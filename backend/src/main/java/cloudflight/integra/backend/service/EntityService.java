@@ -21,10 +21,7 @@ public abstract class EntityService<T extends Entity<ID>, ID extends Serializabl
         return repository.findById(id);
     }
 
-    @Override
-    public List<T> findAll() {
-        return repository.findAll();
-    }
+
 
     @Override
     public T save(T t) {
