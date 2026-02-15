@@ -1,0 +1,40 @@
+package cloudflight.integra.backend.domain.dtos;
+
+import cloudflight.integra.backend.domain.User;
+import cloudflight.integra.backend.domain.UserBio;
+import cloudflight.integra.backend.domain.utils.UserRole;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class UserCreateDto {
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Must be a valid email address")
+    private String email;
+
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 5, max = 40, message = "Username must be between 5 and 40 characters")
+    private String username;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, message = "Password must be at least 8 characters long")
+    private String password;
+
+
+    private UserBio bio;
+
+    public User toEntity() {
+        User user = new User();
+        user.setEmail(this.email);
+        user.setUsername(this.username);
+        user.setPassword(this.password);
+
+        user.setRole(UserRole.USER);
+
+        user.setBio(this.bio);
+        return user;
+    }
+}
