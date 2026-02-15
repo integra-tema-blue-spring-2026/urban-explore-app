@@ -4,7 +4,6 @@ import cloudflight.integra.backend.domain.Entity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class EntityService<T extends Entity<ID>, ID extends Serializable>
