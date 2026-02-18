@@ -17,7 +17,7 @@ import cloudflight.integra.backend.quests.model.QuestDto;
 
 
 @RestController
-@RequestMapping("/api/quests")
+@RequestMapping("/quests")
 public class QuestController {
     private final QuestService service;
     private final QuestMapper mapper;
