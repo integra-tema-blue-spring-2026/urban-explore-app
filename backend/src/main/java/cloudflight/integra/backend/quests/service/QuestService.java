@@ -1,11 +1,12 @@
-package cloudflight.integra.backend.quests;
+package cloudflight.integra.backend.quests.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import cloudflight.integra.backend.quests.model.Quest;
+import cloudflight.integra.backend.quests.model.entity.Quest;
+import cloudflight.integra.backend.quests.repository.QuestRepository;
 
 @Service
 public class QuestService {
@@ -14,7 +15,7 @@ public class QuestService {
     public QuestService(QuestRepository repo){ this.repo = repo; }
 
     public List<Quest> getAllQuests(){
-        return repo.getAllQuests();
+        return repo.findAll();
     }
 
     public Optional<Quest> findById(Long id){
@@ -26,7 +27,7 @@ public class QuestService {
     }
 
     public void delete(Long id){
-        repo.delete(id);
+        repo.deleteById(id);
     }
 
     public Optional<Quest> update(Long id, Quest quest) {

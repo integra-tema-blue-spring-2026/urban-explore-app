@@ -1,4 +1,4 @@
-package cloudflight.integra.backend.quests;
+package cloudflight.integra.backend.controller;
 
 
 import java.util.List;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cloudflight.integra.backend.quests.model.QuestDto;
+import cloudflight.integra.backend.quests.model.dto.QuestDto;
+import cloudflight.integra.backend.quests.service.QuestService;
+import cloudflight.integra.backend.utils.QuestMapper;
 
 
 @RestController
