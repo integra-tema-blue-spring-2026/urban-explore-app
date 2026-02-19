@@ -1,7 +1,7 @@
 package cloudflight.integra.backend.quests.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import cloudflight.integra.backend.utils.enums.Difficulty;
 import lombok.Data;
 
@@ -12,10 +12,10 @@ public class QuestDto {
     @NotNull(message = "ID cannot be null")
     private Long id;
 
-    @NotNull(message = "Title cannot be null")
+    @NotBlank(message = "Title cannot be null")
     private String title;
 
-    @NotNull(message = "Description cannot be null")
+    @NotBlank(message = "Description cannot be null")
     private String description;
 
     @NotNull(message = "Difficulty cannot be null")
