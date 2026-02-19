@@ -44,9 +44,14 @@ public class ReviewService {
     @Transactional
     public ReviewDto updateReview(UUID id, ReviewDto reviewDto) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(()-> new ReviewException("Review with id: "+ id + "not found"));
-        log.info("Updating review with id: "+ id);
+
+        if(!(reviewDto.getText()!=null && !reviewDto.getText().isEmpty()))
+            existingReview.setText(reviewDto.getText());
+
+        if(!(reviewDto.getRating()>=1 && reviewDto.getRating()<=5)){
+            throw new ReviewException("Rating must be between 1 and 5");
+        }
         existingReview.setRating(reviewDto.getRating());
-        existingReview.setText(reviewDto.getText());
 
         Review updatedReview=reviewRepository.save(existingReview);
         return reviewMapper.toDto(updatedReview);
