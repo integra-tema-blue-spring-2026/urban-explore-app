@@ -4,7 +4,9 @@ import cloudflight.integra.backend.domain.User;
 import cloudflight.integra.backend.domain.dtos.UserCreateDto;
 import cloudflight.integra.backend.domain.dtos.UserUpdateDto;
 import cloudflight.integra.backend.domain.dtos.UserViewDto;
+import cloudflight.integra.backend.domain.utils.UserMappingRules;
 import cloudflight.integra.backend.service.UsersService;
+import cloudflight.integra.backend.service.utils.Mapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserViewDto> getUser(@PathVariable Long id) {
         return service.findById(id)
-            .map(service::getUserDto)
+            .map(UserMappingRules.TO_DTO_RULE)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -31,12 +33,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserViewDto> createUser(@Valid @RequestBody UserCreateDto createDto) {
-        User newUser = createDto.toEntity();
+        User newUser = Mapper.toEntity(createDto, UserMappingRules.TO_ENTITY_RULE);
 
         User savedUser = service.save(newUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(service.getUserDto(savedUser));
+            .body(Mapper.toDto(savedUser, UserMappingRules.TO_DTO_RULE));
     }
 
     @PutMapping("/{id}")
@@ -47,11 +49,10 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        updateDto.updateExistingEntity(currentUser);
-
+        Mapper.mapUpdateToEntity(updateDto, currentUser, UserMappingRules.UPDATE_ENTITY_RULE);
         User updatedUser = service.save(currentUser);
 
-        return ResponseEntity.ok(service.getUserDto(updatedUser));
+        return ResponseEntity.ok(Mapper.toDto(updatedUser, UserMappingRules.TO_DTO_RULE));
     }
 
     @DeleteMapping("/{id}")

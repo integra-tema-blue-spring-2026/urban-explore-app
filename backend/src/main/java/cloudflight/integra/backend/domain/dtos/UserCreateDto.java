@@ -25,16 +25,4 @@ public class UserCreateDto {
 
 
     private UserBio bio;
-
-    public User toEntity() {
-        User user = new User();
-        user.setEmail(this.email);
-        user.setUsername(this.username);
-        user.setPassword(this.password);
-
-        user.setRole(UserRole.USER);
-
-        user.setBio(this.bio);
-        return user;
-    }
 }

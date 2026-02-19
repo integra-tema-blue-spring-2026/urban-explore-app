@@ -11,16 +11,4 @@ public class UserUpdateDto {
     private String username;
     private UserBio bio;
     private String avatarUrl;
-
-    public void updateExistingEntity(User existingUser) {
-        if (this.username != null) {
-            existingUser.setUsername(this.username);
-        }
-        if (this.bio != null) {
-            existingUser.setBio(this.bio);
-        }
-        if (this.avatarUrl != null) {
-            existingUser.setAvatarUrl(this.avatarUrl);
-        }
-    }
 }
