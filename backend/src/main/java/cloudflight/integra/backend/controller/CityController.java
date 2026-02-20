@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 @RestController
 @RequestMapping("/cities")
 @RequiredArgsConstructor
+
 public class CityController {
     private final CityService cityService;
     private final CityMapper cityMapper;
