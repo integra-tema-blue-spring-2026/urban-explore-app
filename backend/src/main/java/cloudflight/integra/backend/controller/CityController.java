@@ -10,8 +10,9 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping("/cities")
 @RequiredArgsConstructor
+
 public class CityController {
     private final CityService cityService;
 

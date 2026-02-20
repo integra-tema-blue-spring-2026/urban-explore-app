@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.service;
 
+import cloudflight.integra.backend.exception.CityException;
 import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.CityStatus;
 import cloudflight.integra.backend.model.dtos.CityDto;
@@ -44,14 +45,14 @@ public class CityService {
             City updatedCity = cityRepository.save(city);
             return cityMapper.toDto(updatedCity);
         } else {
-            throw new RuntimeException("City not found with id: " + id);
+            throw new CityException("City not found with id: " + id);
         }
     }
 
     @Transactional
     public void deleteCity(Long id) {
         if (!cityRepository.existsById(id)) {
-            throw new RuntimeException("City not found with id: " + id);
+            throw new CityException("City not found with id: " + id);
         }
         cityRepository.deleteById(id);
     }

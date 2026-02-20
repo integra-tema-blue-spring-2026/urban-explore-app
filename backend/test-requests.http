@@ -1,0 +1,47 @@
+### 0.Add first city
+POST http://localhost:8080/api/cities
+Content-Type: application/json
+
+{
+    "name": "Cluj-Napoca",
+    "country": "Romania",
+    "description": "The heart of Transylvania.",
+    "population": 324576,
+    "imageUrl": "https://example.com/cluj.jpg",
+    "status": "PENDING"
+}
+
+### 1.Add a second city
+POST http://localhost:8080/api/cities
+Content-Type: application/json
+
+{
+    "name": "Bucharest",
+    "country": "Romania",
+    "description": "The capital city.",
+    "population": 1883000,
+    "imageUrl": "https://example.com/bucharest.jpg",
+    "status": "APPROVED"
+}
+
+### 2. Read cities
+GET http://localhost:8080/api/cities
+
+
+### 3.Change the description of city
+PUT http://localhost:8080/api/cities/3
+Content-Type: application/json
+
+{
+    "name": "Cluj-Napoca",
+    "country": "Romania",
+    "description": "Updated: The Silicon Valley of Europe.",
+    "population": 324576,
+    "imageUrl": "https://example.com/cluj-updated.jpg",
+    "status": "APPROVED"
+}
+
+### 4.Remove the first city
+DELETE http://localhost:8080/api/cities/1
+
+
