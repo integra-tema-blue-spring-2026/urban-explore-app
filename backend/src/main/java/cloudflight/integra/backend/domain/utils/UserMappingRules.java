@@ -8,7 +8,11 @@ import cloudflight.integra.backend.domain.dtos.UserViewDto;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class UserMappingRules {
+public final class UserMappingRules {
+
+    private UserMappingRules() {
+    }
+
     public static final Function<UserCreateDto, User> TO_ENTITY_RULE = dto -> {
         User user = new User();
         user.setEmail(dto.getEmail());

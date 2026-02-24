@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.Optional;
 
 public abstract class EntityService<T extends Entity<ID>, ID extends Serializable>
-    implements Service<T, ID>{
+    implements CrudService<T, ID> {
 
-    protected JpaRepository<T, ID> repository;
+    protected final JpaRepository<T, ID> repository;
 
     public EntityService(JpaRepository<T, ID> repository) {
         this.repository = repository;

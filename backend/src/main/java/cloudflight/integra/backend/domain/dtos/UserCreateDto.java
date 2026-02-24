@@ -1,8 +1,6 @@
 package cloudflight.integra.backend.domain.dtos;
 
-import cloudflight.integra.backend.domain.User;
 import cloudflight.integra.backend.domain.UserBio;
-import cloudflight.integra.backend.domain.utils.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,7 +18,7 @@ public class UserCreateDto {
     private String username;
 
     @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, message = "Password must be at least 8 characters long")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
 

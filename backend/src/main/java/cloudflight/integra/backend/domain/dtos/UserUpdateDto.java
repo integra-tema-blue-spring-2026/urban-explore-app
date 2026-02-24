@@ -1,6 +1,5 @@
 package cloudflight.integra.backend.domain.dtos;
 
-import cloudflight.integra.backend.domain.User;
 import cloudflight.integra.backend.domain.UserBio;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

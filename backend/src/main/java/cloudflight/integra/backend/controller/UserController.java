@@ -56,8 +56,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserViewDto> deleteUser(@PathVariable Long id){
-        if(service.findById(id).isPresent()){
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        if(service.findById(id).isEmpty()){
             return ResponseEntity.notFound().build();
         }
 
@@ -66,5 +66,8 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping("/test-error")
+    public ResponseEntity<String> testError() throws Exception {
+        throw new Exception("This is a simulated database crash!");
+    }
 }

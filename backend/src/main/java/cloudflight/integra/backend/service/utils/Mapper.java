@@ -3,17 +3,21 @@ package cloudflight.integra.backend.service.utils;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class Mapper {
-    public static <Entity, DTO > DTO toDto(Entity entity, Function<Entity, DTO> mapper) {
-        return mapper.apply(entity);
+public final class Mapper {
+
+    private Mapper() {
+    }
+
+    public static <E, DTO > DTO toDto(E E, Function<E, DTO> mapper) {
+        return mapper.apply(E);
     }
 
 
-    public static <Entity, DTO> Entity toEntity(DTO dto, Function<DTO, Entity> mapper){
+    public static <E, DTO> E toEntity(DTO dto, Function<DTO, E> mapper){
         return mapper.apply(dto);
     }
 
-    public static <Entity, DTO> void mapUpdateToEntity(DTO dto, Entity entity, BiConsumer<DTO, Entity> mappingRule) {
-        mappingRule.accept(dto, entity);
+    public static <E, DTO> void mapUpdateToEntity(DTO dto, E E, BiConsumer<DTO, E> mappingRule) {
+        mappingRule.accept(dto, E);
     }
 }
