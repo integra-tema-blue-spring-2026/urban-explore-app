@@ -1,7 +1,9 @@
 package cloudflight.integra.backend.controller;
 
-import cloudflight.integra.backend.model.dtos.PointOfInterestCreateDto;
-import cloudflight.integra.backend.model.dtos.PointOfInterestDto;
+import cloudflight.integra.backend.model.PointOfInterest;
+import cloudflight.integra.backend.model.dtos.PointOfInterestRequestDto;
+import cloudflight.integra.backend.model.dtos.PointOfInterestResponseDto;
+import cloudflight.integra.backend.model.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +16,47 @@ import java.util.List;
 @RequestMapping("/pois")
 public class PointOfInterestController {
     private final PointOfInterestService pointOfInterestService;
+    private final PointOfInterestMapper pointOfInterestMapper;
 
     @Autowired
-    public PointOfInterestController(PointOfInterestService pointOfInterestService) {
+    public PointOfInterestController(PointOfInterestService pointOfInterestService,
+                                     PointOfInterestMapper pointOfInterestMapper
+    ) {
         this.pointOfInterestService = pointOfInterestService;
+        this.pointOfInterestMapper = pointOfInterestMapper;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PointOfInterestDto savePointOfInterest(@Valid @RequestBody PointOfInterestCreateDto pointOfInterestCreateDto) {
-        return pointOfInterestService.save(pointOfInterestCreateDto);
+    public PointOfInterestResponseDto savePointOfInterest(@Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+        PointOfInterest newPointOfInterest = pointOfInterestMapper.toNewEntity(pointOfInterestRequestDto);
+        PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
+        return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestDto> getAll() {
-        return pointOfInterestService.getAll();
+    public List<PointOfInterestResponseDto> getAll() {
+        return pointOfInterestService
+            .getAll()
+            .stream()
+            .map(pointOfInterestMapper::toDto)
+            .toList();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestDto findById(@PathVariable Long id) {
-        return pointOfInterestService.findById(id);
+    public PointOfInterestResponseDto findById(@PathVariable Long id) {
+        return pointOfInterestMapper.toDto(pointOfInterestService.findById(id));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestDto update(@PathVariable Long id, @Valid @RequestBody PointOfInterestCreateDto pointOfInterestCreateDto) {
-        return pointOfInterestService.update(id, pointOfInterestCreateDto);
+    public PointOfInterestResponseDto update(@PathVariable Long id, @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+        PointOfInterest updatedPointOfInterest = pointOfInterestMapper.toNewEntity(pointOfInterestRequestDto);
+        updatedPointOfInterest.setId(id);
+        PointOfInterest savedPointOfInterest = pointOfInterestService.update(updatedPointOfInterest);
+        return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
 
     @DeleteMapping("/{id}")

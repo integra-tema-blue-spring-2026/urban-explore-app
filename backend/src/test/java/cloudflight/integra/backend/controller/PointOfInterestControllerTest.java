@@ -1,14 +1,16 @@
 package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.PointOfInterestType;
-import cloudflight.integra.backend.model.dtos.PointOfInterestCreateDto;
-import cloudflight.integra.backend.model.dtos.PointOfInterestDto;
+import cloudflight.integra.backend.model.dtos.PointOfInterestRequestDto;
+import cloudflight.integra.backend.model.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PointOfInterestController.class)
+@Import(PointOfInterestMapper.class)
 public class PointOfInterestControllerTest {
 
     @Autowired
@@ -36,9 +38,10 @@ public class PointOfInterestControllerTest {
     @MockitoBean
     private PointOfInterestService pointOfInterestService;
 
+
     @Test
     public void POST_PointOfInterest_OK() throws Exception {
-        PointOfInterestCreateDto dto = new PointOfInterestCreateDto(
+        PointOfInterestRequestDto dto = new PointOfInterestRequestDto(
             "Museum A",
             "A Museum",
             "Str. A",
@@ -46,7 +49,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        PointOfInterestDto responseDto = new PointOfInterestDto(
+        PointOfInterest savedEntity = new PointOfInterest(
             1L,
             "Museum A",
             "A Museum",
@@ -55,7 +58,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        when(pointOfInterestService.save(any(PointOfInterestCreateDto.class))).thenReturn(responseDto);
+        when(pointOfInterestService.save(any(PointOfInterest.class))).thenReturn(savedEntity);
 
         mockMvc.perform(post("/pois")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +75,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void POST_PointOfInterest_ERROR() throws Exception {
-        PointOfInterestCreateDto dto = new PointOfInterestCreateDto(
+        PointOfInterestRequestDto dto = new PointOfInterestRequestDto(
             "",
             "",
             "",
@@ -90,7 +93,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void GET_all_PointOfInterest_OK() throws Exception {
-        PointOfInterestDto dto1 = new PointOfInterestDto(
+        PointOfInterest entity1 = new PointOfInterest(
             1L,
             "Museum A",
             "A Museum",
@@ -99,7 +102,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        PointOfInterestDto dto2 = new PointOfInterestDto(
+        PointOfInterest entity2 = new PointOfInterest(
             2L,
             "Museum B",
             "A Museum",
@@ -108,7 +111,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        when(pointOfInterestService.getAll()).thenReturn(Arrays.asList(dto1, dto2));
+        when(pointOfInterestService.getAll()).thenReturn(Arrays.asList(entity1, entity2));
 
         mockMvc.perform(
                         get("/pois")
@@ -127,7 +130,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void GET_PointOfInterest_by_id_OK() throws Exception {
-        PointOfInterestDto responseDto = new PointOfInterestDto(
+        PointOfInterest entity = new PointOfInterest(
             1L,
             "Museum A",
             "A Museum",
@@ -136,7 +139,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        when(pointOfInterestService.findById(1L)).thenReturn(responseDto);
+        when(pointOfInterestService.findById(1L)).thenReturn(entity);
 
         mockMvc.perform(
                         get("/pois/1")
@@ -163,7 +166,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void PUT_PointOfInterest_OK() throws Exception {
-        PointOfInterestCreateDto dto = new PointOfInterestCreateDto(
+        PointOfInterestRequestDto dto = new PointOfInterestRequestDto(
             "Museum Updated",
             "Updated Museum",
             "Str. Updated",
@@ -171,7 +174,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        PointOfInterestDto responseDto = new PointOfInterestDto(
+        PointOfInterest updatedEntity = new PointOfInterest(
             1L,
             "Museum Updated",
             "Updated Museum",
@@ -180,7 +183,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        when(pointOfInterestService.update(eq(1L), any(PointOfInterestCreateDto.class))).thenReturn(responseDto);
+        when(pointOfInterestService.update(any(PointOfInterest.class))).thenReturn(updatedEntity);
 
         mockMvc.perform(put("/pois/1")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -197,7 +200,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void PUT_PointOfInterest_VALIDATION_ERROR() throws Exception {
-        PointOfInterestCreateDto dto = new PointOfInterestCreateDto(
+        PointOfInterestRequestDto dto = new PointOfInterestRequestDto(
             "",
             "",
             "",
@@ -215,7 +218,7 @@ public class PointOfInterestControllerTest {
 
     @Test
     public void PUT_PointOfInterest_NOT_FOUND_ERROR() throws Exception {
-        PointOfInterestCreateDto dto = new PointOfInterestCreateDto(
+        PointOfInterestRequestDto dto = new PointOfInterestRequestDto(
             "Museum Updated",
             "Updated Museum",
             "Str. Updated",
@@ -223,7 +226,7 @@ public class PointOfInterestControllerTest {
             1L
         );
 
-        when(pointOfInterestService.update(eq(999L), any(PointOfInterestCreateDto.class)))
+        when(pointOfInterestService.update(any(PointOfInterest.class)))
             .thenThrow(new PointOfInterestNotFoundException("PointOfInterest with id 999 not found!"));
 
         mockMvc.perform(put("/pois/999")

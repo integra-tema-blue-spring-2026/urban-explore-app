@@ -1,15 +1,15 @@
 package cloudflight.integra.backend.model.mappers;
 
 import cloudflight.integra.backend.model.PointOfInterest;
-import cloudflight.integra.backend.model.dtos.PointOfInterestCreateDto;
-import cloudflight.integra.backend.model.dtos.PointOfInterestDto;
+import cloudflight.integra.backend.model.dtos.PointOfInterestRequestDto;
+import cloudflight.integra.backend.model.dtos.PointOfInterestResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PointOfInterestMapper {
 
-    public PointOfInterestDto toDto(PointOfInterest entity) {
-        return new PointOfInterestDto(
+    public PointOfInterestResponseDto toDto(PointOfInterest entity) {
+        return new PointOfInterestResponseDto(
             entity.getId(),
             entity.getName(),
             entity.getDescription(),
@@ -19,7 +19,7 @@ public class PointOfInterestMapper {
         );
     }
 
-    public PointOfInterest toNewEntity(PointOfInterestCreateDto dto) {
+    public PointOfInterest toNewEntity(PointOfInterestRequestDto dto) {
         return new PointOfInterest(
             null,
             dto.getName(),

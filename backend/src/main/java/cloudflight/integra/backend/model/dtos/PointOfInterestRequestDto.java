@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class PointOfInterestCreateDto {
+@NoArgsConstructor
+public class PointOfInterestRequestDto {
 
     @NotBlank(message = "Name is required")
     private String name;

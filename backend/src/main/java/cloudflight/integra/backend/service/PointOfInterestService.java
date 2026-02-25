@@ -2,9 +2,6 @@ package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
-import cloudflight.integra.backend.model.dtos.PointOfInterestCreateDto;
-import cloudflight.integra.backend.model.dtos.PointOfInterestDto;
-import cloudflight.integra.backend.model.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,37 +12,38 @@ import java.util.List;
 @Service
 public class PointOfInterestService {
     private final PointOfInterestRepository pointOfInterestRepository;
-    private final PointOfInterestMapper pointOfInterestMapper;
 
     @Autowired
     public PointOfInterestService(
-        PointOfInterestRepository pointOfInterestRepository,
-        PointOfInterestMapper pointOfInterestMapper
+        PointOfInterestRepository pointOfInterestRepository
     ) {
         this.pointOfInterestRepository = pointOfInterestRepository;
-        this.pointOfInterestMapper = pointOfInterestMapper;
     }
 
     @Transactional
-    public PointOfInterestDto save(PointOfInterestCreateDto pointOfInterestCreateDto) {
-        PointOfInterest newPointOfInterest = pointOfInterestMapper.toNewEntity(pointOfInterestCreateDto);
-        PointOfInterest savedPointOfInterest = pointOfInterestRepository.save(newPointOfInterest);
-        return pointOfInterestMapper.toDto(savedPointOfInterest);
+    public PointOfInterest save(PointOfInterest newPointOfInterest) {
+        return pointOfInterestRepository.save(newPointOfInterest);
     }
 
     @Transactional(readOnly = true)
-    public List<PointOfInterestDto> getAll(){
-        return pointOfInterestRepository.findAll()
-            .stream()
-            .map(pointOfInterestMapper::toDto)
-            .toList();
+    public List<PointOfInterest> getAll(){
+        return pointOfInterestRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public PointOfInterestDto findById(Long id) {
-        return pointOfInterestMapper.toDto(pointOfInterestRepository.findById(id).orElseThrow(
+    public PointOfInterest findById(Long id) {
+        return pointOfInterestRepository.findById(id).orElseThrow(
             () -> new PointOfInterestNotFoundException("PointOfInterest with id " + id + " not found!")
-        ));
+        );
+    }
+
+    @Transactional
+    public PointOfInterest update(PointOfInterest updatedPointOfInterest) {
+        if(!pointOfInterestRepository.existsById(updatedPointOfInterest.getId())) {
+            throw new PointOfInterestNotFoundException("PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
+        }
+
+        return pointOfInterestRepository.save(updatedPointOfInterest);
     }
 
     @Transactional
@@ -55,17 +53,5 @@ public class PointOfInterestService {
         }
 
         pointOfInterestRepository.deleteById(id);
-    }
-
-    @Transactional
-    public PointOfInterestDto update(Long id, PointOfInterestCreateDto pointOfInterestCreateDto) {
-        if(!pointOfInterestRepository.existsById(id)) {
-            throw new PointOfInterestNotFoundException("PointOfInterest with id " + id + " not found!");
-        }
-
-        PointOfInterest pointOfInterest = pointOfInterestMapper.toNewEntity(pointOfInterestCreateDto);
-        pointOfInterest.setId(id);
-        PointOfInterest savedPointOfInterest = pointOfInterestRepository.save(pointOfInterest);
-        return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
 }
