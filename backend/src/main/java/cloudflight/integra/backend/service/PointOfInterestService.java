@@ -3,22 +3,16 @@ package cloudflight.integra.backend.service;
 import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PointOfInterestService {
     private final PointOfInterestRepository pointOfInterestRepository;
-
-    @Autowired
-    public PointOfInterestService(
-        PointOfInterestRepository pointOfInterestRepository
-    ) {
-        this.pointOfInterestRepository = pointOfInterestRepository;
-    }
 
     @Transactional
     public PointOfInterest save(PointOfInterest newPointOfInterest) {

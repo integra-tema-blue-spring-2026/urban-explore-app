@@ -19,7 +19,7 @@ public class PointOfInterestMapper {
         );
     }
 
-    public PointOfInterest toNewEntity(PointOfInterestRequestDto dto) {
+    public PointOfInterest toEntity(PointOfInterestRequestDto dto) {
         return new PointOfInterest(
             null,
             dto.getName(),
