@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class PointOfInterestService {
     }
 
     @Transactional(readOnly = true)
-    public PointOfInterest findById(Long id) {
+    public PointOfInterest findById(UUID id) {
         return pointOfInterestRepository.findById(id).orElseThrow(
             () -> new PointOfInterestNotFoundException("PointOfInterest with id " + id + " not found!")
         );
@@ -41,7 +42,7 @@ public class PointOfInterestService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         if(!pointOfInterestRepository.existsById(id)) {
             throw new PointOfInterestNotFoundException("PointOfInterest with id " + id + " not found!");
         }

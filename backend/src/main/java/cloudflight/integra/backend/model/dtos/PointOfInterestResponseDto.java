@@ -2,8 +2,10 @@ package cloudflight.integra.backend.model.dtos;
 
 import cloudflight.integra.backend.model.PointOfInterestType;
 
+import java.util.UUID;
+
 public record PointOfInterestResponseDto(
-    Long id,
+    UUID id,
     String name,
     String description,
     String address,

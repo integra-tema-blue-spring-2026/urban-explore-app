@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/pois")
@@ -39,13 +40,13 @@ public class PointOfInterestController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestResponseDto findById(@PathVariable Long id) {
+    public PointOfInterestResponseDto findById(@PathVariable UUID id) {
         return pointOfInterestMapper.toDto(pointOfInterestService.findById(id));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestResponseDto update(@PathVariable Long id, @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+    public PointOfInterestResponseDto update(@PathVariable UUID id, @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
         PointOfInterest updatedPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         updatedPointOfInterest.setId(id);
         PointOfInterest savedPointOfInterest = pointOfInterestService.update(updatedPointOfInterest);
@@ -54,7 +55,7 @@ public class PointOfInterestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
+    public void deleteById(@PathVariable UUID id) {
         pointOfInterestService.deleteById(id);
     }
 
