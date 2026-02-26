@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +27,5 @@ public class PointOfInterestRequestDto {
     private PointOfInterestType type;
 
     @NotNull(message = "City ID is required")
-    private Long cityId;
+    private UUID cityId;
 }

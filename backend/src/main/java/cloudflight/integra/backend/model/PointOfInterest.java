@@ -32,5 +32,5 @@ public class PointOfInterest {
     private PointOfInterestType type;
 
     @Column(nullable = false)
-    private Long cityId;
+    private UUID cityId;
 }

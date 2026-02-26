@@ -10,5 +10,5 @@ public record PointOfInterestResponseDto(
     String description,
     String address,
     PointOfInterestType type,
-    Long cityId
+    UUID cityId
 ){}
