@@ -1,6 +1,7 @@
 package cloudflight.integra.backend.quests.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class QuestService {
         return questRepo.findAll();
     }
 
-    public Quest findById(Long id){
+    public Quest findById(UUID id){
         return questRepo.findById(id).orElseThrow(() -> 
             new QuestNotFoundException("Quest with ID " + id + " not found"));   
     }
@@ -28,14 +29,14 @@ public class QuestService {
         return questRepo.save(quest);
     }
 
-    public void delete(Long id){
+    public void delete(UUID id){
         if (!questRepo.existsById(id)){
             throw new QuestNotFoundException("Quest with ID " + id + " not found");
         }
         questRepo.deleteById(id);
     }
 
-    public Quest update(Long id, Quest quest) {
+    public Quest update(UUID id, Quest quest) {
         if (!questRepo.existsById(id)) {
             throw new QuestNotFoundException("Quest with ID " + id + " not found");
         }

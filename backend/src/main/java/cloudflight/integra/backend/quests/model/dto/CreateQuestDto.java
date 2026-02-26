@@ -10,10 +10,7 @@ import lombok.Data;
 
 
 @Data
-public class QuestDto {
-
-    @NotNull(message = "ID cannot be null")
-    private UUID id;
+public class CreateQuestDto {
 
     @NotBlank(message = "Title cannot be null")
     private String title;
@@ -30,8 +27,7 @@ public class QuestDto {
     @NotNull(message = "City ID cannot be null")
     private UUID cityId;
 
-    public QuestDto(UUID id, String title, String description, Difficulty difficulty, int exp, UUID cityId) {
-        this.id = id;
+    public CreateQuestDto(String title, String description, Difficulty difficulty, int exp, UUID cityId) {
         this.title = title;
         this.description = description;
         this.difficulty = difficulty;

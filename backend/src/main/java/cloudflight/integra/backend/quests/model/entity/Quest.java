@@ -1,8 +1,12 @@
 package cloudflight.integra.backend.quests.model.entity;
 
-import cloudflight.integra.backend.utils.enums.Difficulty;
+import java.util.UUID;
+
+import cloudflight.integra.backend.utils.Enums.Difficulty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -13,8 +17,9 @@ import lombok.Data;
 public class Quest {
 
     @Id 
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false)
     private String title;
@@ -29,9 +34,9 @@ public class Quest {
     private int exp;
 
     @Column(nullable = false)
-    private Long cityId;
+    private UUID cityId;
 
-    public Quest(Long id, String title, String description, Difficulty difficulty, int exp, Long cityId) {
+    public Quest(UUID id, String title, String description, Difficulty difficulty, int exp, UUID cityId) {
         this.id = id;
         this.title = title;
         this.description = description;

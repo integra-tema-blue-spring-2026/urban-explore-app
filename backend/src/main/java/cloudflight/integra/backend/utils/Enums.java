@@ -1,7 +1,8 @@
 package cloudflight.integra.backend.utils;
 
-public class enums {
+public class Enums {
     public enum Difficulty {
-        Easy, Medium, Hard
+        EASY, MEDIUM, HARD
     }
 }
+
