@@ -1,7 +1,9 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.ReviewDto;
 import cloudflight.integra.backend.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto){
+    public ResponseEntity<ReviewDto> createReview(@Valid @RequestBody ReviewCreateDto reviewDto){
         return new ResponseEntity<>(reviewService.createReview(reviewDto), HttpStatus.CREATED);
     }
 
@@ -27,7 +29,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @RequestBody ReviewDto reviewDto){
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody ReviewDto reviewDto){
         return new ResponseEntity<>(reviewService.updateReview(id, reviewDto), HttpStatus.OK);
     }
 

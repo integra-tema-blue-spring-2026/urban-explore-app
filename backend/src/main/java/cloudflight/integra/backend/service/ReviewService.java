@@ -2,6 +2,7 @@ package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exception.ReviewException;
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.ReviewDto;
 import cloudflight.integra.backend.model.mappers.ReviewMapper;
 import cloudflight.integra.backend.repository.ReviewRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -21,32 +23,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
 
-    public ReviewDto createReview(ReviewDto reviewDto) {
-        if (reviewDto == null) {
-            throw new ReviewException("Review must not be null");
-        }
-
-        if (reviewDto.getText() == null || reviewDto.getText().trim().isEmpty()) {
-            throw new ReviewException("Review text must not be empty");
-        }
-
-        if (reviewDto.getRating() == null) {
-            throw new ReviewException("Rating must not be null");
-        }
-
-        if (reviewDto.getUserId() == null) {
-            throw new ReviewException("User ID must not be null");
-        }
-
-        if (reviewDto.getPoiId() == null) {
-            throw new ReviewException("POI ID must not be null");
-        }
-
-        Review review = reviewMapper.toEntity(reviewDto);
-
-        if (review.getRating() == null || !(review.getRating() >= 1 && review.getRating() <= 5)) {
-            throw new ReviewException("Rating must be between 1 and 5");
-        }
+    public ReviewDto createReview(ReviewCreateDto reviewDto) {
+        Review review = reviewMapper.toEntityFromCreateDto(reviewDto);
 
         review.setPostedDate(LocalDateTime.now());
 
@@ -65,12 +43,8 @@ public class ReviewService {
     public ReviewDto updateReview(UUID id, ReviewDto reviewDto) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(()-> new ReviewException("Review with id: "+ id + " not found"));
 
-        if(reviewDto.getText()!=null && !reviewDto.getText().isEmpty())
-            existingReview.setText(reviewDto.getText());
+        existingReview.setText(reviewDto.getText());
 
-        if(reviewDto.getRating() == null || !(reviewDto.getRating()>=1 && reviewDto.getRating()<=5)){
-            throw new ReviewException("Rating must be between 1 and 5");
-        }
         existingReview.setRating(reviewDto.getRating());
 
         Review updatedReview=reviewRepository.save(existingReview);
@@ -84,5 +58,10 @@ public class ReviewService {
         }
 
         reviewRepository.deleteById(id);
+    }
+
+    public Optional<ReviewDto> findReviewById(UUID id) {
+        return reviewRepository.findById(id)
+            .map(reviewMapper::toDto);
     }
 }

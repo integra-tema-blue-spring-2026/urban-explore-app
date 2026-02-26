@@ -1,6 +1,7 @@
 package cloudflight.integra.backend.model.mappers;
 
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,15 @@ public class ReviewMapper {
             .postedDate(review.getPostedDate())
             .userId(review.getUserId())
             .poiId(review.getPoiId())
+            .build();
+    }
+
+    public Review toEntityFromCreateDto(ReviewCreateDto reviewDto) {
+        return Review.builder()
+            .text(reviewDto.getText())
+            .rating(reviewDto.getRating())
+            .userId(reviewDto.getUserId())
+            .poiId(reviewDto.getPoiId())
             .build();
     }
 }
