@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,7 @@ public class CityService {
     }
 
     @Transactional
-    public CityDto updateCity(Long id, CityDto inputCity) {
+    public CityDto updateCity(UUID id, CityDto inputCity) {
         Optional<City> optionalCity = cityRepository.findById(id);
         if (optionalCity.isPresent()) {
             City city = optionalCity.get();
@@ -50,7 +51,7 @@ public class CityService {
     }
 
     @Transactional
-    public void deleteCity(Long id) {
+    public void deleteCity(UUID id) {
         if (!cityRepository.existsById(id)) {
             throw new CityException("City not found with id: " + id);
         }

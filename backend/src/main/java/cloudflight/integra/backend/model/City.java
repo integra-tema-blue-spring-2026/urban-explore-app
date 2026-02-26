@@ -3,6 +3,8 @@ package cloudflight.integra.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "cities")
 @Data
@@ -12,8 +14,8 @@ import lombok.*;
 public class City {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String name;

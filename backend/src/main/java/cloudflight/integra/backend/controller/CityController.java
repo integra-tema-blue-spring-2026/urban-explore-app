@@ -2,17 +2,18 @@ package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.dtos.CityDto;
 import cloudflight.integra.backend.service.CityService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping("/cities")
 @RequiredArgsConstructor
-
 public class CityController {
     private final CityService cityService;
 
@@ -22,17 +23,17 @@ public class CityController {
     }
 
     @PostMapping
-    public CityDto createCity(@RequestBody CityDto cityDto) {
+    public CityDto createCity(@Valid @RequestBody CityDto cityDto) {
         return cityService.createCity(cityDto);
     }
 
     @PutMapping("/{id}")
-    public CityDto updateCity(@PathVariable Long id, @RequestBody CityDto cityDto) {
+    public CityDto updateCity(@PathVariable UUID id, @Valid @RequestBody CityDto cityDto) {
         return cityService.updateCity(id, cityDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCity(@PathVariable Long id) {
+    public void deleteCity(@PathVariable UUID id) {
         cityService.deleteCity(id);
     }
 }
