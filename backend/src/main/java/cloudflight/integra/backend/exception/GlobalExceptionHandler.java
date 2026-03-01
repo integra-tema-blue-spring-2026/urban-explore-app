@@ -13,51 +13,44 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult()
             .getFieldErrors()
             .forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.badRequest()
-            .body(Map.of(
-                "status",
-                400,
-                "error",
-                "Bad Request",
-                "message",
-                "Validation failed",
-                "fieldErrors",
-                fieldErrors
-            ));
+            .body(ErrorResponse.builder()
+                    .status(400)
+                    .error("Bad Request")
+                    .message("Validation failed")
+                    .fieldErrors(fieldErrors)
+                    .build()
+            );
     }
 
 
     @ExceptionHandler(CityNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleCityNotFound(CityNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleCityNotFound(CityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(Map.of(
-                "status",
-                404,
-                "error",
-                "Not Found",
-                "message",
-                ex.getMessage()
-            ));
+            .body(ErrorResponse.builder()
+                    .status(404)
+                    .error("Not Found")
+                    .message(ex.getMessage())
+                .build()
+            );
     }
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(Map.of(
-                "status",
-                500,
-                "error",
-                "Internal Server Error",
-                "message",
-                ex.getMessage()
-            ));
+            .body(ErrorResponse.builder()
+                    .status(500)
+                    .error("Internal Server Error")
+                    .message("An unexpected error occurred")
+                    .build()
+            );
     }
 }
 
