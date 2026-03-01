@@ -2,6 +2,7 @@ package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.ReviewDto;
+import cloudflight.integra.backend.model.dtos.ReviewUpdateDto;
 import cloudflight.integra.backend.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody ReviewDto reviewDto){
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody ReviewUpdateDto reviewDto){
         return new ResponseEntity<>(reviewService.updateReview(id, reviewDto), HttpStatus.OK);
     }
 
@@ -38,4 +39,5 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

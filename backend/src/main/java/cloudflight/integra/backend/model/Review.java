@@ -7,12 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Data
 @Table(name="reviews")
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Review {
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
@@ -32,4 +29,14 @@ public class Review {
 
     @Column(nullable=false)
     private Long poiId;
+
+    @Builder
+    public Review(UUID id, String text, Integer rating, LocalDateTime postedDate, Long userId, Long poiId) {
+        this.id = id;
+        this.text = text;
+        this.rating = rating;
+        this.postedDate = postedDate;
+        this.userId = userId;
+        this.poiId = poiId;
+    }
 }

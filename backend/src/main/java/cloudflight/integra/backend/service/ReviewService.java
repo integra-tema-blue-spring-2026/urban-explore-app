@@ -4,6 +4,7 @@ import cloudflight.integra.backend.exception.ReviewException;
 import cloudflight.integra.backend.model.Review;
 import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.ReviewDto;
+import cloudflight.integra.backend.model.dtos.ReviewUpdateDto;
 import cloudflight.integra.backend.model.mappers.ReviewMapper;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto updateReview(UUID id, ReviewDto reviewDto) {
+    public ReviewDto updateReview(UUID id, ReviewUpdateDto reviewDto) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(()-> new ReviewException("Review with id: "+ id + " not found"));
 
         existingReview.setText(reviewDto.getText());
@@ -58,10 +59,5 @@ public class ReviewService {
         }
 
         reviewRepository.deleteById(id);
-    }
-
-    public Optional<ReviewDto> findReviewById(UUID id) {
-        return reviewRepository.findById(id)
-            .map(reviewMapper::toDto);
     }
 }
