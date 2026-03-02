@@ -1,0 +1,38 @@
+package cloudflight.integra.backend.quests.model.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.UUID;
+
+import cloudflight.integra.backend.utils.Enums.Difficulty;
+import lombok.Data;
+
+
+@Data
+public class CreateQuestDto {
+
+    @NotBlank(message = "Title cannot be null")
+    private String title;
+
+    @NotBlank(message = "Description cannot be null")
+    private String description;
+
+    @NotNull(message = "Difficulty cannot be null")
+    private Difficulty difficulty;
+
+    @NotNull(message = "Experience points cannot be null")
+    private int exp;
+
+    @NotNull(message = "City ID cannot be null")
+    private UUID cityId;
+
+    public CreateQuestDto(String title, String description, Difficulty difficulty, int exp, UUID cityId) {
+        this.title = title;
+        this.description = description;
+        this.difficulty = difficulty;
+        this.exp = exp;
+        this.cityId = cityId;
+    }
+}
+
