@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: backend
-
   datasource:
     url: jdbc:postgresql://localhost:9400/postgres
     username: postgres
