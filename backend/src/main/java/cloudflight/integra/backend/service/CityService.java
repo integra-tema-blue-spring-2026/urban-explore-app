@@ -4,11 +4,16 @@ import cloudflight.integra.backend.exception.CityNotFoundException;
 import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.CityStatus;
 import cloudflight.integra.backend.model.dtos.CityDto;
+import cloudflight.integra.backend.model.dtos.CreateCityDto;
+import cloudflight.integra.backend.model.dtos.UpdateCityDto;
 import cloudflight.integra.backend.model.mappers.CityMapper;
 import cloudflight.integra.backend.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +27,17 @@ public class CityService {
     private final CityRepository cityRepository;
     private final CityMapper cityMapper;
 
+    private boolean isStringEmpty(String str) {
+        return str == null || str.isBlank();
+    }
+
     public List<CityDto> getAllCities() {
         return cityRepository.findAll().stream()
             .map(cityMapper::toDto)
             .collect(Collectors.toList());
     }
 
-    public CityDto createCity(CityDto cityDto) {
+    public CityDto createCity(CreateCityDto cityDto) {
         City city = cityMapper.toEntity(cityDto);
         city.setStatus(CityStatus.PENDING);
         City savedCity = cityRepository.save(city);
@@ -36,13 +45,14 @@ public class CityService {
     }
 
     @Transactional
-    public CityDto updateCity(UUID id, CityDto inputCity) {
+    public CityDto updateCity(UUID id, UpdateCityDto inputCity) {
+        if (isStringEmpty(inputCity.getDescription()) && isStringEmpty(inputCity.getImageUrl())) {
+            throw new IllegalArgumentException("At least one field (description or imageUrl) must be provided for update.");
+        }
         Optional<City> optionalCity = cityRepository.findById(id);
         if (optionalCity.isPresent()) {
             City city = optionalCity.get();
-
-            city.setDescription(inputCity.getDescription());
-            city.setImageUrl(inputCity.getImageUrl());
+            cityMapper.updateEntity(inputCity, city);
             City updatedCity = cityRepository.save(city);
             return cityMapper.toDto(updatedCity);
         } else {

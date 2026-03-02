@@ -1,5 +1,7 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.model.dtos.CreateCityDto;
+import cloudflight.integra.backend.model.dtos.UpdateCityDto;
 import cloudflight.integra.backend.model.dtos.CityDto;
 import cloudflight.integra.backend.service.CityService;
 import jakarta.validation.Valid;
@@ -23,12 +25,12 @@ public class CityController {
     }
 
     @PostMapping
-    public CityDto createCity(@Valid @RequestBody CityDto cityDto) {
+    public CityDto createCity(@Valid @RequestBody CreateCityDto cityDto) {
         return cityService.createCity(cityDto);
     }
 
     @PutMapping("/{id}")
-    public CityDto updateCity(@PathVariable UUID id, @Valid @RequestBody CityDto cityDto) {
+    public CityDto updateCity(@PathVariable UUID id, @Valid @RequestBody UpdateCityDto cityDto) {
         return cityService.updateCity(id, cityDto);
     }
 

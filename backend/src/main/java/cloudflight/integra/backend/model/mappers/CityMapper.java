@@ -1,7 +1,10 @@
 package cloudflight.integra.backend.model.mappers;
 
 import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.CityStatus;
 import cloudflight.integra.backend.model.dtos.CityDto;
+import cloudflight.integra.backend.model.dtos.CreateCityDto;
+import cloudflight.integra.backend.model.dtos.UpdateCityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,4 +41,28 @@ public class CityMapper {
             .status(city.getStatus())
             .build();
     }
+
+    public void updateEntity(UpdateCityDto dto, City existingCity) {
+        if (dto == null || existingCity == null) return;
+        if (dto.getDescription() != null && !dto.getDescription().isBlank()) {
+            existingCity.setDescription(dto.getDescription());
+        }
+        if (dto.getImageUrl() != null && !dto.getImageUrl().isBlank()) {
+            existingCity.setImageUrl(dto.getImageUrl());
+        }
+        }
+
+    public City toEntity(CreateCityDto dto) {
+        if (dto == null) return null;
+        return City.builder()
+            .name(dto.getName())
+            .country(dto.getCountry())
+            .description(dto.getDescription())
+            .population(dto.getPopulation())
+            .imageUrl(dto.getImageUrl())
+            .status(CityStatus.PENDING)
+            .build();
+    }
 }
+
+
