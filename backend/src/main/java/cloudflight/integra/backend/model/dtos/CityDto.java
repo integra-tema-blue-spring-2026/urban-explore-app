@@ -1,10 +1,8 @@
 package cloudflight.integra.backend.model.dtos;
 
 import cloudflight.integra.backend.model.CityStatus;
-import jakarta.validation.constraints.Positive;
+
 import lombok.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
