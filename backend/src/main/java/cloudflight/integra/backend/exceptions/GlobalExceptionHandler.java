@@ -1,6 +1,8 @@
 package cloudflight.integra.backend.exceptions;
 
 import cloudflight.integra.backend.domain.dtos.ApiErrorResponse;
+import cloudflight.integra.backend.exception.CityNotFoundException;
+import cloudflight.integra.backend.exception.UpdateCityException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -61,5 +63,32 @@ public class GlobalExceptionHandler {
             .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @ExceptionHandler(CityNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleCityNotFound(CityNotFoundException ex,HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Resource not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+
+    }
+
+    @ExceptionHandler(UpdateCityException.class)
+    public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(UpdateCityException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(Map.of("400", "Invalid input provided"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
