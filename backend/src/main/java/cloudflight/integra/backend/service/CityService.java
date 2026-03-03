@@ -1,6 +1,7 @@
 package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exception.CityNotFoundException;
+import cloudflight.integra.backend.exception.UpdateCityException;
 import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.CityStatus;
 import cloudflight.integra.backend.model.dtos.CityDto;
@@ -45,7 +46,7 @@ public class CityService {
     @Transactional
     public CityDto updateCity(UUID id, UpdateCityDto inputCity) {
         if (isStringEmpty(inputCity.getDescription()) && isStringEmpty(inputCity.getImageUrl())) {
-            throw new IllegalArgumentException("At least one field (description or imageUrl) must be provided for update.");
+            throw new UpdateCityException("At least one field (description or imageUrl) must be provided for update.");
         }
         Optional<City> optionalCity = cityRepository.findById(id);
         if (optionalCity.isPresent()) {
