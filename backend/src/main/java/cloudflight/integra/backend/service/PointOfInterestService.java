@@ -2,6 +2,7 @@ package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
+import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PointOfInterestService {
     private final PointOfInterestRepository pointOfInterestRepository;
+    private final CityRepository cityRepository;
 
     @Transactional
     public PointOfInterest save(PointOfInterest newPointOfInterest) {

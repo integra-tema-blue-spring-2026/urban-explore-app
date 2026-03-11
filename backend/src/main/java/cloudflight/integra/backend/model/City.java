@@ -3,6 +3,7 @@ package cloudflight.integra.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,4 +33,7 @@ public class City {
 
     @Enumerated(EnumType.STRING)
     private CityStatus status;
+
+    @OneToMany(mappedBy = "city")
+    private List<PointOfInterest> pointOfInterests;
 }

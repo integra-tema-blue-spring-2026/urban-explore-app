@@ -66,4 +66,15 @@ public class CityService {
         }
         cityRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public List<City> getCitiesByName(String name) {
+        List<City> cities = cityRepository.findByName(name);
+
+        if(cities.isEmpty()) {
+            throw new CityNotFoundException("No cities found with name: " + name);
+        }
+
+        return cities;
+    }
 }
