@@ -32,6 +32,7 @@ public class PointOfInterest {
     @Column(nullable = false)
     private PointOfInterestType type;
 
-    @Column(nullable = false)
-    private UUID cityId;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 }
