@@ -12,21 +12,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CityMapper {
 
-    public City toEntity(CityDto cityDto) {
-        if (cityDto == null) {
-            return null;
-        }
-        return City.builder()
-            .id(cityDto.getId())
-            .name(cityDto.getName())
-            .country(cityDto.getCountry())
-            .description(cityDto.getDescription())
-            .population(cityDto.getPopulation())
-            .imageUrl(cityDto.getImageUrl())
-            .status(cityDto.getStatus())
-            .build();
-    }
-
     public CityDto toDto(City city) {
         if (city == null) {
             return null;
@@ -42,15 +27,13 @@ public class CityMapper {
             .build();
     }
 
-    public void updateEntity(UpdateCityDto dto, City existingCity) {
-        if (dto == null || existingCity == null) return;
-        if (dto.getDescription() != null && !dto.getDescription().isBlank()) {
-            existingCity.setDescription(dto.getDescription());
-        }
-        if (dto.getImageUrl() != null && !dto.getImageUrl().isBlank()) {
-            existingCity.setImageUrl(dto.getImageUrl());
-        }
-        }
+    public City toEntity(UpdateCityDto dto) {
+        if (dto == null) return null;
+        return City.builder()
+            .description(dto.getDescription())
+            .imageUrl(dto.getImageUrl())
+            .build();
+    }
 
     public City toEntity(CreateCityDto dto) {
         if (dto == null) return null;
