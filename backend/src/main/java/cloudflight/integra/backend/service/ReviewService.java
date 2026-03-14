@@ -1,11 +1,11 @@
 package cloudflight.integra.backend.service;
 
-import cloudflight.integra.backend.exception.ReviewException;
+import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.Review;
-import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
-import cloudflight.integra.backend.model.dtos.ReviewDto;
-import cloudflight.integra.backend.model.dtos.ReviewUpdateDto;
-import cloudflight.integra.backend.model.mappers.ReviewMapper;
+import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
+import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j

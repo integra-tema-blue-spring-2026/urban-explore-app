@@ -1,8 +1,8 @@
 package cloudflight.integra.backend.controller;
 
-import cloudflight.integra.backend.model.dtos.ReviewCreateDto;
-import cloudflight.integra.backend.model.dtos.ReviewDto;
-import cloudflight.integra.backend.model.dtos.ReviewUpdateDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
 import cloudflight.integra.backend.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

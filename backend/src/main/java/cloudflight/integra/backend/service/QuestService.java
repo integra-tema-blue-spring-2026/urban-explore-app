@@ -1,0 +1,46 @@
+package cloudflight.integra.backend.service;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import cloudflight.integra.backend.model.Quest;
+import cloudflight.integra.backend.repository.QuestRepository;
+
+import cloudflight.integra.backend.exceptions.custom.QuestNotFoundException;
+
+@Service
+public class QuestService {
+    private final QuestRepository questRepo;
+
+    public QuestService(QuestRepository questRepo){ this.questRepo = questRepo; }
+
+    public List<Quest> getAllQuests(){
+        return questRepo.findAll();
+    }
+
+    public Quest findById(UUID id){
+        return questRepo.findById(id).orElseThrow(() ->
+            new QuestNotFoundException("Quest with ID " + id + " not found"));
+    }
+
+    public Quest create(Quest quest){
+        return questRepo.save(quest);
+    }
+
+    public void delete(UUID id){
+        if (!questRepo.existsById(id)){
+            throw new QuestNotFoundException("Quest with ID " + id + " not found");
+        }
+        questRepo.deleteById(id);
+    }
+
+    public Quest update(UUID id, Quest quest) {
+        if (!questRepo.existsById(id)) {
+            throw new QuestNotFoundException("Quest with ID " + id + " not found");
+        }
+        quest.setId(id);
+        return questRepo.save(quest);
+    }
+}

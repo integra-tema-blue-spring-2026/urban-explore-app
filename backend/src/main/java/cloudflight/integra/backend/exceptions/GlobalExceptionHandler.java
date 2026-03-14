@@ -1,8 +1,8 @@
 package cloudflight.integra.backend.exceptions;
 
-import cloudflight.integra.backend.domain.dtos.ApiErrorResponse;
-import cloudflight.integra.backend.exception.CityNotFoundException;
-import cloudflight.integra.backend.exception.UpdateCityException;
+import cloudflight.integra.backend.model.dtos.ApiErrorResponse;
+import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

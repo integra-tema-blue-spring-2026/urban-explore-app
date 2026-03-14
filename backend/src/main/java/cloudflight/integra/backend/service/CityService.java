@@ -1,13 +1,13 @@
 package cloudflight.integra.backend.service;
 
-import cloudflight.integra.backend.exception.CityNotFoundException;
-import cloudflight.integra.backend.exception.UpdateCityException;
+import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import cloudflight.integra.backend.model.City;
-import cloudflight.integra.backend.model.CityStatus;
-import cloudflight.integra.backend.model.dtos.CityDto;
-import cloudflight.integra.backend.model.dtos.CreateCityDto;
-import cloudflight.integra.backend.model.dtos.UpdateCityDto;
-import cloudflight.integra.backend.model.mappers.CityMapper;
+import cloudflight.integra.backend.model.utils.enums.CityStatus;
+import cloudflight.integra.backend.model.dtos.city.CityDto;
+import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
+import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
+import cloudflight.integra.backend.model.utils.mappers.CityMapper;
 import cloudflight.integra.backend.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

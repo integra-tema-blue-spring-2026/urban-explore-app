@@ -1,6 +1,6 @@
 package cloudflight.integra.backend.service;
 
-import cloudflight.integra.backend.domain.User;
+import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,7 +28,7 @@ public class UsersService{
         return repository.save(t);
     }
 
-    
+
     @Transactional
     public void delete(UUID id) {
         repository.deleteById(id);
