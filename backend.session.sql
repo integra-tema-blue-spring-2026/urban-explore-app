@@ -1,3 +1,2 @@
-SELECT * FROM quests
-
+SELECT * FROM cities;
 
