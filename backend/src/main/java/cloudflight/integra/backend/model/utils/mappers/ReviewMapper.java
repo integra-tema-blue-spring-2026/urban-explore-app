@@ -3,22 +3,13 @@ package cloudflight.integra.backend.model.utils.mappers;
 import cloudflight.integra.backend.model.Review;
 import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewDto;
+import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ReviewMapper {
-    public Review toEntity(ReviewDto reviewDto) {
-        return Review.builder()
-            .id(reviewDto.getId())
-            .text(reviewDto.getText())
-            .rating(reviewDto.getRating())
-            .postedDate(reviewDto.getPostedDate())
-            .userId(reviewDto.getUserId())
-            .poiId(reviewDto.getPoiId())
-            .build();
-    }
 
     public ReviewDto toDto(Review review) {
         return ReviewDto.builder()
@@ -37,6 +28,14 @@ public class ReviewMapper {
             .rating(reviewDto.getRating())
             .userId(reviewDto.getUserId())
             .poiId(reviewDto.getPoiId())
+            .build();
+    }
+
+    public Review toEntityFromUpdateDto(ReviewUpdateDto reviewDto) {
+        if (reviewDto == null) return null;
+        return Review.builder()
+            .text(reviewDto.getText())
+            .rating(reviewDto.getRating())
             .build();
     }
 }

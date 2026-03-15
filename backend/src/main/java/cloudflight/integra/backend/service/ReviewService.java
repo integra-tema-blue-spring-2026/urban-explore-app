@@ -2,10 +2,6 @@ package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.Review;
-import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
-import cloudflight.integra.backend.model.dtos.review.ReviewDto;
-import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
-import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,34 +17,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final ReviewMapper reviewMapper;
 
-    public ReviewDto createReview(ReviewCreateDto reviewDto) {
-        Review review = reviewMapper.toEntityFromCreateDto(reviewDto);
-
-        review.setPostedDate(LocalDateTime.now());
-
-        Review savedReview = reviewRepository.save(review);
-        return reviewMapper.toDto(savedReview);
+    public Review createReview(Review inputReview) {
+        inputReview.setPostedDate(LocalDateTime.now());
+        return reviewRepository.save(inputReview);
     }
 
-    public List<ReviewDto> getAllReviews() {
-        List<Review> reviews=reviewRepository.findAll();
-        return reviews.stream()
-            .map(reviewMapper::toDto)
-            .toList();
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
     }
 
     @Transactional
-    public ReviewDto updateReview(UUID id, ReviewUpdateDto reviewDto) {
-        Review existingReview=reviewRepository.findById(id).orElseThrow(()-> new ReviewException("Review with id: "+ id + " not found"));
+    public Review updateReview(UUID id, Review inputReview) {
+        Review existingReview=reviewRepository.findById(id).orElseThrow(
+            ()-> new ReviewException("Review with id: "+ id + " not found"));
 
-        existingReview.setText(reviewDto.getText());
+        existingReview.setText(inputReview.getText());
+        existingReview.setRating(inputReview.getRating());
 
-        existingReview.setRating(reviewDto.getRating());
-
-        Review updatedReview=reviewRepository.save(existingReview);
-        return reviewMapper.toDto(updatedReview);
+        return reviewRepository.save(existingReview);
     }
 
     @Transactional
