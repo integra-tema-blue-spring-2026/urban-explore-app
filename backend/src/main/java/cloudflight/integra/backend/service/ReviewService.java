@@ -33,7 +33,7 @@ public class ReviewService {
             ()-> new ReviewException("Review with id: "+ id + " not found"));
 
         existingReview.setText(inputReview.getText());
-        existingReview.setRating(inputReview.getRating());
+        existingReview.setRating(inputReview.getRating() == null ? existingReview.getRating() : inputReview.getRating());
 
         return reviewRepository.save(existingReview);
     }

@@ -39,8 +39,8 @@ public class CityService {
         Optional<City> existingCityOpt = cityRepository.findById(id);
         if (existingCityOpt.isPresent()) {
             City existingCity = existingCityOpt.get();
-            existingCity.setDescription(inputCity.getDescription());
-            existingCity.setImageUrl(inputCity.getImageUrl());
+            existingCity.setDescription(inputCity.getDescription() == null ? existingCity.getDescription() : inputCity.getDescription());
+            existingCity.setImageUrl(inputCity.getImageUrl() == null ? existingCity.getImageUrl() : inputCity.getImageUrl());
             return cityRepository.save(existingCity);
         } else {
             throw new CityNotFoundException("City not found with id: " + id);

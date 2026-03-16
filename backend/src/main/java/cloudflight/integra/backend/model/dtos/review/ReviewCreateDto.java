@@ -18,6 +18,7 @@ public class ReviewCreateDto {
 
     @Min(1)
     @Max(5)
+    @NotNull(message = "Review must have a rating between 1 and 5")
     private Integer rating;
 
     @NotNull(message = "Review must have an user ID")
