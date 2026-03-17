@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {City} from '../model/city.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {PointOfInterest, PointOfInterestFilter} from '../model/point-of-interest.model';
 
 @Injectable({
@@ -13,16 +13,16 @@ export class CityService {
   constructor(private httpClient: HttpClient) {}
 
   getCitiesWithName(name: string): Observable<City[]> {
-    if(name === '' || name === null || name === undefined) {
-      throw new Error('Name must not be empty');
+    if(!name.trim()) {
+      return throwError(() => new Error('Name must not be empty'));
     }
 
     return this.httpClient.get<City[]>(`${this.apiPath}/${name}`);
   }
 
   getPointsOfInterestFromCitiesWithName(name: string, filter: PointOfInterestFilter = {}): Observable<PointOfInterest[]> {
-    if(name === '' || name === null || name === undefined) {
-      throw new Error('Name must not be empty');
+    if(!name.trim()) {
+      return throwError(() => new Error('Name must not be empty'));
     }
 
     let params = new HttpParams();

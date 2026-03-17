@@ -36,5 +36,7 @@ public class City {
     private CityStatus status;
 
     @OneToMany(mappedBy = "city")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<PointOfInterest> pointOfInterests;
 }
