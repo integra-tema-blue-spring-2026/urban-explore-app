@@ -1,19 +1,12 @@
 package cloudflight.integra.backend.model.utils.mappers;
 
-import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
-import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
-import cloudflight.integra.backend.repository.CityRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class PointOfInterestMapper {
-
-    private final CityRepository cityRepository;
 
     public PointOfInterestResponseDto toDto(PointOfInterest entity) {
         return new PointOfInterestResponseDto(
@@ -22,22 +15,18 @@ public class PointOfInterestMapper {
             entity.getDescription(),
             entity.getAddress(),
             entity.getType(),
-            entity.getCity().getId()
+            entity.getCityId()
         );
     }
 
     public PointOfInterest toEntity(PointOfInterestRequestDto dto) {
-        City city = cityRepository.findById(dto.getCityId()).orElseThrow(
-            () -> new CityNotFoundException("City with id " + dto.getCityId() + " not found")
-        );
-
         return new PointOfInterest(
             null,
             dto.getName(),
             dto.getDescription(),
             dto.getAddress(),
             dto.getType(),
-            city
+            dto.getCityId()
         );
     }
 }
