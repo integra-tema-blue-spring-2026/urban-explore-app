@@ -1,6 +1,6 @@
 package cloudflight.integra.backend.service;
 
-import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
+import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;

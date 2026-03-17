@@ -1,6 +1,5 @@
 package cloudflight.integra.backend.model;
 
-import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

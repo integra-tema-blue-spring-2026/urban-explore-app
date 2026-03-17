@@ -1,10 +1,10 @@
 package cloudflight.integra.backend.controller;
 
-import cloudflight.integra.backend.model.User;
-import cloudflight.integra.backend.model.dtos.user.UserCreateDto;
-import cloudflight.integra.backend.model.dtos.user.UserUpdateDto;
-import cloudflight.integra.backend.model.dtos.user.UserViewDto;
-import cloudflight.integra.backend.model.utils.mappers.rules.UserMappingRules;
+import cloudflight.integra.backend.domain.User;
+import cloudflight.integra.backend.domain.dtos.UserCreateDto;
+import cloudflight.integra.backend.domain.dtos.UserUpdateDto;
+import cloudflight.integra.backend.domain.dtos.UserViewDto;
+import cloudflight.integra.backend.domain.utils.UserMappingRules;
 import cloudflight.integra.backend.service.UsersService;
 import cloudflight.integra.backend.service.utils.Mapper;
 import jakarta.validation.Valid;

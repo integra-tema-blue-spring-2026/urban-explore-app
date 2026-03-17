@@ -1,9 +1,9 @@
 package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.PointOfInterest;
-import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
-import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
-import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
+import cloudflight.integra.backend.model.dtos.PointOfInterestRequestDto;
+import cloudflight.integra.backend.model.dtos.PointOfInterestResponseDto;
+import cloudflight.integra.backend.model.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
