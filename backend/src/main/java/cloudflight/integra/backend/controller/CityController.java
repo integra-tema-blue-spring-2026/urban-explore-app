@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/cities")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class CityController {
     private final CityService cityService;
