@@ -3,12 +3,13 @@ import { PoiService } from '../../core/services/poi';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { poi } from '../../core/utils/Poi-interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-poi',
   templateUrl: './poi.html',
   standalone: true, 
-  imports: [ReactiveFormsModule, CommonModule] 
+  imports: [ReactiveFormsModule, CommonModule, RouterLink] 
 })
 export class Poi implements OnInit {
   pois: poi[] = [];
@@ -56,18 +57,10 @@ export class Poi implements OnInit {
 
   savePoi() {
     if (!this.poiForm.valid) return;
-    if (this.editingId) {
-      this.poiService.updatePoi(this.editingId, this.poiForm.value as poi).subscribe(() => {
-        this.editingId = null;
-        this.loadPois();
-        this.poiForm.reset();
-      });
-    } else {
       this.poiService.addPoi(this.poiForm.value as poi).subscribe(() => {
         this.loadPois();
         this.poiForm.reset();
       });
-    }
   }
 
   onDelete(id: string | undefined) {1

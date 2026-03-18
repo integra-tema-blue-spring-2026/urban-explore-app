@@ -1,0 +1,91 @@
+<div style="max-width: 600px; margin: 40px auto; padding: 0 20px; font-family: sans-serif;">
+
+  <a (click)="goBack()" style="font-size: 14px; color: #374151; cursor: pointer; text-decoration: none;">
+    ← Back
+  </a>
+
+  <div *ngIf="poi">
+
+    <!-- Name -->
+    <div style="margin: 16px 0 4px 0; display: flex; align-items: center; gap: 8px;">
+      <ng-container *ngIf="editingField === 'name'; else showName">
+        <input [(ngModel)]="editingValue"
+          style="font-size: 32px; font-weight: 700; border: 2px solid #7c3aed; border-radius: 6px; padding: 2px 8px; width: 100%;">
+        <button (click)="saveEdit()" style="padding: 4px 10px; background: #7c3aed; color: white; border: none; border-radius: 5px; cursor: pointer;">✓</button>
+        <button (click)="cancelEdit()" style="padding: 4px 10px; background: #e5e7eb; border: none; border-radius: 5px; cursor: pointer;">✕</button>
+      </ng-container>
+      <ng-template #showName>
+        <h1 style="font-size: 32px; font-weight: 700; margin: 0;">{{ poi.name }}</h1>
+        <button (click)="startEdit('name', poi.name)"
+          style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 5px; padding: 3px 10px; cursor: pointer; font-size: 12px; color: #6b7280;">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Address -->
+    <div style="margin: 0 0 20px 0; display: flex; align-items: center; gap: 8px;">
+      <ng-container *ngIf="editingField === 'address'; else showAddress">
+        <input [(ngModel)]="editingValue"
+          style="font-size: 14px; border: 2px solid #7c3aed; border-radius: 6px; padding: 4px 8px; width: 100%;">
+        <button (click)="saveEdit()" style="padding: 4px 10px; background: #7c3aed; color: white; border: none; border-radius: 5px; cursor: pointer;">✓</button>
+        <button (click)="cancelEdit()" style="padding: 4px 10px; background: #e5e7eb; border: none; border-radius: 5px; cursor: pointer;">✕</button>
+      </ng-container>
+      <ng-template #showAddress>
+        <p style="color: #6b7280; margin: 0;">{{ poi.address }}</p>
+        <button (click)="startEdit('address', poi.address)"
+          style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 5px; padding: 3px 10px; cursor: pointer; font-size: 12px; color: #6b7280;">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Placeholder image -->
+    <div style="width: 100%; height: 220px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 28px;">
+      <span style="font-size: 64px;">📍</span>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e5e7eb; margin-bottom: 20px;">
+
+    <!-- About / Description -->
+    <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 8px 0;">About</h3>
+    <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+      <ng-container *ngIf="editingField === 'description'; else showDescription">
+        <textarea [(ngModel)]="editingValue"
+          style="font-size: 14px; border: 2px solid #7c3aed; border-radius: 6px; padding: 4px 8px; width: 100%; min-height: 80px;"></textarea>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <button (click)="saveEdit()" style="padding: 4px 10px; background: #7c3aed; color: white; border: none; border-radius: 5px; cursor: pointer;">✓</button>
+          <button (click)="cancelEdit()" style="padding: 4px 10px; background: #e5e7eb; border: none; border-radius: 5px; cursor: pointer;">✕</button>
+        </div>
+      </ng-container>
+      <ng-template #showDescription>
+        <p style="color: #6b7280; font-size: 14px; margin: 0; flex: 1;">{{ poi.description }}</p>
+        <button (click)="startEdit('description', poi.description)"
+          style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 5px; padding: 3px 10px; cursor: pointer; font-size: 12px; color: #6b7280;">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Type -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <ng-container *ngIf="editingField === 'type'; else showType">
+        <input [(ngModel)]="editingValue"
+          style="font-size: 13px; border: 2px solid #7c3aed; border-radius: 6px; padding: 4px 8px;">
+        <button (click)="saveEdit()" style="padding: 4px 10px; background: #7c3aed; color: white; border: none; border-radius: 5px; cursor: pointer;">✓</button>
+        <button (click)="cancelEdit()" style="padding: 4px 10px; background: #e5e7eb; border: none; border-radius: 5px; cursor: pointer;">✕</button>
+      </ng-container>
+      <ng-template #showType>
+        <p style="color: #9ca3af; font-size: 13px; margin: 0;">{{ poi.type }}</p>
+        <button (click)="startEdit('type', poi.type)"
+          style="background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 5px; padding: 3px 10px; cursor: pointer; font-size: 12px; color: #6b7280;">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #e5e7eb; margin-top: 20px;">
+  </div>
+
+</div>
