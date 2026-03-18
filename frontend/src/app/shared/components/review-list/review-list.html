@@ -1,0 +1,48 @@
+<section class="review-list-card">
+  <div class="review-list-header">
+    <div>
+      <h3>Reviews</h3>
+      <p class="review-list-count">{{ reviews.length }} reviews</p>
+    </div>
+    <button class="write-review-button" type="button" (click)="createReview.emit()">
+      {{ isWriting ? 'Cancel' : 'Write review' }}
+    </button>
+  </div>
+
+  @if (!isWriting) {
+    @if (isLoading) {
+      <p class="review-state">Loading reviews...</p>
+    } @else if (reviews.length === 0) {
+      <p class="review-state">No reviews found yet. Add the first one.</p>
+    } @else {
+      <div class="review-list-grid">
+        @for (review of reviews; track review.id) {
+          <article class="review-card">
+            <div class="review-card-head">
+              <div class="review-author-block">
+                <span class="review-avatar">{{ review.userId }}</span>
+                <div>
+                  <p class="review-author">User {{ review.userId }}</p>
+                  <p class="review-date">{{ formatPostedDate(review.postedDate) }}</p>
+                </div>
+              </div>
+              <div class="review-toolbar">
+                <div class="review-rating-row">
+                  <span class="review-rating">{{ review.rating }}<img src="/star.png" alt="Star"></span>
+                </div>
+                <div class="review-actions-row">
+                  <button class="icon-button" type="button" (click)="editReview.emit(review)"><img src="/edit.png" alt="Edit"></button>
+                  <button class="icon-button" type="button" (click)="deleteReview.emit(review)"><img src="/delete.png" alt="Delete"></button>
+                </div>
+              </div>
+            </div>
+            <p class="review-text">{{ review.text }}</p>
+            <div class="review-context-row">
+              <span>POI {{ review.poiId }}</span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

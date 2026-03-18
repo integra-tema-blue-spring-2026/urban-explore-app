@@ -1,0 +1,160 @@
+.review-list-card {
+  padding: 0;
+  color: #1a1a1a;
+}
+
+.review-list-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+}
+
+.review-list-header h3 {
+  margin: 0;
+  font-size: 2.50rem;
+  font-weight: 650;
+}
+
+.review-list-count {
+  margin: 0.2rem 0 0;
+  color: #6a6a6a;
+  font-size: 1.50rem;
+}
+
+.write-review-button {
+  border: 0;
+  border-radius: 5px;
+  padding: 0.55rem 0.9rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: #665ac2;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.review-state {
+  margin: 1rem 0 0;
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #cfcfcf;
+  background: #f4f4f4;
+}
+
+.review-list-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+
+.review-card {
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #b8b8b8;
+  background: #f5f5f5;
+}
+
+.review-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.review-author-block {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: space-between;
+  font-size: 2rem;
+  color: #6c5600;
+}
+
+.review-toolbar img {
+  width: 30px;
+  height: 30px;
+}
+
+.review-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #929292;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.review-author {
+    margin: 0;
+    font-size: 1.50rem;
+}
+
+.review-date,
+.review-context-row {
+  margin: 0;
+  font-size: 1.00rem;
+  color: #666666;
+}
+
+.review-author {
+  font-weight: 600;
+}
+
+.review-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.review-rating-row,
+.review-actions-row {
+  display: flex;
+  align-items: center;
+}
+
+.review-actions-row {
+  gap: 0.35rem;
+}
+
+.icon-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.review-text {
+  margin: 0.45rem 0;
+  color: #242424;
+  font-size: 1.75rem;
+}
+
+@media (max-width: 720px) {
+  .review-list-header,
+  .review-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .review-toolbar {
+    align-items: flex-start;
+  }
+
+  .write-review-button {
+    width: 100%;
+  }
+}

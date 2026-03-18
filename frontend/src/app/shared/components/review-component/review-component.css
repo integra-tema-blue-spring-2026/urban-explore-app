@@ -1,0 +1,15 @@
+* {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.review-shell {
+	display: grid;
+	gap: 0.9rem;
+	align-items: start;
+
+}
+
+.review-shell app-review-form {
+	display: block;
+}
