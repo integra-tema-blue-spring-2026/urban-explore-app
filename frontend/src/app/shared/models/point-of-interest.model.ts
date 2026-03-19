@@ -4,7 +4,7 @@ export enum PointOfInterestType {
   CAFE = 'CAFE',
 }
 
-export type PointOfInterest = {
+export interface PointOfInterest {
   id: string;
   name: string;
   description: string;
@@ -13,7 +13,7 @@ export type PointOfInterest = {
   cityId: string;
 }
 
-export type PointOfInterestFilter = {
+export interface PointOfInterestFilter {
   name?: string;
   description?: string;
 }

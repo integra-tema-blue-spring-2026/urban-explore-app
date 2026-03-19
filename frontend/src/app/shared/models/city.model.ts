@@ -3,7 +3,7 @@ export enum CityStatus {
   APPROVED = 'APPROVED',
 }
 
-export type City = {
+export interface City {
   id: string;
   name: string;
   country: string;

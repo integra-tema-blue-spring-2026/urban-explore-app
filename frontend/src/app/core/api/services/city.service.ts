@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
-import {City} from '../model/city.model';
+import {City} from '../../../shared/models/city.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {PointOfInterest, PointOfInterestFilter} from '../model/point-of-interest.model';
+import {PointOfInterest, PointOfInterestFilter} from '../../../shared/models/point-of-interest.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CityService {
-  private apiPath = 'http://localhost:8080/api/cities';
+  private apiPath = '/api/cities';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -17,7 +17,7 @@ export class CityService {
       return throwError(() => new Error('Name must not be empty'));
     }
 
-    return this.httpClient.get<City[]>(`${this.apiPath}/${name}`);
+    return this.httpClient.get<City[]>(`${this.apiPath}/${encodeURIComponent(name)}`);
   }
 
   getPointsOfInterestFromCitiesWithName(name: string, filter: PointOfInterestFilter = {}): Observable<PointOfInterest[]> {
@@ -29,9 +29,11 @@ export class CityService {
     if (filter.name) {
       params = params.set('poiName', filter.name);
     }
+
     if (filter.description) {
       params = params.set('poiDescription', filter.description);
     }
-    return this.httpClient.get<PointOfInterest[]>(`${this.apiPath}/${name}/pois`, { params });
+
+    return this.httpClient.get<PointOfInterest[]>(`${this.apiPath}/${encodeURIComponent(name)}/pois`, { params });
   }
 }
