@@ -42,7 +42,8 @@ public class PointOfInterestService {
     @Transactional
     public PointOfInterest update(PointOfInterest updatedPointOfInterest) {
         if(!pointOfInterestRepository.existsById(updatedPointOfInterest.getId())) {
-            throw new PointOfInterestNotFoundException("PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
+            throw new PointOfInterestNotFoundException(
+                "PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
         }
 
         if (!cityRepository.existsById(updatedPointOfInterest.getCity().getId())){

@@ -60,11 +60,10 @@ public class CityController {
 
     @GetMapping("/{name}/pois")
     @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getPointsOfInterestFromCityWithName
-        (@PathVariable String name,
-         @RequestParam(required = false) String poiDescription,
-         @RequestParam(required = false) String poiName
-        ) {
+    public List<PointOfInterestResponseDto> getPointsOfInterestFromCityWithName(
+        @PathVariable String name,
+        @RequestParam(required = false) String poiDescription,
+        @RequestParam(required = false) String poiName) {
 
         Predicate<PointOfInterest> filter = poi -> true;
 
