@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReviewFormComponent } from '../review-form/review-form';
 import { ReviewListComponent } from '../review-list/review-list';
@@ -15,7 +15,8 @@ import { ReviewController } from '../../service/review-controller';
 })
 export class ReviewComponent {
   @Input() poiId: string | null = null;
-  
+  @Input() userId: string | null = null;
+
   reviews: ReviewDto[] = [];
   selectedReview: ReviewDto | null = null;
   showForm = false;
@@ -36,12 +37,41 @@ export class ReviewComponent {
   }
 
   ngOnInit() {
-    if (this.poiId) {
-      this.reviewForm.patchValue({ poiId: parseInt(this.poiId) });
-    }
+    this.applyParentPoiIdToForm();
+    this.applyCurrentUserIdToForm();
     this.loadReviews();
   }
 
+  private parseParentPoiId(): number | null {
+    if (this.poiId === null) {
+      return null;
+    }
+
+    const parsedPoiId = Number(this.poiId);
+    return Number.isInteger(parsedPoiId) && parsedPoiId > 0 ? parsedPoiId : null;
+  }
+
+  private applyParentPoiIdToForm(): void {
+    const parentPoiId = this.parseParentPoiId();
+
+    if (parentPoiId === null) {
+      this.reviewForm.controls.poiId.enable();
+      return;
+    }
+
+    this.reviewForm.patchValue({ poiId: parentPoiId });
+    this.reviewForm.controls.poiId.enable();
+  }
+
+  private applyCurrentUserIdToForm(): void {
+    if (this.userId === null) {
+      this.reviewForm.controls.userId.enable();
+      return;
+    }
+
+    this.reviewForm.patchValue({ userId: Number(this.userId) });
+    this.reviewForm.controls.userId.disable();
+  }
   loadReviews(): void {
     this.isLoading = true;
     this.reviewController.getReviews().subscribe({
@@ -119,7 +149,7 @@ export class ReviewComponent {
       poiId: review.poiId,
     });
     this.reviewForm.controls.userId.disable();
-    this.reviewForm.controls.poiId.disable(); // Always disable when editing
+    this.reviewForm.controls.poiId.disable();
     this.reviewForm.markAsPristine();
   }
 
@@ -127,15 +157,9 @@ export class ReviewComponent {
     this.selectedReview = null;
     this.showForm = false;
     this.reviewForm.reset();
-    this.reviewForm.controls.userId.enable();
-    
-    // If POI ID was provided via @Input, disable it; otherwise enable it
-    if (this.poiId) {
-      this.reviewForm.patchValue({ poiId: parseInt(this.poiId) });
-      this.reviewForm.controls.poiId.disable();
-    } else {
-      this.reviewForm.controls.poiId.enable();
-    }
+
+    this.applyCurrentUserIdToForm();
+    this.applyParentPoiIdToForm();
     
     this.reviewForm.markAsPristine();
   }
@@ -148,19 +172,12 @@ export class ReviewComponent {
 
     this.selectedReview = null;
     this.showForm = true;
-    
-    const currentPoiId = this.reviewForm.controls.poiId.value;
+
     this.reviewForm.reset();
+
+    this.applyParentPoiIdToForm();
+    this.applyCurrentUserIdToForm();
     
-    // If POI ID was provided via @Input, disable it and restore it
-    if (this.poiId) {
-      this.reviewForm.patchValue({ poiId: parseInt(this.poiId) });
-      this.reviewForm.controls.poiId.disable();
-    } else {
-      this.reviewForm.controls.poiId.enable();
-    }
-    
-    this.reviewForm.controls.userId.enable();
     this.reviewForm.markAsPristine();
   }
 

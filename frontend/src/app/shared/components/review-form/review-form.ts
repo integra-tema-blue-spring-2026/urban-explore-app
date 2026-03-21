@@ -11,7 +11,6 @@ export class ReviewFormComponent {
   @Input({ required: true }) form!: FormGroup;
   @Input() isWriting = false;
   @Input() isSubmitting = false;
-  @Input() knownPoiIds: number[] = [];
   @Output() submitReview = new EventEmitter<void>();
   @Output() cancelEdit = new EventEmitter<void>();
 

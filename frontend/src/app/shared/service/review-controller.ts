@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReviewDto } from '../models/reviewDto';
@@ -8,10 +8,8 @@ import { ReviewUpdateDto } from '../models/reviewUpdateDto';
   providedIn: 'root',
 })
 export class ReviewController {
+  private http = inject(HttpClient);
   private readonly apiUrl = '/api/reviews';
-
-    constructor(private http: HttpClient) {
-    }
 
     public addReview(review: ReviewCreateDto): Observable<ReviewDto> {
       return this.http.post<ReviewDto>(this.apiUrl, review);
