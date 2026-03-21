@@ -56,17 +56,24 @@ export class Poi implements OnInit {
   }
 
   savePoi() {
-    if (!this.poiForm.valid) return;
-      this.poiService.addPoi(this.poiForm.value as poi).subscribe(() => {
-        this.loadPois();
-        this.poiForm.reset();
-      });
-  }
+    if (!this.poiForm.valid) {
+      this.poiForm.markAllAsTouched(); 
+      return;
+    }
+    this.poiService.addPoi(this.poiForm.value as poi).subscribe(() => {
+      this.loadPois();
+      this.poiForm.reset();
+      alert('POI added successfully!');
+    });
+}
 
-  onDelete(id: string | undefined) {1
+  onDelete(id: string | undefined) {
     if (!id) return;
-    if (confirm('Are you sure?')) {
-      this.poiService.deletePoi(id).subscribe(() => this.loadPois());
+    if (confirm('Are you sure you want to delete this POI?')) {
+      this.poiService.deletePoi(id).subscribe(() => {
+        this.loadPois();
+        alert('POI deleted successfully!');
+      });
+    }
   }
- }
 }

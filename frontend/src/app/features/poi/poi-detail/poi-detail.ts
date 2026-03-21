@@ -40,12 +40,13 @@ export class PoiDetail implements OnInit {
 
   saveEdit() {
     if (!this.poi || !this.editingField) return;
-    (this.poi as any)[this.editingField] = this.editingValue; 
+    (this.poi as any)[this.editingField] = this.editingValue;
     this.editingField = null;
     this.poiService.updatePoi(this.poi.id!, this.poi).subscribe(() => {
+      alert('POI updated successfully!');
       this.cdr.detectChanges();
     });
-  }
+}
 
   cancelEdit() {
     this.editingField = null;
