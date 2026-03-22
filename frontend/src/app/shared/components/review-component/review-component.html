@@ -6,6 +6,7 @@
 		[isLoading]="isLoading"
 		[isWriting]="showForm"
 		(createReview)="openCreateForm()"
+		(cancelEdit)="cancelEdit()"
 		(editReview)="startEdit($event)"
 		(deleteReview)="deleteReview($event)"
 	/>

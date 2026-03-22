@@ -4,7 +4,7 @@
       <h3>Reviews</h3>
       <p class="review-list-count">{{ reviews.length }} reviews</p>
     </div>
-    <button class="write-review-button" type="button" (click)="createReview.emit()">
+    <button class="write-review-button" type="button" (click)="onWriteButtonClick()">
       {{ isWriting ? 'Cancel' : 'Write review' }}
     </button>
   </div>

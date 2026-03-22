@@ -11,8 +11,17 @@ export class ReviewListComponent {
   @Input() isLoading = false;
   @Input() isWriting = false;
   @Output() createReview = new EventEmitter<void>();
+  @Output() cancelEdit = new EventEmitter<void>();
   @Output() editReview = new EventEmitter<ReviewDto>();
   @Output() deleteReview = new EventEmitter<ReviewDto>();
+
+  onWriteButtonClick(): void {
+    if (this.isWriting) {
+      this.cancelEdit.emit();
+    } else {
+      this.createReview.emit();
+    }
+  }
 
   protected formatPostedDate(postedDate: string): string {
     const parsedDate = new Date(postedDate);

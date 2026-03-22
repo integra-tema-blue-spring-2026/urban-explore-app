@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReviewFormComponent } from '../review-form/review-form';
 import { ReviewListComponent } from '../review-list/review-list';
@@ -60,16 +60,27 @@ export class ReviewComponent {
     }
 
     this.reviewForm.patchValue({ poiId: parentPoiId });
-    this.reviewForm.controls.poiId.enable();
+    this.reviewForm.controls.poiId.disable();
+  }
+
+  private parseCurrentUserId(): number | null {
+    if (this.userId === null) {
+      return null;
+    }
+
+    const parsedUserId = Number(this.userId);
+    return Number.isInteger(parsedUserId) && parsedUserId > 0 ? parsedUserId : null;
   }
 
   private applyCurrentUserIdToForm(): void {
-    if (this.userId === null) {
+    const currentUserId = this.parseCurrentUserId();
+
+    if (currentUserId === null) {
       this.reviewForm.controls.userId.enable();
       return;
     }
 
-    this.reviewForm.patchValue({ userId: Number(this.userId) });
+    this.reviewForm.patchValue({ userId: currentUserId });
     this.reviewForm.controls.userId.disable();
   }
   loadReviews(): void {
@@ -198,5 +209,4 @@ export class ReviewComponent {
       },
     });
   }
-
 }
