@@ -1,8 +1,10 @@
 package cloudflight.integra.backend.controller;
 
-import cloudflight.integra.backend.model.dtos.CreateCityDto;
-import cloudflight.integra.backend.model.dtos.UpdateCityDto;
-import cloudflight.integra.backend.model.dtos.CityDto;
+import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
+import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
+import cloudflight.integra.backend.model.dtos.city.CityDto;
+import cloudflight.integra.backend.model.utils.mappers.CityMapper;
 import cloudflight.integra.backend.service.CityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +20,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CityController {
     private final CityService cityService;
+    private final CityMapper cityMapper;
+
 
     @GetMapping
     public List<CityDto> getAllCities() {
-        return cityService.getAllCities();
+        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
     }
 
     @PostMapping
     public CityDto createCity(@Valid @RequestBody CreateCityDto cityDto) {
-        return cityService.createCity(cityDto);
+        City createdCity =  cityService.createCity(cityMapper.toEntity(cityDto));
+        return cityMapper.toDto(createdCity);
     }
 
     @PutMapping("/{id}")
     public CityDto updateCity(@PathVariable UUID id, @Valid @RequestBody UpdateCityDto cityDto) {
-        return cityService.updateCity(id, cityDto);
+        City inputCity = cityMapper.toEntity(cityDto);
+        return cityMapper.toDto(cityService.updateCity(id, inputCity));
     }
 
     @DeleteMapping("/{id}")

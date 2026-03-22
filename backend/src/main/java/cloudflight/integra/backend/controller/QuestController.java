@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import cloudflight.integra.backend.quests.model.dto.CreateQuestDto;
-import cloudflight.integra.backend.quests.model.dto.QuestDto;
-import cloudflight.integra.backend.quests.service.QuestService;
-import cloudflight.integra.backend.utils.QuestMapper;
+import cloudflight.integra.backend.model.dtos.quest.CreateQuestDto;
+import cloudflight.integra.backend.model.dtos.quest.QuestDto;
+import cloudflight.integra.backend.service.QuestService;
+import cloudflight.integra.backend.model.utils.mappers.QuestMapper;
 import jakarta.validation.Valid;
 
 
@@ -58,5 +58,5 @@ public class QuestController {
     @DeleteMapping("/{id}")
     public void delete(@Valid @PathVariable UUID id){
         questService.delete(id);
-    } 
+    }
 }
