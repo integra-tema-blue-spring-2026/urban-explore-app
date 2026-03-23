@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {City} from '../../../shared/models/city.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
@@ -9,8 +9,7 @@ import {PointOfInterest, PointOfInterestFilter} from '../../../shared/models/poi
 })
 export class CityService {
   private apiPath = '/api/cities';
-
-  constructor(private httpClient: HttpClient) {}
+  private httpClient = inject(HttpClient);
 
   getCitiesWithName(name: string): Observable<City[]> {
     if(!name.trim()) {
