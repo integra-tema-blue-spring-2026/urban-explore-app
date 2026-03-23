@@ -39,8 +39,8 @@ public class UserController {
     public ResponseEntity<Set<UserViewDto>> getFollowers(@PathVariable UUID id) {
         return service.findById(id)
                 .map(user -> user.getFollowers().stream()
-                     .map(follower -> Mapper.toDto(follower, UserMappingRules.TO_DTO_RULE))
-                     .collect(Collectors.toSet()))
+                .map(follower -> Mapper.toDto(follower, UserMappingRules.TO_DTO_RULE))
+                .collect(Collectors.toSet()))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -49,8 +49,8 @@ public class UserController {
     public ResponseEntity<Set<UserViewDto>> getFollowing(@PathVariable UUID id) {
         return service.findById(id)
                 .map(user -> user.getFollowing().stream()
-                     .map(following -> Mapper.toDto(following, UserMappingRules.TO_DTO_RULE))
-                     .collect(Collectors.toSet()))
+                .map(following -> Mapper.toDto(following, UserMappingRules.TO_DTO_RULE))
+                .collect(Collectors.toSet()))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
