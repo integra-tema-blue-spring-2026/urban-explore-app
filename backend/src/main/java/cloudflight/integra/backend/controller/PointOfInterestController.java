@@ -22,7 +22,9 @@ public class PointOfInterestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PointOfInterestResponseDto savePointOfInterest(@Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+    public PointOfInterestResponseDto savePointOfInterest(
+        @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
@@ -46,7 +48,10 @@ public class PointOfInterestController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestResponseDto update(@PathVariable UUID id, @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+    public PointOfInterestResponseDto update(
+        @PathVariable UUID id,
+        @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+
         PointOfInterest updatedPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         updatedPointOfInterest.setId(id);
         PointOfInterest savedPointOfInterest = pointOfInterestService.update(updatedPointOfInterest);

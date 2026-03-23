@@ -38,7 +38,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(
+        DataIntegrityViolationException ex,
+        HttpServletRequest request) {
 
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
@@ -80,7 +82,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UpdateCityException.class)
-    public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(UpdateCityException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(
+        UpdateCityException ex,
+        HttpServletRequest request) {
+
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.BAD_REQUEST)

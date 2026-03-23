@@ -44,8 +44,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserViewDto> updateUser(@PathVariable UUID id,
-                                                  @Valid @RequestBody UserUpdateDto updateDto){
+    public ResponseEntity<UserViewDto> updateUser(
+        @PathVariable UUID id,
+        @Valid @RequestBody UserUpdateDto updateDto){
+
         User currentUser = service.findById(id).orElse(null);
         if(currentUser == null){
             return ResponseEntity.notFound().build();
