@@ -5,12 +5,28 @@ import cloudflight.integra.backend.model.utils.enums.CityStatus;
 import cloudflight.integra.backend.model.dtos.city.CityDto;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
 import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class CityMapper {
+
+    public City toEntity(CityDto cityDto) {
+        if (cityDto == null) {
+            return null;
+        }
+        return City.builder()
+            .id(cityDto.getId())
+            .name(cityDto.getName())
+            .country(cityDto.getCountry())
+            .description(cityDto.getDescription())
+            .population(cityDto.getPopulation())
+            .imageUrl(cityDto.getImageUrl())
+            .status(cityDto.getStatus())
+            .build();
+    }
 
     public CityDto toDto(City city) {
         if (city == null) {
