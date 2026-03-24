@@ -171,7 +171,6 @@ export class ReviewComponent {
 
     this.applyCurrentUserIdToForm();
     this.applyParentPoiIdToForm();
-    
     this.reviewForm.markAsPristine();
   }
 
@@ -188,7 +187,6 @@ export class ReviewComponent {
 
     this.applyParentPoiIdToForm();
     this.applyCurrentUserIdToForm();
-    
     this.reviewForm.markAsPristine();
   }
 
