@@ -34,13 +34,24 @@ public class CityService {
     @Transactional
     public City updateCity(UUID id, City inputCity) {
         if (isStringEmpty(inputCity.getDescription()) && isStringEmpty(inputCity.getImageUrl())) {
-            throw new UpdateCityException("At least one field (description or imageUrl) must be provided for update.");
+            throw new UpdateCityException(
+                "At least one field (description or imageUrl) must be provided for update.");
         }
         Optional<City> existingCityOpt = cityRepository.findById(id);
         if (existingCityOpt.isPresent()) {
             City existingCity = existingCityOpt.get();
-            existingCity.setDescription(inputCity.getDescription() == null ? existingCity.getDescription() : inputCity.getDescription());
-            existingCity.setImageUrl(inputCity.getImageUrl() == null ? existingCity.getImageUrl() : inputCity.getImageUrl());
+
+            existingCity.setDescription(
+                inputCity.getDescription() == null ?
+                    existingCity.getDescription() :
+                    inputCity.getDescription()
+            );
+
+            existingCity.setImageUrl(
+                inputCity.getImageUrl() == null ?
+                    existingCity.getImageUrl() :
+                    inputCity.getImageUrl()
+            );
             return cityRepository.save(existingCity);
         } else {
             throw new CityNotFoundException("City not found with id: " + id);
@@ -53,5 +64,16 @@ public class CityService {
             throw new CityNotFoundException("City not found with id: " + id);
         }
         cityRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<City> getCitiesByName(String name) {
+        List<City> cities = cityRepository.findByName(name);
+
+        if(cities.isEmpty()) {
+            throw new CityNotFoundException("No cities found with name: " + name);
+        }
+
+        return cities;
     }
 }
