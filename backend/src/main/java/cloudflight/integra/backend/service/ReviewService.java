@@ -18,14 +18,9 @@ import java.util.UUID;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    public ReviewDto createReview(ReviewCreateDto reviewDto) {
-
-        Review review = reviewMapper.toEntityFromCreateDto(reviewDto);
-
-        review.setPostedDate(LocalDateTime.now());
-
-        Review savedReview = reviewRepository.save(review);
-        return reviewMapper.toDto(savedReview);
+    public Review createReview(Review inputReview) {
+        inputReview.setPostedDate(LocalDateTime.now());
+        return reviewRepository.save(inputReview);
     }
 
     public List<Review> getAllReviews() {
