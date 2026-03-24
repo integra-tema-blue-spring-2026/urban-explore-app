@@ -3,9 +3,8 @@ package cloudflight.integra.backend.service;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
 import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import cloudflight.integra.backend.model.City;
-import cloudflight.integra.backend.model.CityStatus;
-import cloudflight.integra.backend.model.dtos.CityDto;
-import cloudflight.integra.backend.model.mappers.CityMapper;
+
+
 import cloudflight.integra.backend.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 public class CityService {
 
     private final CityRepository cityRepository;
-    private final CityMapper cityMapper;
 
     private boolean isStringEmpty(String str) {
         return str == null || str.isBlank();

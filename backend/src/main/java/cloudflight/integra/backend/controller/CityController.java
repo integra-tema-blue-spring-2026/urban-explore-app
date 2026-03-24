@@ -5,7 +5,7 @@ import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
 import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
 import cloudflight.integra.backend.model.dtos.city.CityDto;
-import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.mappers.CityMapper;
 import cloudflight.integra.backend.service.CityService;
