@@ -26,4 +26,5 @@ export class ReviewController {
     public getReviews(): Observable<ReviewDto[]> {
       return this.http.get<ReviewDto[]>(this.apiUrl);
     }
-}
+  }
+
