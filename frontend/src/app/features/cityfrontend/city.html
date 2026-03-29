@@ -39,8 +39,8 @@
       <td>{{ city.name }}</td>
       <td>{{ city.country }}</td>
       <td>
-          <span [class.status-approved]="city.status === 'APPROVED'"
-                [class.status-pending]="city.status !== 'APPROVED'">
+        <span [class.status-approved]="city.status === CityStatus.APPROVED"
+               [class.status-pending]="city.status !== CityStatus.APPROVED">
             {{ city.status }}
           </span>
       </td>

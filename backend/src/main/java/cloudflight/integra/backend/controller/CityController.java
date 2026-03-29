@@ -22,7 +22,6 @@ import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("/cities")
-@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 
 public class CityController {

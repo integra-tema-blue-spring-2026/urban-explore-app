@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {City} from '../../../shared/models/city.model';
+import {City, CreateCityRequest, UpdateCityRequest} from '../../../shared/models/city.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {PointOfInterest, PointOfInterestFilter} from '../../../shared/models/point-of-interest.model';
@@ -9,8 +9,6 @@ import {PointOfInterest, PointOfInterestFilter} from '../../../shared/models/poi
 })
 export class CityService {
   private apiPath = '/api/cities';
-  private readonly apiUrl = 'http://localhost:8080/api/cities';
-
   private httpClient = inject(HttpClient);
 
   getCitiesWithName(name: string): Observable<City[]> {
@@ -35,15 +33,15 @@ export class CityService {
       params = params.set('poiDescription', filter.description);
     }
 
-    return this.httpClient.get<PointOfInterest[]>(`${this.apiUrl}/${encodeURIComponent(name)}/pois`, { params });
+    return this.httpClient.get<PointOfInterest[]>(`${this.apiPath}/${encodeURIComponent(name)}/pois`, { params });
   }
   getCities(): Observable<City[]> {
     return this.httpClient.get<City[]>(this.apiPath);
   }
-  addCity(city: City): Observable<City> {
+  addCity(city: CreateCityRequest): Observable<City> {
     return this.httpClient.post<City>(this.apiPath, city);
   }
-  updateCity(id: string, city: City): Observable<City> {
+  updateCity(id: string, city: UpdateCityRequest): Observable<City> {
     return this.httpClient.put<City>(`${this.apiPath}/${id}`, city);
   }
   deleteCity(id: string): Observable<void> {
