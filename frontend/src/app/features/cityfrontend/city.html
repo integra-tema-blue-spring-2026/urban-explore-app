@@ -40,9 +40,9 @@
       <td>{{ city.country }}</td>
       <td>
         <span [class.status-approved]="city.status === CityStatus.APPROVED"
-               [class.status-pending]="city.status !== CityStatus.APPROVED">
+              [class.status-pending]="city.status !== CityStatus.APPROVED">
             {{ city.status }}
-          </span>
+        </span>
       </td>
       <td>{{ city.population | number }}</td>
       <td class="table-actions">
