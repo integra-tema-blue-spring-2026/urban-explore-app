@@ -67,7 +67,6 @@ public class CityController {
         @RequestParam(required = false) String poiName) {
 
         Predicate<PointOfInterest> filter = poi -> true;
-
         if(poiDescription != null) {
             filter = filter.and(poi -> poi.getDescription().contains(poiDescription));
         }
