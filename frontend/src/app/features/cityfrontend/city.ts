@@ -1,9 +1,9 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CityService } from '../../core/Service/CityFrontendService';
+import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { City } from '../../shared/models/CityFrontendModel';
+import { City, CityStatus } from '../../shared/models/city.model';
+
 
 @Component({
   selector: 'app-city',
@@ -21,7 +21,8 @@ export class CityComponent implements    OnInit {
     country: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     population: new FormControl(1, [Validators.required, Validators.min(1)]),
-    imageUrl: new FormControl('',Validators.required)
+    imageUrl: new FormControl('',Validators.required),
+
   });
 
   constructor(private cityService: CityService, private cdr: ChangeDetectorRef) {}

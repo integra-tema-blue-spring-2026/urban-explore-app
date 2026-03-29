@@ -1,10 +1,10 @@
 export enum CityStatus {
   PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
+  APPROVED = 'APPROVED'
 }
 
 export interface City {
-  id: string;
+  id?: string;
   name: string;
   country: string;
   description: string;
@@ -12,3 +12,4 @@ export interface City {
   imageUrl: string;
   status: CityStatus;
 }
+
