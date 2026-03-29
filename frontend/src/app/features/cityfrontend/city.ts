@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { City, CityStatus } from '../../shared/models/city.model';
+import { City} from '../../shared/models/city.model';
 
 
 @Component({
