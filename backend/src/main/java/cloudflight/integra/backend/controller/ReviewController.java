@@ -29,14 +29,7 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAllReviews(){
-        return new ResponseEntity<>(reviewService.getAllReviews().stream()
-            .map(reviewMapper::toDto)
-            .toList(), HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ReviewDto>> getFilteredReviews(@RequestParam(required = false) UUID poiId, @RequestParam(required = false) UUID userId){
+    public ResponseEntity<List<ReviewDto>> getReviews(@RequestParam(required = false) UUID poiId, @RequestParam(required = false) UUID userId){
         return new ResponseEntity<>(reviewService.getFilteredReviews(poiId, userId).stream()
             .map(reviewMapper::toDto)
             .toList(), HttpStatus.OK);

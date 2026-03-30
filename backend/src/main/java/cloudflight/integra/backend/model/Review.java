@@ -25,13 +25,13 @@ public class Review {
     private LocalDateTime postedDate;
 
     @Column(nullable=false)
-    private Long userId;
+    private UUID userId;
 
     @Column(nullable=false)
-    private Long poiId;
+    private UUID poiId;
 
     @Builder
-    public Review(UUID id, String text, Integer rating, LocalDateTime postedDate, Long userId, Long poiId) {
+    public Review(UUID id, String text, Integer rating, LocalDateTime postedDate, UUID userId, UUID poiId) {
         this.id = id;
         this.text = text;
         this.rating = rating;

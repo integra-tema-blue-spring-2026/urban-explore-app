@@ -1,5 +1,7 @@
 package cloudflight.integra.backend.model.dtos.review;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +24,8 @@ public class ReviewCreateDto {
     private Integer rating;
 
     @NotNull(message = "Review must have an user ID")
-    private Long userId;
+    private UUID userId;
 
     @NotNull(message = "Review must have a Point of Interest ID")
-    private Long poiId;
+    private UUID poiId;
 }

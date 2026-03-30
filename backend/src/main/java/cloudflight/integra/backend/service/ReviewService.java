@@ -4,6 +4,7 @@ import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.Review;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
+import cloudflight.integra.backend.repository.UserRepository;
 import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,17 @@ import java.util.UUID;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final PointOfInterestRepository pointOfInterestRepository;
+    private final UserRepository userRepository;
 
     public Review createReview(Review inputReview) {
-        if (!pointOfInterestRepository.existsById(
-                java.util.UUID.fromString(inputReview.getPoiId().toString())
-        )) {
+        if (!pointOfInterestRepository.existsById(inputReview.getPoiId())) {
             throw new PointOfInterestNotFoundException("POI with id: " + inputReview.getPoiId() + " not found");
         }
+       
+            if (!userRepository.existsById(inputReview.getUserId())) {
+                throw new ReviewException("User with id: " + inputReview.getUserId() + " not found");
+            }
+            
         inputReview.setPostedDate(LocalDateTime.now());
         return reviewRepository.save(inputReview);
     }
