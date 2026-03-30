@@ -27,11 +27,10 @@ public class ReviewService {
         if (!pointOfInterestRepository.existsById(inputReview.getPoiId())) {
             throw new PointOfInterestNotFoundException("POI with id: " + inputReview.getPoiId() + " not found");
         }
-       
             if (!userRepository.existsById(inputReview.getUserId())) {
                 throw new ReviewException("User with id: " + inputReview.getUserId() + " not found");
             }
-            
+
         inputReview.setPostedDate(LocalDateTime.now());
         return reviewRepository.save(inputReview);
     }
@@ -51,12 +50,11 @@ public class ReviewService {
             return reviewRepository.findAll();
         }
     }
-    
+
     @Transactional
     public Review updateReview(UUID id, Review inputReview) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(
             ()-> new ReviewException("Review with id: "+ id + " not found"));
-
         existingReview.setText(inputReview.getText());
         existingReview.setRating(
             inputReview.getRating() == null ?

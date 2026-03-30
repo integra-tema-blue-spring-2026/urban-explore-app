@@ -29,7 +29,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> getReviews(@RequestParam(required = false) UUID poiId, @RequestParam(required = false) UUID userId){
+    public ResponseEntity<List<ReviewDto>> getReviews(@RequestParam(required = false) UUID poiId,
+                                                      @RequestParam(required = false) UUID userId){
         return new ResponseEntity<>(reviewService.getFilteredReviews(poiId, userId).stream()
             .map(reviewMapper::toDto)
             .toList(), HttpStatus.OK);
@@ -49,5 +50,4 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
