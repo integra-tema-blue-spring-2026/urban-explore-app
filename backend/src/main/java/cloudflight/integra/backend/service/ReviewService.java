@@ -3,6 +3,8 @@ package cloudflight.integra.backend.service;
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.Review;
 import cloudflight.integra.backend.repository.ReviewRepository;
+import cloudflight.integra.backend.repository.PointOfInterestRepository;
+import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +19,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final PointOfInterestRepository pointOfInterestRepository;
 
     public Review createReview(Review inputReview) {
+        if (!pointOfInterestRepository.existsById(
+                java.util.UUID.fromString(inputReview.getPoiId().toString())
+        )) {
+            throw new PointOfInterestNotFoundException("POI with id: " + inputReview.getPoiId() + " not found");
+        }
         inputReview.setPostedDate(LocalDateTime.now());
         return reviewRepository.save(inputReview);
     }
@@ -27,6 +35,18 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
+    public List<Review> getFilteredReviews(UUID poiId, UUID userId) {
+        if(poiId != null && userId != null) {
+            return reviewRepository.findByPoiIdAndUserId(poiId, userId);
+        } else if (poiId != null) {
+            return reviewRepository.findByPoiId(poiId);
+        } else if (userId != null) {
+            return reviewRepository.findByUserId(userId);
+        } else {
+            return reviewRepository.findAll();
+        }
+    }
+    
     @Transactional
     public Review updateReview(UUID id, Review inputReview) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(

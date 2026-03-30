@@ -85,7 +85,10 @@ export class ReviewComponent {
   }
   loadReviews(): void {
     this.isLoading = true;
-    this.reviewController.getReviews().subscribe({
+
+    const poiId = this.poiId;
+    const userId = this.userId;
+    this.reviewController.getFilteredReviews(poiId, userId).subscribe({
       next: (reviews) => {
         this.reviews = reviews;
         this.isLoading = false;

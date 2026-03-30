@@ -23,8 +23,16 @@ export class ReviewController {
       return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 
-    public getReviews(): Observable<ReviewDto[]> {
+    public getAllReviews(): Observable<ReviewDto[]> {
       return this.http.get<ReviewDto[]>(this.apiUrl);
+    }
+
+    public getFilteredReviews(poiId?: string | null, userId?: string | null): Observable<ReviewDto[]> {
+      let params: any = {};
+      if (poiId) params.poiId = poiId;
+      if (userId) params.userId = userId;
+      console.log('Fetching reviews with params:', params);
+      return this.http.get<ReviewDto[]>(this.apiUrl, { params });
     }
   }
 

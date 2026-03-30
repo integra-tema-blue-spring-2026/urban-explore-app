@@ -35,6 +35,13 @@ public class ReviewController {
             .toList(), HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ReviewDto>> getFilteredReviews(@RequestParam(required = false) UUID poiId, @RequestParam(required = false) UUID userId){
+        return new ResponseEntity<>(reviewService.getFilteredReviews(poiId, userId).stream()
+            .map(reviewMapper::toDto)
+            .toList(), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ReviewDto> updateReview(@PathVariable UUID id, @Valid @RequestBody ReviewUpdateDto reviewDto){
 
