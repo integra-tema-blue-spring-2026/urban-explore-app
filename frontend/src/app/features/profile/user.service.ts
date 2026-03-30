@@ -3,6 +3,8 @@ import {User} from '../../shared/models/user/user';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs';
+import {UserCreateDto} from '../../shared/models/user/user-create-dto';
+import {UserUpdateDto} from '../../shared/models/user/user-update-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,21 +28,28 @@ export class UserService {
   }
 
   //PUT ------------------------------------------------------
-  updateUser(userId : string, userData : Partial<User>) : Observable<User>{
+  updateUser(userId : string, userData : UserUpdateDto) : Observable<User>{
     return this.http.put<User>(`${this.USER_API_URL}/${userId}`, userData);
   }
 
   followUser(userId : string, followerId: string) : Observable<User>{
-    return this.http.put<User>(`${this.USER_API_URL}/${userId}/follow`, {followerId});
+    return this.http.put<User>(`${this.USER_API_URL}/follow/${userId}`,
+      {},
+      {
+        params: { followerId: followerId }
+      });
   }
 
   unfollowUser(userId : string, followerId: string) : Observable<User>{
-    return this.http.put<User>(`${this.USER_API_URL}/${userId}/unfollow`, {followerId});
+    return this.http.put<User>(`${this.USER_API_URL}/unfollow/${userId}`,{},
+      {
+        params: { followerId: followerId }
+      });
   }
 
   //POST ------------------------------------------------------
-  createUser(userData : Partial<User>, password: string) : Observable<User>{
-    return this.http.post<User>(`${this.USER_API_URL}`, {...userData, password});
+  createUser(userData : UserCreateDto) : Observable<User>{
+    return this.http.post<User>(`${this.USER_API_URL}`, userData);
   }
 
   //DELETE ------------------------------------------------------

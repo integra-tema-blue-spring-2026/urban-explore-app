@@ -51,7 +51,6 @@ describe('UserService', () => {
       {next : (user) => {
         expect(user).toBeTruthy();
         expect(user.id).toBe(mockUserId);
-        expect(user.name).toBe('John Doe');
         expect(user.email).toBe('test@gmail.com');
         expect(user.username).toBe('johndoe');
         expect(user.role).toBe(UserRole.USER);
@@ -161,15 +160,13 @@ describe('UserService', () => {
 
 
     const updatedData : Partial<User> = {
-      name: 'John Doe Updated',
-      email: 'email@gmail.com',
+      username:'John Updated',
     }
 
     const mockUpdatedUser = {
       id: mockUserId1,
-      name: updatedData.name,
-      email: updatedData.email,
-      username: 'johndoe1',
+      email:  'email@gmail.com',
+      username: updatedData.username,
       role: UserRole.USER,
       bio: {
         header: 'Hello, I am John!',
@@ -183,8 +180,7 @@ describe('UserService', () => {
         next: (user) => {
           expect(user).toBeTruthy();
           expect(user.id).toBe(mockUserId1);
-          expect(user.name).toBe(updatedData.name);
-          expect(user.email).toBe(updatedData.email);
+          expect(user.username).toBe(updatedData.username);
         }
       });
 
@@ -218,11 +214,12 @@ describe('UserService', () => {
         }
       });
 
-    const req = testHttp.expectOne(`${service.USER_API_URL}/${mockUserId1}/follow`);
+    const req = testHttp.expectOne((request) => {
+      return request.url === `${service.USER_API_URL}/follow/${mockUserId1}`
+        && request.params.get('followerId') === mockFollowerId1;
+    });
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual({
-      followerId: mockFollowerId1
-    })
+    expect(req.request.body).toEqual({})
     req.flush(mockUser);
   });
 
@@ -250,30 +247,30 @@ describe('UserService', () => {
         }
       });
 
-    const req = testHttp.expectOne(`${service.USER_API_URL}/${mockUserId1}/unfollow`);
+    const req = testHttp.expectOne((request) => {
+      return request.url === `${service.USER_API_URL}/unfollow/${mockUserId1}`
+        && request.params.get('followerId') === mockFollowerId1;
+    });
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual({
-      followerId: mockFollowerId1
-    })
+    expect(req.request.body).toEqual({})
     req.flush(mockUser);
   });
 
   it('should create the user', () => {
     const mockUserId1 = '123e4567-e89b-12d3-a456-426614174000';
     const mockCreateUser ={
-      name: 'John Doe1',
       email: 'tes1t@gmail.com',
       username: 'johndoe1',
       bio: {
         header: 'Hello, I am John!',
         body: 'New York',
         footer: 'https://johndoe.com'
-      }
+      },
+      password : 'password'
     };
 
     const mockUser ={
       id: mockUserId1,
-      name: 'John Doe1',
       email: 'tes1t@gmail.com',
       username: 'johndoe1',
       role: UserRole.USER,
@@ -284,7 +281,7 @@ describe('UserService', () => {
       }
     };
 
-    service.createUser(mockCreateUser, "password" ).subscribe(
+    service.createUser(mockCreateUser).subscribe(
       {
         next: (user) => {
           expect(user).toBeTruthy();
@@ -295,10 +292,7 @@ describe('UserService', () => {
 
     const req = testHttp.expectOne(`${service.USER_API_URL}`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({
-      ...mockCreateUser,
-      password: "password"
-    })
+    expect(req.request.body).toEqual(mockCreateUser);
     req.flush(mockUser);
   });
 

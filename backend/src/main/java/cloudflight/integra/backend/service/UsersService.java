@@ -44,7 +44,7 @@ public class UsersService{
         User targetUser = repository.findById(targetUserId).orElseThrow(
             () -> new UserFollowException("Target User not found"));
 
-        follower.addFollower(targetUser);
+        targetUser.addFollower(follower);
 
         repository.save(follower);
         return repository.save(targetUser);
