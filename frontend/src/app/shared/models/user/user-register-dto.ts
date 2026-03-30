@@ -1,6 +1,6 @@
 import {User} from './user';
 
-export type UserCreateDto =
+export type UserRegisterDto =
   Pick<User, 'email' | 'username'> &
   Partial<Pick<User, 'bio'>> &
   {

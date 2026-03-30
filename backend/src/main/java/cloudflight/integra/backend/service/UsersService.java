@@ -4,18 +4,18 @@ import cloudflight.integra.backend.exceptions.custom.user.UserFollowException;
 import cloudflight.integra.backend.exceptions.custom.user.UserUnfollowException;
 import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UsersService{
-
-    protected final JpaRepository<User, UUID> repository;
-
+public class UsersService implements UserDetailsService {
+    protected final UserRepository repository;
 
     public UsersService(UserRepository userRepository) {
         this.repository = userRepository;
@@ -29,7 +29,6 @@ public class UsersService{
     public User save(User t) {
         return repository.save(t);
     }
-
 
     @Transactional
     public void delete(UUID id) {
@@ -62,5 +61,13 @@ public class UsersService{
 
         repository.save(follower);
         return repository.save(targetUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByUsername(username).orElseThrow(() ->
+            new UsernameNotFoundException("User not found with username: " + username)
+        );
     }
 }

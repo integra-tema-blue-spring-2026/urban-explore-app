@@ -3,8 +3,9 @@ import {User} from '../../shared/models/user/user';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs';
-import {UserCreateDto} from '../../shared/models/user/user-create-dto';
+import {UserRegisterDto} from '../../shared/models/user/user-register-dto';
 import {UserUpdateDto} from '../../shared/models/user/user-update-dto';
+import {UserLoginDto} from '../../shared/models/user/user-login.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +49,12 @@ export class UserService {
   }
 
   //POST ------------------------------------------------------
-  createUser(userData : UserCreateDto) : Observable<User>{
-    return this.http.post<User>(`${this.USER_API_URL}`, userData);
+  registerUser(userData : UserRegisterDto) : Observable<User>{
+    return this.http.post<User>(`${this.USER_API_URL}/auth/register`, userData);
+  }
+
+  loginUser(userData: UserLoginDto) : Observable<{token: string}> {
+    return this.http.post<{token: string}>(`${this.USER_API_URL}/auth/login`, userData);
   }
 
   //DELETE ------------------------------------------------------

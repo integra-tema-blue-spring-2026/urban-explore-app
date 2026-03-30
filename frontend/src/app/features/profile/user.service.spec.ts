@@ -256,9 +256,9 @@ describe('UserService', () => {
     req.flush(mockUser);
   });
 
-  it('should create the user', () => {
+  it('should register the user', () => {
     const mockUserId1 = '123e4567-e89b-12d3-a456-426614174000';
-    const mockCreateUser ={
+    const mockRegisteredUser ={
       email: 'tes1t@gmail.com',
       username: 'johndoe1',
       bio: {
@@ -281,7 +281,7 @@ describe('UserService', () => {
       }
     };
 
-    service.createUser(mockCreateUser).subscribe(
+    service.registerUser(mockRegisteredUser).subscribe(
       {
         next: (user) => {
           expect(user).toBeTruthy();
@@ -290,10 +290,32 @@ describe('UserService', () => {
         }
       });
 
-    const req = testHttp.expectOne(`${service.USER_API_URL}`);
+    const req = testHttp.expectOne(`${service.USER_API_URL}/auth/register`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(mockCreateUser);
+    expect(req.request.body).toEqual(mockRegisteredUser);
     req.flush(mockUser);
+  });
+
+  it('should login the user', ()=>{
+    const mockCredentials = {
+      username: 'johndoe1',
+      password: 'password',
+    };
+    const mockTokenResponse = {
+      token: 'mock-jwt-token',
+    };
+
+    service.loginUser(mockCredentials).subscribe({
+      next: (response) => {
+        expect(response).toBeTruthy();
+        expect(response.token).toBe(mockTokenResponse.token);
+      }
+    });
+
+    const req = testHttp.expectOne(`${service.USER_API_URL}/auth/login`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(mockCredentials);
+    req.flush(mockTokenResponse);
   });
 
   it('should delete the user', () => {
