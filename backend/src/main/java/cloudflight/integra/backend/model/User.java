@@ -3,7 +3,11 @@ package cloudflight.integra.backend.model;
 import cloudflight.integra.backend.model.utils.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @jakarta.persistence.Entity
@@ -31,4 +35,29 @@ public class User  {
     private UserBio bio;
 
     private String avatarUrl;
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_followers",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<User> followers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "followers")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private  Set<User> following = new HashSet<>();
+
+    public void addFollower(User follower) {
+        this.followers.add(follower);
+        follower.getFollowing().add(this);
+    }
+
+    public void removeFollower(User follower) {
+        this.followers.remove(follower);
+        follower.getFollowing().remove(this);
+    }
 }
