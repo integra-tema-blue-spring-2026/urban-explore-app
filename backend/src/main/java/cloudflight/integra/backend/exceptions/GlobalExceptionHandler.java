@@ -1,8 +1,8 @@
 package cloudflight.integra.backend.exceptions;
 
-import cloudflight.integra.backend.domain.dtos.ApiErrorResponse;
-import cloudflight.integra.backend.exception.CityNotFoundException;
-import cloudflight.integra.backend.exception.UpdateCityException;
+import cloudflight.integra.backend.model.dtos.ApiErrorResponse;
+import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(
+        DataIntegrityViolationException ex,
+        HttpServletRequest request) {
 
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
@@ -79,7 +81,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UpdateCityException.class)
-    public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(UpdateCityException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(
+        UpdateCityException ex,
+        HttpServletRequest request) {
+
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.BAD_REQUEST)

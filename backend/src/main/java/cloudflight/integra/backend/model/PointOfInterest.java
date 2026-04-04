@@ -1,9 +1,8 @@
 package cloudflight.integra.backend.model;
 
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -31,6 +30,9 @@ public class PointOfInterest {
     @Column(nullable = false)
     private PointOfInterestType type;
 
-    @Column(nullable = false)
-    private UUID cityId;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private City city;
 }

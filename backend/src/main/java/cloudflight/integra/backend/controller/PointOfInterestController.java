@@ -1,9 +1,9 @@
 package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.PointOfInterest;
-import cloudflight.integra.backend.model.dtos.PointOfInterestRequestDto;
-import cloudflight.integra.backend.model.dtos.PointOfInterestResponseDto;
-import cloudflight.integra.backend.model.mappers.PointOfInterestMapper;
+import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
+import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
+import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,9 @@ public class PointOfInterestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PointOfInterestResponseDto savePointOfInterest(@Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+    public PointOfInterestResponseDto savePointOfInterest(
+        @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
@@ -47,7 +49,10 @@ public class PointOfInterestController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PointOfInterestResponseDto update(@PathVariable UUID id, @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+    public PointOfInterestResponseDto update(
+        @PathVariable UUID id,
+        @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
+
         PointOfInterest updatedPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         updatedPointOfInterest.setId(id);
         PointOfInterest savedPointOfInterest = pointOfInterestService.update(updatedPointOfInterest);

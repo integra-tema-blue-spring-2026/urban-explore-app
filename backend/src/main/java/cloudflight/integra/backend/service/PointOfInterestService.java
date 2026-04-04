@@ -1,7 +1,9 @@
 package cloudflight.integra.backend.service;
 
-import cloudflight.integra.backend.exception.PointOfInterestNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
+import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PointOfInterestService {
     private final PointOfInterestRepository pointOfInterestRepository;
+    private final CityRepository cityRepository;
 
     @Transactional
     public PointOfInterest save(PointOfInterest newPointOfInterest) {
+        if (!cityRepository.existsById(newPointOfInterest.getCity().getId())){
+            throw new CityNotFoundException("City with id " + newPointOfInterest.getCity().getId() + " not found");
+        }
+
         return pointOfInterestRepository.save(newPointOfInterest);
     }
 
@@ -35,7 +42,12 @@ public class PointOfInterestService {
     @Transactional
     public PointOfInterest update(PointOfInterest updatedPointOfInterest) {
         if(!pointOfInterestRepository.existsById(updatedPointOfInterest.getId())) {
-            throw new PointOfInterestNotFoundException("PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
+            throw new PointOfInterestNotFoundException(
+                "PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
+        }
+
+        if (!cityRepository.existsById(updatedPointOfInterest.getCity().getId())){
+            throw new CityNotFoundException("City with id " + updatedPointOfInterest.getCity().getId() + " not found");
         }
 
         return pointOfInterestRepository.save(updatedPointOfInterest);

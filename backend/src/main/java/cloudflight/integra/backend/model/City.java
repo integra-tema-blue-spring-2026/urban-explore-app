@@ -1,8 +1,10 @@
 package cloudflight.integra.backend.model;
 
+import cloudflight.integra.backend.model.utils.enums.CityStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,4 +34,9 @@ public class City {
 
     @Enumerated(EnumType.STRING)
     private CityStatus status;
+
+    @OneToMany(mappedBy = "city")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<PointOfInterest> pointOfInterests;
 }

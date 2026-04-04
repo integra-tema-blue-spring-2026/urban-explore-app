@@ -1,4 +1,4 @@
-rootProject.name = 'student-skeleton-project'
+rootProject.name = 'urban-explore-app'
 
 include 'backend'
 include 'frontend'

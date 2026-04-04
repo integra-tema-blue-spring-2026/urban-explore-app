@@ -1,10 +1,10 @@
 package cloudflight.integra.backend.controller;
 
-import cloudflight.integra.backend.domain.User;
-import cloudflight.integra.backend.domain.dtos.UserCreateDto;
-import cloudflight.integra.backend.domain.dtos.UserUpdateDto;
-import cloudflight.integra.backend.domain.dtos.UserViewDto;
-import cloudflight.integra.backend.domain.utils.UserMappingRules;
+import cloudflight.integra.backend.model.User;
+import cloudflight.integra.backend.model.dtos.user.UserCreateDto;
+import cloudflight.integra.backend.model.dtos.user.UserUpdateDto;
+import cloudflight.integra.backend.model.dtos.user.UserViewDto;
+import cloudflight.integra.backend.model.utils.mappers.rules.UserMappingRules;
 import cloudflight.integra.backend.service.UsersService;
 import cloudflight.integra.backend.service.utils.Mapper;
 import jakarta.validation.Valid;
@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -24,6 +26,7 @@ public class UserController {
         this.service = service;
     }
 
+    // GET --------------------------------------------------
     @GetMapping("/{id}")
     public ResponseEntity<UserViewDto> getUser(@PathVariable UUID id) {
         return service.findById(id)
@@ -32,7 +35,27 @@ public class UserController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/followers")
+    public ResponseEntity<Set<UserViewDto>> getFollowers(@PathVariable UUID id) {
+        return service.findById(id)
+                .map(user -> user.getFollowers().stream()
+                .map(follower -> Mapper.toDto(follower, UserMappingRules.TO_DTO_RULE))
+                .collect(Collectors.toSet()))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
+    @GetMapping("/{id}/following")
+    public ResponseEntity<Set<UserViewDto>> getFollowing(@PathVariable UUID id) {
+        return service.findById(id)
+                .map(user -> user.getFollowing().stream()
+                .map(following -> Mapper.toDto(following, UserMappingRules.TO_DTO_RULE))
+                .collect(Collectors.toSet()))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // POST --------------------------------------------------
     @PostMapping
     public ResponseEntity<UserViewDto> createUser(@Valid @RequestBody UserCreateDto createDto) {
         User newUser = Mapper.toEntity(createDto, UserMappingRules.TO_ENTITY_RULE);
@@ -43,9 +66,12 @@ public class UserController {
             .body(Mapper.toDto(savedUser, UserMappingRules.TO_DTO_RULE));
     }
 
+    //PUT --------------------------------------------------
     @PutMapping("/{id}")
-    public ResponseEntity<UserViewDto> updateUser(@PathVariable UUID id,
-                                                  @Valid @RequestBody UserUpdateDto updateDto){
+    public ResponseEntity<UserViewDto> updateUser(
+        @PathVariable UUID id,
+        @Valid @RequestBody UserUpdateDto updateDto){
+
         User currentUser = service.findById(id).orElse(null);
         if(currentUser == null){
             return ResponseEntity.notFound().build();
@@ -57,6 +83,19 @@ public class UserController {
         return ResponseEntity.ok(Mapper.toDto(updatedUser, UserMappingRules.TO_DTO_RULE));
     }
 
+    @PutMapping("/follow/{id}")
+    public ResponseEntity<UserViewDto> followUser(@RequestParam UUID followerId, @PathVariable UUID id) {
+        User updatedUser = service.followUser(followerId, id);
+        return ResponseEntity.ok(Mapper.toDto(updatedUser, UserMappingRules.TO_DTO_RULE));
+    }
+
+    @PutMapping("/unfollow/{id}")
+    public ResponseEntity<UserViewDto> unfollowUser(@RequestParam UUID followerId, @PathVariable UUID id) {
+        User updatedUser = service.unfollowUser(followerId, id);
+        return ResponseEntity.ok(Mapper.toDto(updatedUser, UserMappingRules.TO_DTO_RULE));
+    }
+
+    // DELETE --------------------------------------------------
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id){
         if(service.findById(id).isEmpty()){
