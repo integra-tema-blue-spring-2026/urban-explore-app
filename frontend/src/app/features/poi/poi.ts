@@ -47,8 +47,14 @@ export class Poi implements OnInit {
   }
 
   loadPois() {
-    this.poiService.getPois().subscribe((data: poi[]) => {
-      this.pois = data;
+    this.poiService.getPois().subscribe({
+      next: (data: poi[]) => {
+        this.pois = data;
+      },
+      error: (error) => {
+        console.error('Error loading POIs:', error);
+        alert('Failed to load POIs');
+      }
     });
   }
 
@@ -57,19 +63,47 @@ export class Poi implements OnInit {
       this.poiForm.markAllAsTouched();
       return;
     }
-    this.poiService.addPoi(this.poiForm.value as poi).subscribe(() => {
-      this.loadPois();
-      this.poiForm.reset();
-      alert('POI added successfully!');
-    });
+    
+    if (this.editingId) {
+      this.poiService.updatePoi(this.editingId, this.poiForm.value as poi).subscribe({
+        next: () => {
+          this.loadPois();
+          this.editingId = null;
+          this.poiForm.reset();
+          alert('POI updated successfully!');
+        },
+        error: (error) => {
+          console.error('Error updating POI:', error);
+          alert('Failed to update POI');
+        }
+      });
+    } else {
+      this.poiService.addPoi(this.poiForm.value as poi).subscribe({
+        next: () => {
+          this.loadPois();
+          this.poiForm.reset();
+          alert('POI added successfully!');
+        },
+        error: (error) => {
+          console.error('Error adding POI:', error);
+          alert('Failed to add POI');
+        }
+      });
+    }
   }
 
   onDelete(id: string | undefined) {
     if (!id) return;
     if (confirm('Are you sure you want to delete this POI?')) {
-      this.poiService.deletePoi(id).subscribe(() => {
-        this.loadPois();
-        alert('POI deleted successfully!');
+      this.poiService.deletePoi(id).subscribe({
+        next: () => {
+          this.loadPois();
+          alert('POI deleted successfully!');
+        },
+        error: (error) => {
+          console.error('Error deleting POI:', error);
+          alert('Failed to delete POI');
+        }
       });
     }
   }

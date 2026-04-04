@@ -24,8 +24,14 @@ export class PoiDetail implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.poiService.getPoiById(id).subscribe((data: poi) => {
-        this.poi = data;
+      this.poiService.getPoiById(id).subscribe({
+        next: (data: poi) => {
+          this.poi = data;
+        },
+        error: (error) => {
+          console.error('Error loading POI details:', error);
+          alert('Failed to load POI details');
+        }
       });
     }
   }
@@ -39,8 +45,14 @@ export class PoiDetail implements OnInit {
     if (!this.poi || !this.editingField) return;
     (this.poi as any)[this.editingField] = this.editingValue;
     this.editingField = null;
-    this.poiService.updatePoi(this.poi.id!, this.poi).subscribe(() => {
-      alert('POI updated successfully!');
+    this.poiService.updatePoi(this.poi.id!, this.poi).subscribe({
+      next: () => {
+        alert('POI updated successfully!');
+      },
+      error: (error) => {
+        console.error('Error updating POI:', error);
+        alert('Failed to update POI');
+      }
     });
   }
 
