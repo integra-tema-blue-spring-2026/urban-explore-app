@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PoiService } from '../../core/services/poi';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -8,10 +8,13 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-poi',
   templateUrl: './poi.html',
-  standalone: true, 
-  imports: [ReactiveFormsModule, CommonModule, RouterLink] 
+  styleUrls: ['./poi.css'],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, RouterLink]
 })
 export class Poi implements OnInit {
+  private poiService = inject(PoiService);
+
   pois: poi[] = [];
   editingId: string | null = null;
 
@@ -23,16 +26,11 @@ export class Poi implements OnInit {
     cityId: new FormControl('', Validators.required)
   });
 
-  constructor(
-    private poiService: PoiService,
-    private cdr: ChangeDetectorRef //to detect changes after operations
-  ) {}
-
   ngOnInit(): void {
     this.loadPois();
   }
 
-   startEdit(p: poi) {
+  startEdit(p: poi) {
     this.editingId = p.id!;
     this.poiForm.setValue({
       name: p.name,
@@ -51,13 +49,12 @@ export class Poi implements OnInit {
   loadPois() {
     this.poiService.getPois().subscribe((data: poi[]) => {
       this.pois = data;
-      this.cdr.detectChanges();
     });
   }
 
   savePoi() {
     if (!this.poiForm.valid) {
-      this.poiForm.markAllAsTouched(); 
+      this.poiForm.markAllAsTouched();
       return;
     }
     this.poiService.addPoi(this.poiForm.value as poi).subscribe(() => {
@@ -65,7 +62,7 @@ export class Poi implements OnInit {
       this.poiForm.reset();
       alert('POI added successfully!');
     });
-}
+  }
 
   onDelete(id: string | undefined) {
     if (!id) return;

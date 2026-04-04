@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,27 +8,24 @@ import { poi } from '../../../core/utils/Poi-interface';
 @Component({
   selector: 'app-poi-detail',
   templateUrl: './poi-detail.html',
+  styleUrls: ['./poi-detail.css'],
   standalone: true,
   imports: [CommonModule, FormsModule]
 })
 export class PoiDetail implements OnInit {
-  poi: poi | null = null;
-  editingField: string | null = null; 
-  editingValue: string = '';            
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private poiService = inject(PoiService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private poiService: PoiService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  poi: poi | null = null;
+  editingField: string | null = null;
+  editingValue: string = '';
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.poiService.getPoiById(id).subscribe((data: poi) => {
         this.poi = data;
-        this.cdr.detectChanges();
       });
     }
   }
@@ -44,9 +41,8 @@ export class PoiDetail implements OnInit {
     this.editingField = null;
     this.poiService.updatePoi(this.poi.id!, this.poi).subscribe(() => {
       alert('POI updated successfully!');
-      this.cdr.detectChanges();
     });
-}
+  }
 
   cancelEdit() {
     this.editingField = null;

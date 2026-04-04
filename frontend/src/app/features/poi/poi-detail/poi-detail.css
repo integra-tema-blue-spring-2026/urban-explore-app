@@ -1,0 +1,161 @@
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: sans-serif;
+}
+
+.back-link {
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-row--name {
+  margin: 16px 0 4px 0;
+}
+
+.field-row--address {
+  margin: 0 0 20px 0;
+}
+
+.field-row--type {
+  margin: 0;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.emoji-large {
+  font-size: 64px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 20px 0;
+}
+
+.divider--top {
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.description-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  font-size: 14px;
+  border: 2px solid #7c3aed;
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.input-field--name {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.textarea-field {
+  font-size: 14px;
+  border: 2px solid #7c3aed;
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 100%;
+  min-height: 80px;
+}
+
+.button-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.button-primary {
+  padding: 4px 10px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-primary:hover {
+  background: #6d28d9;
+}
+
+.button-secondary {
+  padding: 4px 10px;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-secondary:hover {
+  background: #d1d5db;
+}
+
+.button-edit {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.button-edit:hover {
+  background: #e5e7eb;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.text-secondary {
+  color: #6b7280;
+  margin: 0;
+}
+
+.text-tertiary {
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 0;
+}
+
+.flex-grow {
+  flex: 1;
+}
