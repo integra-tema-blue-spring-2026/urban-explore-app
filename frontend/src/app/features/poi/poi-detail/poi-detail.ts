@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ export class PoiDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private poiService = inject(PoiService);
+  private cdr = inject(ChangeDetectorRef);
 
   poi: poi | null = null;
   editingField: string | null = null;
@@ -27,6 +28,7 @@ export class PoiDetail implements OnInit {
       this.poiService.getPoiById(id).subscribe({
         next: (data: poi) => {
           this.poi = data;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading POI details:', error);

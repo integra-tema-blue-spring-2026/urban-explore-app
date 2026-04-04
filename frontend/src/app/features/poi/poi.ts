@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { PoiService } from '../../core/services/poi';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 })
 export class Poi implements OnInit {
   private poiService = inject(PoiService);
+  private cdr = inject(ChangeDetectorRef);
 
   pois: poi[] = [];
   editingId: string | null = null;
@@ -50,6 +51,7 @@ export class Poi implements OnInit {
     this.poiService.getPois().subscribe({
       next: (data: poi[]) => {
         this.pois = data;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading POIs:', error);
