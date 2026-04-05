@@ -25,12 +25,12 @@ public class ReviewDto {
     @Max(5)
     private Integer rating;
 
-    @NotBlank
+    @NotNull(message = "Review must have a posted date")
     private LocalDateTime postedDate;
 
-    @NotNull(message = "Review must have an user ID")
-    private Long userId;
+    @NotNull(message = "Review must have a user ID")
+    private UUID userId;
 
     @NotNull(message = "Review must have a Point of Interest ID")
-    private Long poiId;
+    private UUID poiId;
 }

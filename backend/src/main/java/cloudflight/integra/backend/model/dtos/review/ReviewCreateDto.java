@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -21,9 +22,9 @@ public class ReviewCreateDto {
     @NotNull(message = "Review must have a rating between 1 and 5")
     private Integer rating;
 
-    @NotNull(message = "Review must have an user ID")
-    private Long userId;
+    @NotNull(message = "Review must have a user ID")
+    private UUID userId;
 
     @NotNull(message = "Review must have a Point of Interest ID")
-    private Long poiId;
+    private UUID poiId;
 }

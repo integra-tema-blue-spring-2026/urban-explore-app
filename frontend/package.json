@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "generate:api": "npx @openapitools/openapi-generator-cli generate -i http://localhost:8080/api/v3/api-docs -g typescript-angular -o src/app/core/api/generated --config openapi-generator-config.json --skip-validate-spec",
+    "generate:api:local": "npx @openapitools/openapi-generator-cli generate -i ./openapi.yaml.json -g typescript-angular -o src/app/core/api/generated --config openapi-generator-config.json --skip-validate-spec"
   },
   "prettier": {
     "printWidth": 100,
