@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception ex, HttpServletRequest request) {
-        ex.printStackTrace();
+        //TODO: log the exception
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -63,6 +63,7 @@ public class GlobalExceptionHandler {
             .message("An unexpected internal server error occurred.")
             .path(request.getRequestURI())
             .build();
+            
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
