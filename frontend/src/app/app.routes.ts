@@ -7,8 +7,8 @@ export const routes: Routes = [
     path: '',
     component: Home,
   },
-  {
-    path: 'poi',
-    component: ReviewComponent,
-  }
+  // {
+  //   path: 'poi',
+  //   component: ReviewComponent,
+  // }
 ];

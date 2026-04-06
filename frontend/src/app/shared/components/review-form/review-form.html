@@ -34,28 +34,27 @@
 
     <label class="review-field">
       <span>User ID</span>
-      <input type="number" min="1" formControlName="userId" placeholder="User reference" />
+      <input type="text" formControlName="userId" placeholder="550e8400-e29b-41d4-a716-446655440000" />
       @if (hasError('userId', 'required')) {
         <small>User ID is required.</small>
       }
-      @if (hasError('userId', 'min')) {
-        <small>User ID must be greater than 0.</small>
+      @if (hasError('userId', 'invalidUuid')) {
+        <small>User ID must be a valid UUID.</small>
       }
     </label>
 
     <label class="review-field">
       <span>POI ID</span>
       <input
-        type="number"
-        min="1"
+        type="text"
         formControlName="poiId"
-        placeholder="Point of interest reference"
+        placeholder="550e8400-e29b-41d4-a716-446655440000"
       />
       @if (hasError('poiId', 'required')) {
         <small>POI ID is required.</small>
       }
-      @if (hasError('poiId', 'min')) {
-        <small>POI ID must be greater than 0.</small>
+      @if (hasError('poiId', 'invalidUuid')) {
+        <small>POI ID must be a valid UUID.</small>
       }
     </label>
 

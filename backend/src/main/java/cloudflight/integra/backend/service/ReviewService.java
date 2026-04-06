@@ -67,10 +67,13 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(UUID id) {
+        log.info("Attempting to delete review with id: {}", id);
         if(!(reviewRepository.existsById(id))) {
+            log.warn("Review with id: {} not found", id);
             throw new ReviewException("Review with id: " + id + " not found");
         }
 
         reviewRepository.deleteById(id);
+        log.info("Review with id: {} deleted successfully", id);
     }
 }

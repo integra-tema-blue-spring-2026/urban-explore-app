@@ -3,6 +3,6 @@ export interface ReviewDto {
     text: string;
     rating: number;
     postedDate: string;
-    userId: number;
-    poiId: number;
+    userId: string;
+    poiId: string;
 }

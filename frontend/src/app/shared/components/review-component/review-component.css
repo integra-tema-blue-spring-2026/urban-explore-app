@@ -12,3 +12,25 @@
 .review-shell app-review-form {
   display: block;
 }
+
+/* Make toasts larger and more prominent */
+:host ::ng-deep .p-toast-large .p-toast-message {
+  font-size: 18px;
+  padding: 24px !important;
+  min-width: 500px;
+}
+
+:host ::ng-deep .p-toast-large .p-toast-message-content {
+  padding: 0;
+}
+
+:host ::ng-deep .p-toast-large .p-toast-summary {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+:host ::ng-deep .p-toast-large .p-toast-detail {
+  font-size: 16px;
+  line-height: 1.5;
+}
