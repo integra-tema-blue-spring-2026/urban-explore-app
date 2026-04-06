@@ -38,7 +38,7 @@ public class Review {
 
     @Builder
     public Review(UUID id, String text,
-        Integer rating, LocalDateTime postedDate, 
+        Integer rating, LocalDateTime postedDate,
         User user, PointOfInterest pointOfInterest) {
         this.id = id;
         this.text = text;

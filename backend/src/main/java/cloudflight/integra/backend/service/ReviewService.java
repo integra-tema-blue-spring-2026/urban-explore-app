@@ -25,7 +25,7 @@ public class ReviewService {
     private final PointOfInterestRepository pointOfInterestRepository;
 
     public Review createReview(Review inputReview) {
-        
+
         if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
             User user = userRepository.findById(inputReview.getUser().getId())
                 .orElseThrow(() -> new ReviewException(
@@ -37,8 +37,8 @@ public class ReviewService {
 
         if (inputReview.getPointOfInterest() != null && inputReview.getPointOfInterest().getId() != null) {
             PointOfInterest poi = pointOfInterestRepository.findById(inputReview.getPointOfInterest().getId())
-                .orElseThrow(() -> 
-                new ReviewException("Point of Interest with id: " + inputReview.getPointOfInterest().getId() + 
+                .orElseThrow(() ->
+                new ReviewException("Point of Interest with id: " + inputReview.getPointOfInterest().getId() +
                 " not found"));
             inputReview.setPointOfInterest(poi);
         } else {

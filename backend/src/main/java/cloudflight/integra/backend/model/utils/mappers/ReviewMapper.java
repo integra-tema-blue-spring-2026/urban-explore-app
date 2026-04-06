@@ -28,14 +28,14 @@ public class ReviewMapper {
         Review review = Review.builder()
             .text(reviewDto.getText())
             .rating(reviewDto.getRating())
-            .build();    
-            
+            .build();
+
         if (reviewDto.getUserId() != null) {
             User user = new User();
             user.setId(reviewDto.getUserId());
             review.setUser(user);
         }
-        
+
         if (reviewDto.getPoiId() != null) {
             PointOfInterest poi = new PointOfInterest();
             poi.setId(reviewDto.getPoiId());
