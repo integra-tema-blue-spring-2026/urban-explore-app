@@ -65,7 +65,7 @@ export class Poi implements OnInit {
       this.poiForm.markAllAsTouched();
       return;
     }
-    
+
     if (this.editingId) {
       this.poiService.updatePoi(this.editingId, this.poiForm.value as poi).subscribe({
         next: () => {

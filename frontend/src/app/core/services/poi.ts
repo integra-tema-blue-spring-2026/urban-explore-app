@@ -5,8 +5,8 @@ import { poi } from '../utils/Poi-interface';
 
 @Injectable({ providedIn: 'root' })
 export class PoiService {
-  private apiUrl = 'http://localhost:8080/api/pois'; 
-
+  private apiUrl = 'http://localhost:8080/api/pois';
+  
   constructor(private http: HttpClient) {}
 
   getPois(): Observable<poi[]> {
