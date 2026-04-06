@@ -60,7 +60,6 @@ export class ReviewComponent {
     if (error.error?.error) return error.error.error;
     if (error.message) return error.message;
     if (error.status) return `HTTP Error ${error.status}: ${error.statusText || 'Request failed'}`;
-    
     return 'An unknown error occurred.';
   }
 
