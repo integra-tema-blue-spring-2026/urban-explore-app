@@ -28,9 +28,8 @@ public class ReviewMapper {
         Review review = Review.builder()
             .text(reviewDto.getText())
             .rating(reviewDto.getRating())
-            .build();
-        
-        // Set user and POI as stubs with just IDs (they will be resolved by the service)
+            .build();    
+            
         if (reviewDto.getUserId() != null) {
             User user = new User();
             user.setId(reviewDto.getUserId());
@@ -42,7 +41,6 @@ public class ReviewMapper {
             poi.setId(reviewDto.getPoiId());
             review.setPointOfInterest(poi);
         }
-        
         return review;
     }
 

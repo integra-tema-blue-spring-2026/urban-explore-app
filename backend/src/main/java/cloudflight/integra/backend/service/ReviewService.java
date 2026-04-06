@@ -28,7 +28,8 @@ public class ReviewService {
         
         if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
             User user = userRepository.findById(inputReview.getUser().getId())
-                .orElseThrow(() -> new ReviewException("User with id: " + inputReview.getUser().getId() + " not found"));
+                .orElseThrow(() -> new ReviewException(
+                    "User with id: " + inputReview.getUser().getId() + " not found"));
             inputReview.setUser(user);
         } else {
             throw new ReviewException("Review must have a valid user ID");
@@ -36,7 +37,9 @@ public class ReviewService {
 
         if (inputReview.getPointOfInterest() != null && inputReview.getPointOfInterest().getId() != null) {
             PointOfInterest poi = pointOfInterestRepository.findById(inputReview.getPointOfInterest().getId())
-                .orElseThrow(() -> new ReviewException("Point of Interest with id: " + inputReview.getPointOfInterest().getId() + " not found"));
+                .orElseThrow(() -> 
+                new ReviewException("Point of Interest with id: " + inputReview.getPointOfInterest().getId() + 
+                " not found"));
             inputReview.setPointOfInterest(poi);
         } else {
             throw new ReviewException("Review must have a valid Point of Interest ID");

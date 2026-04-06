@@ -63,8 +63,8 @@ public class GlobalExceptionHandler {
             .message("An unexpected internal server error occurred.")
             .path(request.getRequestURI())
             .build();
-            
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(CityNotFoundException.class)
