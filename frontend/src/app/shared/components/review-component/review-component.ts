@@ -55,16 +55,10 @@ export class ReviewComponent {
 
   private getErrorMessage(error: any): string {
     if (!error) return 'An unknown error occurred.';
-    
-    // HTTP error with detailed message
     if (error.error?.message) return error.error.message;
     if (error.error?.detail) return error.error.detail;
     if (error.error?.error) return error.error.error;
-    
-    // Error message from error object
     if (error.message) return error.message;
-    
-    // Status code information
     if (error.status) return `HTTP Error ${error.status}: ${error.statusText || 'Request failed'}`;
     
     return 'An unknown error occurred.';
