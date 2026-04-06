@@ -5,9 +5,9 @@ import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
 import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
 import cloudflight.integra.backend.model.dtos.city.CityDto;
+import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.mappers.CityMapper;
-import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.CityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+
 
 @RestController
 @RequestMapping("/cities")
@@ -66,7 +67,6 @@ public class CityController {
         @RequestParam(required = false) String poiName) {
 
         Predicate<PointOfInterest> filter = poi -> true;
-
         if(poiDescription != null) {
             filter = filter.and(poi -> poi.getDescription().contains(poiDescription));
         }

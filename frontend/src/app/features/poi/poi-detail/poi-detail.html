@@ -1,0 +1,82 @@
+<div class="container">
+
+  <a (click)="goBack()" class="back-link">
+    ← Back
+  </a>
+
+  <div *ngIf="poi">
+
+    <!-- Name -->
+    <div class="field-row field-row--name">
+      <ng-container *ngIf="editingField === 'name'; else showName">
+        <input [(ngModel)]="editingValue" class="input-field input-field--name">
+        <button (click)="saveEdit()" class="button-primary">✓</button>
+        <button (click)="cancelEdit()" class="button-secondary">✕</button>
+      </ng-container>
+      <ng-template #showName>
+        <h1 class="title">{{ poi.name }}</h1>
+        <button (click)="startEdit('name', poi.name)" class="button-edit">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Address -->
+    <div class="field-row field-row--address">
+      <ng-container *ngIf="editingField === 'address'; else showAddress">
+        <input [(ngModel)]="editingValue" class="input-field">
+        <button (click)="saveEdit()" class="button-primary">✓</button>
+        <button (click)="cancelEdit()" class="button-secondary">✕</button>
+      </ng-container>
+      <ng-template #showAddress>
+        <p class="text-secondary">{{ poi.address }}</p>
+        <button (click)="startEdit('address', poi.address)" class="button-edit">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Placeholder image -->
+    <div class="image-placeholder">
+      <span class="emoji-large">📍</span>
+    </div>
+
+    <hr class="divider">
+
+    <!-- About / Description -->
+    <h3 class="section-title">About</h3>
+    <div class="description-container">
+      <ng-container *ngIf="editingField === 'description'; else showDescription">
+        <textarea [(ngModel)]="editingValue" class="textarea-field"></textarea>
+        <div class="button-group-vertical">
+          <button (click)="saveEdit()" class="button-primary">✓</button>
+          <button (click)="cancelEdit()" class="button-secondary">✕</button>
+        </div>
+      </ng-container>
+      <ng-template #showDescription>
+        <p class="text-secondary flex-grow">{{ poi.description }}</p>
+        <button (click)="startEdit('description', poi.description)" class="button-edit">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Type -->
+    <div class="field-row field-row--type">
+      <ng-container *ngIf="editingField === 'type'; else showType">
+        <input [(ngModel)]="editingValue" class="input-field">
+        <button (click)="saveEdit()" class="button-primary">✓</button>
+        <button (click)="cancelEdit()" class="button-secondary">✕</button>
+      </ng-container>
+      <ng-template #showType>
+        <p class="text-tertiary">{{ poi.type }}</p>
+        <button (click)="startEdit('type', poi.type)" class="button-edit">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+
+    <hr class="divider divider--top">
+  </div>
+
+</div>
