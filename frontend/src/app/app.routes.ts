@@ -28,6 +28,6 @@ export const routes: Routes = [
 
   {
     path: 'cities',
-    component: CityComponent 
+    component: CityComponent
   }
 ];
