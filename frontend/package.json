@@ -41,6 +41,7 @@
     "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
     "@angular/localize": "^21.1.2",
+    "@openapitools/openapi-generator-cli": "^2.24.0",
     "@tailwindcss/postcss": "^4.1.12",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
