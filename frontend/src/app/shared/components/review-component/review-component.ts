@@ -19,8 +19,8 @@ import { ReviewController } from '../../service/review-controller';
   styleUrl: './review-component.css',
 })
 export class ReviewComponent {
-  @Input() poiId: string | null = null;
-  @Input() userId: string | null = null;
+  @Input() poiId: string | null | undefined = null;
+  @Input() userId: string | null | undefined = null;
 
   reviews: ReviewDto[] = [];
   selectedReview: ReviewDto | null = null;
@@ -70,7 +70,7 @@ export class ReviewComponent {
     return 'An unknown error occurred.';
   }
 
-  private isValidUuid(value: string | null): boolean {
+  private isValidUuid(value: string | null | undefined): boolean {
     if (!value) return false;
     return this.uuidPattern.test(value);
   }

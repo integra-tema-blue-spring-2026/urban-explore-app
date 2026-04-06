@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PoiService } from '../../../core/services/poi';
 import { poi } from '../../../core/utils/Poi-interface';
+import { ReviewComponent } from '../../../shared/components/review-component/review-component';
 
 @Component({
   selector: 'app-poi-detail',
   templateUrl: './poi-detail.html',
   styleUrls: ['./poi-detail.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ReviewComponent]
 })
 export class PoiDetail implements OnInit {
   private route = inject(ActivatedRoute);
