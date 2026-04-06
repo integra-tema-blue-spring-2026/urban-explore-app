@@ -39,10 +39,12 @@ public class UsersService{
     @Transactional
     public User followUser(UUID followerId, UUID targetUserId) {
 
-        User follower = repository.findById(followerId).orElseThrow(() -> new UserFollowException("Follower not found"));
-        User targetUser = repository.findById(targetUserId).orElseThrow(() -> new UserFollowException("Target User not found"));
+        User follower = repository.findById(followerId).orElseThrow(
+            () -> new UserFollowException("Follower not found"));
+        User targetUser = repository.findById(targetUserId).orElseThrow(
+            () -> new UserFollowException("Target User not found"));
 
-        follower.addFollower(targetUser);
+        targetUser.addFollower(follower);
 
         repository.save(follower);
         return repository.save(targetUser);
@@ -51,8 +53,10 @@ public class UsersService{
     @Transactional
     public User unfollowUser(UUID followerId, UUID targetUserId) {
 
-        User follower = repository.findById(followerId).orElseThrow(() -> new UserUnfollowException("Follower not found"));
-        User targetUser = repository.findById(targetUserId).orElseThrow(() -> new UserUnfollowException("Target User not found"));
+        User follower = repository.findById(followerId).orElseThrow(
+            () -> new UserUnfollowException("Follower not found"));
+        User targetUser = repository.findById(targetUserId).orElseThrow(
+            () -> new UserUnfollowException("Target User not found"));
 
         follower.removeFollower(targetUser);
 

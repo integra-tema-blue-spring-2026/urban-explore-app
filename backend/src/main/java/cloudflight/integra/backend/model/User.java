@@ -3,6 +3,8 @@ package cloudflight.integra.backend.model;
 import cloudflight.integra.backend.model.utils.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,9 +42,13 @@ public class User  {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<User> followers = new HashSet<>();
 
     @ManyToMany(mappedBy = "followers")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private  Set<User> following = new HashSet<>();
 
     public void addFollower(User follower) {

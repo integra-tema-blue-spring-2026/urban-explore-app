@@ -3,10 +3,10 @@ import {UserRole} from './user-role';
 
 export interface User {
   id: string;
-  name: string;
   email: string;
   username: string;
   role: UserRole;
   bio: UserBio;
+  avatarUrl: string;
 }
 
