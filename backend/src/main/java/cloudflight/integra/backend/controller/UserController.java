@@ -34,8 +34,11 @@ public class UserController {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UsersService service, AuthenticationManager authenticationManager, JwtService jwtService,
-                          PasswordEncoder passwordEncoder
+    public UserController(
+        UsersService service,
+        AuthenticationManager authenticationManager,
+        JwtService jwtService,
+        PasswordEncoder passwordEncoder
     ) {
         this.service = service;
         this.authenticationManager = authenticationManager;
