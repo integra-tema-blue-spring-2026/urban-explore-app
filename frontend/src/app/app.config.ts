@@ -3,8 +3,8 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import {providePrimeNG} from 'primeng/config';
-import {authInterceptor} from './core/interceptors/auth.interceptor';
+import { providePrimeNG } from 'primeng/config';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 import Aura from '@primeuix/themes/aura';
 
@@ -17,9 +17,9 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: '.my-app-dark'
-        }
-      }
-    })
-  ]
+          darkModeSelector: '.my-app-dark',
+        },
+      },
+    }),
+  ],
 };

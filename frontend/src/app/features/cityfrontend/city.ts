@@ -2,17 +2,21 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {City, CityStatus, CreateCityRequest, UpdateCityRequest} from '../../shared/models/city.model';
-
+import {
+  City,
+  CityStatus,
+  CreateCityRequest,
+  UpdateCityRequest,
+} from '../../shared/models/city.model';
 
 @Component({
   selector: 'app-city',
   templateUrl: './city.html',
   styleUrl: './city.css',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule],
 })
-export class CityComponent implements    OnInit {
+export class CityComponent implements OnInit {
   cities: City[] = [];
   editingId: string | null = null;
 
@@ -20,13 +24,21 @@ export class CityComponent implements    OnInit {
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     country: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     description: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    population: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
-    imageUrl: new FormControl('', { nonNullable: true, validators: [Validators.required] })
+    population: new FormControl(1, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(1)],
+    }),
+    imageUrl: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  constructor(private cityService: CityService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cityService: CityService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
-  ngOnInit(): void { this.loadCities(); }
+  ngOnInit(): void {
+    this.loadCities();
+  }
 
   loadCities() {
     this.cityService.getCities().subscribe((data) => {
@@ -56,7 +68,7 @@ export class CityComponent implements    OnInit {
     if (this.editingId) {
       const updateData: UpdateCityRequest = {
         description: rawValue.description,
-        imageUrl: rawValue.imageUrl
+        imageUrl: rawValue.imageUrl,
       };
       this.cityService.updateCity(this.editingId, updateData).subscribe(() => {
         alert('City updated successfully!');
@@ -68,7 +80,7 @@ export class CityComponent implements    OnInit {
         country: rawValue.country,
         description: rawValue.description,
         population: rawValue.population,
-        imageUrl: rawValue.imageUrl
+        imageUrl: rawValue.imageUrl,
       };
       this.cityService.addCity(createData).subscribe(() => {
         alert('City added successfully!');

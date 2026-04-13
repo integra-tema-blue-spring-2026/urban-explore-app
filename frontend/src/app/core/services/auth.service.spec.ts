@@ -23,12 +23,12 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: UserService, useValue: userServiceSpy as Partial<UserService> },
-      ]
+      ],
     });
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
-  });
+    afterEach(() => {
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    });
 
     service = TestBed.inject(AuthService);
   });
@@ -71,18 +71,20 @@ describe('AuthService', () => {
       setItem: setItemSpy,
     });
 
-    userServiceSpy.registerUser.mockReturnValue(of({
-      id: '123e4567-e89b-12d3-a456-426614174000',
-      email: userData.email,
-      username: userData.username,
-      role: UserRole.USER,
-      bio: {
-        header: 'Hello',
-        body: 'Traveler',
-        footer: 'https://example.com',
-      },
-      avatarUrl: '',
-    }));
+    userServiceSpy.registerUser.mockReturnValue(
+      of({
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        email: userData.email,
+        username: userData.username,
+        role: UserRole.USER,
+        bio: {
+          header: 'Hello',
+          body: 'Traveler',
+          footer: 'https://example.com',
+        },
+        avatarUrl: '',
+      }),
+    );
     userServiceSpy.loginUser.mockReturnValue(of({ token: 'registered-token' }));
 
     service.register(userData).subscribe((result) => {

@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './poi.html',
   styleUrls: ['./poi.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink]
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
 })
 export class Poi implements OnInit {
   private poiService = inject(PoiService);
@@ -24,7 +24,7 @@ export class Poi implements OnInit {
     description: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
     type: new FormControl('', Validators.required),
-    cityId: new FormControl('', Validators.required)
+    cityId: new FormControl('', Validators.required),
   });
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class Poi implements OnInit {
       description: p.description,
       address: p.address,
       type: p.type,
-      cityId: p.cityId
+      cityId: p.cityId,
     });
   }
 
@@ -56,7 +56,7 @@ export class Poi implements OnInit {
       error: (error) => {
         console.error('Error loading POIs:', error);
         alert('Failed to load POIs');
-      }
+      },
     });
   }
 
@@ -77,7 +77,7 @@ export class Poi implements OnInit {
         error: (error) => {
           console.error('Error updating POI:', error);
           alert('Failed to update POI');
-        }
+        },
       });
     } else {
       this.poiService.addPoi(this.poiForm.value as poi).subscribe({
@@ -89,7 +89,7 @@ export class Poi implements OnInit {
         error: (error) => {
           console.error('Error adding POI:', error);
           alert('Failed to add POI');
-        }
+        },
       });
     }
   }
@@ -105,7 +105,7 @@ export class Poi implements OnInit {
         error: (error) => {
           console.error('Error deleting POI:', error);
           alert('Failed to delete POI');
-        }
+        },
       });
     }
   }

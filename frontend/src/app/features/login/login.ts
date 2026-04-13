@@ -1,9 +1,9 @@
-import {Component, inject} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {ButtonModule} from 'primeng/button';
-import {InputTextModule} from 'primeng/inputtext';
-import {AuthService} from '../../core/services/auth.service';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +19,14 @@ export class Login {
     username: FormControl<string>;
     password: FormControl<string>;
   }> = new FormGroup({
-    username: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6), Validators.maxLength(40)] }),
-    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] }),
+    username: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(6), Validators.maxLength(40)],
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(6)],
+    }),
   });
 
   protected login() {
@@ -31,8 +37,8 @@ export class Login {
       return;
     }
 
-    const {username, password} = this.loginForm.getRawValue();
-    this.authService.login({username, password}).subscribe({
+    const { username, password } = this.loginForm.getRawValue();
+    this.authService.login({ username, password }).subscribe({
       next: () => {
         this.router.navigateByUrl('/cities');
       },

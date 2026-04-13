@@ -1,6 +1,6 @@
 export enum CityStatus {
   PENDING = 'PENDING',
-  APPROVED = 'APPROVED'
+  APPROVED = 'APPROVED',
 }
 
 export interface City {
@@ -13,7 +13,5 @@ export interface City {
   status: CityStatus;
 }
 
-
 export type CreateCityRequest = Omit<City, 'id' | 'status'>;
 export type UpdateCityRequest = Pick<City, 'description' | 'imageUrl'>;
-

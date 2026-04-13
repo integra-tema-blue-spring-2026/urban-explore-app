@@ -11,9 +11,8 @@ describe('Auth', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Auth],
-      providers: [provideHttpClient(), provideRouter([])]
-    })
-    .compileComponents();
+      providers: [provideHttpClient(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Auth);
     component = fixture.componentInstance;

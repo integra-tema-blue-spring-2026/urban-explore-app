@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {SelectButton} from "primeng/selectbutton";
-import {Register} from '../register/register';
-import {Login} from '../login/login';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { SelectButton } from 'primeng/selectbutton';
+import { Register } from '../register/register';
+import { Login } from '../login/login';
 
 @Component({
   selector: 'app-auth',
@@ -11,5 +11,5 @@ import {Login} from '../login/login';
   styleUrl: './auth.css',
 })
 export class Auth {
-  protected selectedOption: any = "register";
+  protected selectedOption: any = 'register';
 }

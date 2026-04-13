@@ -1,5 +1,4 @@
-export type UserLoginDto =
-{
-    username : string;
-    password: string;
+export type UserLoginDto = {
+  username: string;
+  password: string;
 };

@@ -1,9 +1,8 @@
-import {HttpInterceptorFn} from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isAuthEndpoint =
-    req.url.endsWith('api/users/auth/login') ||
-    req.url.endsWith('api/users/auth/register');
+    req.url.endsWith('api/users/auth/login') || req.url.endsWith('api/users/auth/register');
 
   if (isAuthEndpoint) {
     return next(req);
@@ -23,4 +22,3 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authorizedRequest);
 };
-

@@ -1,76 +1,92 @@
 <div class="container">
-
   <h2 class="header-title">Points of Interest</h2>
   <p class="header-subtitle">{{ pois.length }} locations</p>
 
   <form [formGroup]="poiForm" (ngSubmit)="savePoi()" class="form-container">
-
     <div class="form-group">
-      <input formControlName="name" placeholder="Name"
+      <input
+        formControlName="name"
+        placeholder="Name"
         [class.error]="poiForm.get('name')?.invalid && poiForm.get('name')?.touched"
-        class="form-input">
-      <span *ngIf="poiForm.get('name')?.invalid && poiForm.get('name')?.touched"
-        class="form-error">Name is required</span>
+        class="form-input"
+      />
+      <span *ngIf="poiForm.get('name')?.invalid && poiForm.get('name')?.touched" class="form-error"
+        >Name is required</span
+      >
     </div>
 
     <div class="form-group">
-      <input formControlName="description" placeholder="Description"
+      <input
+        formControlName="description"
+        placeholder="Description"
         [class.error]="poiForm.get('description')?.invalid && poiForm.get('description')?.touched"
-        class="form-input">
-      <span *ngIf="poiForm.get('description')?.invalid && poiForm.get('description')?.touched"
-        class="form-error">Description is required</span>
+        class="form-input"
+      />
+      <span
+        *ngIf="poiForm.get('description')?.invalid && poiForm.get('description')?.touched"
+        class="form-error"
+        >Description is required</span
+      >
     </div>
 
     <div class="form-group">
-      <input formControlName="address" placeholder="Address"
+      <input
+        formControlName="address"
+        placeholder="Address"
         [class.error]="poiForm.get('address')?.invalid && poiForm.get('address')?.touched"
-        class="form-input">
-      <span *ngIf="poiForm.get('address')?.invalid && poiForm.get('address')?.touched"
-        class="form-error">Address is required</span>
+        class="form-input"
+      />
+      <span
+        *ngIf="poiForm.get('address')?.invalid && poiForm.get('address')?.touched"
+        class="form-error"
+        >Address is required</span
+      >
     </div>
 
     <div class="form-group form-group--type">
-      <select formControlName="type"
+      <select
+        formControlName="type"
         [class.error]="poiForm.get('type')?.invalid && poiForm.get('type')?.touched"
-        class="form-select">
+        class="form-select"
+      >
         <option value="" disabled selected>Type</option>
         <option value="MUSEUM">MUSEUM</option>
         <option value="PARK">PARK</option>
         <option value="CAFE">CAFE</option>
       </select>
-      <span *ngIf="poiForm.get('type')?.invalid && poiForm.get('type')?.touched"
-        class="form-error">Select a type</span>
+      <span *ngIf="poiForm.get('type')?.invalid && poiForm.get('type')?.touched" class="form-error"
+        >Select a type</span
+      >
     </div>
 
     <div class="form-group form-group--wide">
-      <input formControlName="cityId" placeholder="City UUID"
+      <input
+        formControlName="cityId"
+        placeholder="City UUID"
         [class.error]="poiForm.get('cityId')?.invalid && poiForm.get('cityId')?.touched"
-        class="form-input">
-      <span *ngIf="poiForm.get('cityId')?.invalid && poiForm.get('cityId')?.touched"
-        class="form-error">City UUID is required</span>
+        class="form-input"
+      />
+      <span
+        *ngIf="poiForm.get('cityId')?.invalid && poiForm.get('cityId')?.touched"
+        class="form-error"
+        >City UUID is required</span
+      >
     </div>
 
-    <button type="submit"
-      class="button-primary"
-      [class.disabled]="!poiForm.valid">
+    <button type="submit" class="button-primary" [class.disabled]="!poiForm.valid">
       {{ editingId ? 'Update POI' : 'Add new point' }}
     </button>
 
-    <button *ngIf="editingId" type="button" (click)="cancelEdit()"
-      class="button-secondary">
+    <button *ngIf="editingId" type="button" (click)="cancelEdit()" class="button-secondary">
       Cancel
     </button>
-
   </form>
 
   <!-- POI Cards -->
   <div class="cards-grid">
     <div *ngFor="let poi of pois" class="card">
-
       <!-- Delete button -->
-      <button (click)="onDelete(poi.id!)" class="card-delete-button">
-        🗑️
-      </button>
+      <button (click)="onDelete(poi.id!)" class="card-delete-button">🗑️</button>
 
       <!-- Image placeholder -->
       <div class="card-image">
@@ -90,8 +106,6 @@
           </span>
         </div>
       </div>
-
     </div>
   </div>
-
 </div>

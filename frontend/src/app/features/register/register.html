@@ -4,16 +4,51 @@
 
   <form [formGroup]="registerForm" (ngSubmit)="register()" class="flex flex-col gap-4 mt-4">
     <input pInputText type="email" formControlName="email" placeholder="Email" class="w-full" />
-    <input pInputText type="text" formControlName="username" placeholder="Username" class="w-full" />
-    <input pInputText type="password" formControlName="password" placeholder="Password" class="w-full" />
+    <input
+      pInputText
+      type="text"
+      formControlName="username"
+      placeholder="Username"
+      class="w-full"
+    />
+    <input
+      pInputText
+      type="password"
+      formControlName="password"
+      placeholder="Password"
+      class="w-full"
+    />
     <div formGroupName="bio" class="flex flex-col gap-3">
       <h3 class="font-semibold">Bio</h3>
-      <input pInputText type="text" formControlName="header" placeholder="Bio header" class="w-full" />
-      <textarea pInputText rows="4" formControlName="body" placeholder="Bio body" class="w-full"></textarea>
-      <input pInputText type="text" formControlName="footer" placeholder="Bio footer" class="w-full" />
+      <input
+        pInputText
+        type="text"
+        formControlName="header"
+        placeholder="Bio header"
+        class="w-full"
+      />
+      <textarea
+        pInputText
+        rows="4"
+        formControlName="body"
+        placeholder="Bio body"
+        class="w-full"
+      ></textarea>
+      <input
+        pInputText
+        type="text"
+        formControlName="footer"
+        placeholder="Bio footer"
+        class="w-full"
+      />
     </div>
 
-    <button pButton type="submit" [disabled]="!registerForm.valid" class="w-full bg-[#675EC2]! border-[#675EC2]! text-white!">
+    <button
+      pButton
+      type="submit"
+      [disabled]="!registerForm.valid"
+      class="w-full bg-[#675EC2]! border-[#675EC2]! text-white!"
+    >
       <span pButtonLabel>Create account</span>
     </button>
   </form>

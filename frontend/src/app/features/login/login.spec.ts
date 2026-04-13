@@ -29,9 +29,8 @@ describe('Login', () => {
       providers: [
         { provide: AuthService, useValue: authServiceSpy as Partial<AuthService> },
         { provide: Router, useValue: routerSpy as Partial<Router> },
-      ]
-    })
-    .compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
     component = fixture.componentInstance;
