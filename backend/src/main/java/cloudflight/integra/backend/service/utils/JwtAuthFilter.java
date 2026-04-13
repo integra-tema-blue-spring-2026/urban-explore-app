@@ -19,11 +19,13 @@ import java.io.IOException;
 import java.util.List;
 
 import io.jsonwebtoken.JwtException;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private static final List<String> IGNORED_PATSHS = List.of(
+    private static final List<String> IGNORED_PATHS = List.of(
         "/users/auth/register",
         "/users/auth/login"
     );
@@ -35,7 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getServletPath();
         return "OPTIONS".equalsIgnoreCase(request.getMethod())
-            || IGNORED_PATSHS.stream().anyMatch(path::startsWith);
+            || IGNORED_PATHS.stream().anyMatch(path::startsWith);
     }
 
     @Override
@@ -65,12 +67,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        } catch (JwtException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             SecurityContextHolder.clearContext();
-            throw e;
+            throw new BadCredentialsException("Invalid authentication token.", e);
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
-            throw new JwtException(e.getMessage());
+            throw new AuthenticationServiceException("Authentication processing failed.", e);
         }
         filterChain.doFilter(request, response);
     }

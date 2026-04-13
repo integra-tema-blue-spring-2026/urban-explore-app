@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,16 +86,12 @@ public class UserController {
 
     @PostMapping("/auth/login")
     public ResponseEntity<Map<String, String>> loginUser(@Valid @RequestBody UserLoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
         );
 
-        if (authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                .body(Map.of("token", jwtService.generateToken(loginDto.getUsername())));
-        } else {
-            throw new UsernameNotFoundException("Invalid user request!");
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(Map.of("token", jwtService.generateToken(loginDto.getUsername())));
     }
 
     //PUT --------------------------------------------------

@@ -76,6 +76,30 @@ class UserControllerIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.token").isNotEmpty());
     }
+
+    @Test
+    void loginUserWithInvalidCredentialsReturnsUnauthorized() throws Exception {
+        String suffix = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String username = "jane_" + suffix;
+        String email = "jane." + suffix + "@example.com";
+
+        UserRegisterDto registerDto = new UserRegisterDto();
+        registerDto.setEmail(email);
+        registerDto.setUsername(username);
+        registerDto.setPassword("secret123");
+
+        mockMvc.perform(post("/users/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(registerDto)))
+            .andExpect(status().isCreated());
+
+        UserLoginDto loginDto = new UserLoginDto(username, "wrong-password");
+
+        mockMvc.perform(post("/users/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginDto)))
+            .andExpect(status().isUnauthorized());
+    }
 }
 
 

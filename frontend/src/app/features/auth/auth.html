@@ -8,10 +8,7 @@
       <p-selectButton
         class="w-full"
         styleClass="w-full"
-        [options]="[
-          { label: 'Register', value: 'register' },
-          { label: 'Login', value: 'login' },
-        ]"
+        [options]="options"
         [(ngModel)]="selectedOption"
         [allowEmpty]="false"
       >

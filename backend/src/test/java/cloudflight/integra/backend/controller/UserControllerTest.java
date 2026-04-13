@@ -16,9 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
@@ -79,7 +79,6 @@ class UserControllerTest {
         UserLoginDto loginDto = new UserLoginDto("jane_doe", "secret123");
         Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
 
-        when(authentication.isAuthenticated()).thenReturn(true);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenReturn(authentication);
         when(jwtService.generateToken("jane_doe")).thenReturn("jwt-token");
@@ -94,13 +93,10 @@ class UserControllerTest {
     @Test
     void loginUserThrowsWhenAuthenticationFails() {
         UserLoginDto loginDto = new UserLoginDto("jane_doe", "wrong-pass");
-        Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
-
-        when(authentication.isAuthenticated()).thenReturn(false);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-            .thenReturn(authentication);
+            .thenThrow(new BadCredentialsException("Bad credentials"));
 
-        assertThrows(UsernameNotFoundException.class, () -> controller.loginUser(loginDto));
+        assertThrows(BadCredentialsException.class, () -> controller.loginUser(loginDto));
     }
 }
 

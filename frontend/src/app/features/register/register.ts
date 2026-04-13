@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../../core/services/auth.service';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, InputTextModule, ButtonModule],
+  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, TextareaModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

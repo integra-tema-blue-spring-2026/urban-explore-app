@@ -25,12 +25,13 @@ describe('AuthService', () => {
         { provide: UserService, useValue: userServiceSpy as Partial<UserService> },
       ],
     });
-    afterEach(() => {
-      vi.restoreAllMocks();
-      vi.unstubAllGlobals();
-    });
 
     service = TestBed.inject(AuthService);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('should be created', () => {
