@@ -75,7 +75,7 @@ export class Poi implements OnInit {
       ...(this.poiForm.value as any),
       cityId: this.cityId
     };
-    
+
     if (this.editingId) {
       this.poiService.updatePoi(this.editingId, poiData).subscribe({
         next: () => {

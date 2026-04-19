@@ -75,7 +75,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PointOfInterestNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(PointOfInterestNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(PointOfInterestNotFoundException ex,
+                                                              HttpServletRequest request) {
         return buildNotFoundResponse(ex.getMessage(), request);
     }
 

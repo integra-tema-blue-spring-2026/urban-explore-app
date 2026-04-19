@@ -2,7 +2,7 @@ FROM eclipse-temurin:24-jdk-alpine
 
 WORKDIR /app
 
-# Install Node.js, npm, and bash 
+# Install Node.js, npm, and bash
 RUN apk add --no-cache nodejs npm bash
 
 # Copy the entire project source into the container
