@@ -42,14 +42,6 @@
         class="form-error">Select a type</span>
     </div>
 
-    <div class="form-group form-group--wide">
-      <input formControlName="cityId" placeholder="City UUID"
-        [class.error]="poiForm.get('cityId')?.invalid && poiForm.get('cityId')?.touched"
-        class="form-input">
-      <span *ngIf="poiForm.get('cityId')?.invalid && poiForm.get('cityId')?.touched"
-        class="form-error">City UUID is required</span>
-    </div>
-
     <button type="submit"
       class="button-primary"
       [class.disabled]="!poiForm.valid">
@@ -68,8 +60,8 @@
     <div *ngFor="let poi of pois" class="card">
 
       <!-- Delete button -->
-      <button (click)="onDelete(poi.id!)" class="card-delete-button">
-        🗑️
+      <button (click)="onDelete(poi.id!)" class="card-delete-button" title="Delete">
+        ✕
       </button>
 
       <!-- Image placeholder -->
@@ -79,7 +71,11 @@
 
       <!-- Card body -->
       <div class="card-body">
-        <p class="card-title">{{ poi.name }}</p>
+        <div class="card-header-row">
+          <p class="card-title">{{ poi.name }}</p>
+          <button (click)="startEdit(poi)" class="btn-card-edit" title="Edit">✎</button>
+        </div>
+        
         <a [routerLink]="['/poi/details', poi.id]" class="card-link">
           View Details and Reviews →
         </a>

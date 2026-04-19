@@ -3,6 +3,7 @@ import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {City, CityStatus, CreateCityRequest, UpdateCityRequest} from '../../shared/models/city.model';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
@@ -10,7 +11,7 @@ import {City, CityStatus, CreateCityRequest, UpdateCityRequest} from '../../shar
   templateUrl: './city.html',
   styleUrl: './city.css',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, RouterLink]
 })
 export class CityComponent implements    OnInit {
   cities: City[] = [];

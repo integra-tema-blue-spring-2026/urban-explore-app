@@ -3,7 +3,7 @@ import { PoiService } from '../../core/services/poi';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { poi } from '../../core/utils/Poi-interface';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-poi',
@@ -15,19 +15,21 @@ import { RouterLink } from '@angular/router';
 export class Poi implements OnInit {
   private poiService = inject(PoiService);
   private cdr = inject(ChangeDetectorRef);
+  private route = inject(ActivatedRoute);
 
   pois: poi[] = [];
   editingId: string | null = null;
+  cityId: string | null = null;
 
   poiForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
-    cityId: new FormControl('', Validators.required)
+    type: new FormControl('', Validators.required)
   });
 
   ngOnInit(): void {
+    this.cityId = this.route.snapshot.paramMap.get('cityId');
     this.loadPois();
   }
 
@@ -37,8 +39,7 @@ export class Poi implements OnInit {
       name: p.name,
       description: p.description,
       address: p.address,
-      type: p.type,
-      cityId: p.cityId
+      type: p.type
     });
   }
 
@@ -50,7 +51,11 @@ export class Poi implements OnInit {
   loadPois() {
     this.poiService.getPois().subscribe({
       next: (data: poi[]) => {
-        this.pois = data;
+        if (this.cityId) {
+          this.pois = data.filter(p => p.cityId === this.cityId);
+        } else {
+          this.pois = data;
+        }
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -65,9 +70,14 @@ export class Poi implements OnInit {
       this.poiForm.markAllAsTouched();
       return;
     }
+
+    const poiData: poi = {
+      ...(this.poiForm.value as any),
+      cityId: this.cityId
+    };
     
     if (this.editingId) {
-      this.poiService.updatePoi(this.editingId, this.poiForm.value as poi).subscribe({
+      this.poiService.updatePoi(this.editingId, poiData).subscribe({
         next: () => {
           this.loadPois();
           this.editingId = null;
@@ -80,7 +90,7 @@ export class Poi implements OnInit {
         }
       });
     } else {
-      this.poiService.addPoi(this.poiForm.value as poi).subscribe({
+      this.poiService.addPoi(poiData).subscribe({
         next: () => {
           this.loadPois();
           this.poiForm.reset();

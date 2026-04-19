@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { poi } from '../utils/Poi-interface';
 
 @Injectable({ providedIn: 'root' })
 export class PoiService {
-  private apiUrl = 'http://localhost:8080/api/pois'; 
+  private apiUrl = '/api/pois';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient = inject(HttpClient)) {}
 
   getPois(): Observable<poi[]> {
     return this.http.get<poi[]>(this.apiUrl);

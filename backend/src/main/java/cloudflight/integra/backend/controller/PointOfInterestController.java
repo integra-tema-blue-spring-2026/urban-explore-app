@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/pois")
+@RequestMapping("/api/pois")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class PointOfInterestController {

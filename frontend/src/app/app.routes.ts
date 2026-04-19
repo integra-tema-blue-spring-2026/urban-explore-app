@@ -17,7 +17,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'poi',
+    path: 'cities/:cityId/poi',
     component: Poi
   },
 
@@ -30,5 +30,4 @@ export const routes: Routes = [
     path: 'cities',
     component: CityComponent 
   }
-  
 ];
