@@ -22,8 +22,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException ex,
-                                                                        HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleValidationException(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getFieldErrors().forEach((fieldError) -> {
@@ -57,7 +57,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFound(
+            NoResourceFoundException ex, HttpServletRequest request) {
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND)
@@ -70,22 +71,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CityNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleCityNotFound(CityNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleCityNotFound(
+            CityNotFoundException ex, HttpServletRequest request) {
         return buildNotFoundResponse(ex.getMessage(), request);
     }
 
     @ExceptionHandler(PointOfInterestNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(PointOfInterestNotFoundException ex,
-                                                              HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(
+            PointOfInterestNotFoundException ex, HttpServletRequest request) {
         return buildNotFoundResponse(ex.getMessage(), request);
     }
 
     @ExceptionHandler(QuestNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleQuestNotFound(QuestNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleQuestNotFound(
+            QuestNotFoundException ex, HttpServletRequest request) {
         return buildNotFoundResponse(ex.getMessage(), request);
     }
 
-    private ResponseEntity<ApiErrorResponse> buildNotFoundResponse(String message, HttpServletRequest request) {
+    private ResponseEntity<ApiErrorResponse> buildNotFoundResponse(
+            String message, HttpServletRequest request) {
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND)
@@ -114,11 +118,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleException(Exception ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleException(
+            Exception ex, HttpServletRequest request) {
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .errors(Map.of(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()) ,"Internal server error"))
+            .errors(Map.of(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    "Internal server error"))
             .message("An unexpected internal server error occurred.")
             .path(request.getRequestURI())
             .build();

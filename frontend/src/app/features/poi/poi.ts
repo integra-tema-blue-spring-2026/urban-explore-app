@@ -73,7 +73,7 @@ export class Poi implements OnInit {
 
     const poiData: poi = {
       ...(this.poiForm.value as any),
-      cityId: this.cityId 
+      cityId: this.cityId
     };
 
     if (this.editingId) {

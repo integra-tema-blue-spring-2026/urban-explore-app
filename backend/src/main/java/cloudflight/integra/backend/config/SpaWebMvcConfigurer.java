@@ -20,7 +20,7 @@ public class SpaWebMvcConfigurer implements WebMvcConfigurer {
                 .addResolver(new PathResourceResolver() {
                     @Override
                     protected Resource getResource(@NonNull String resourcePath,
-                                                   @NonNull Resource location) throws IOException {
+                            @NonNull Resource location) throws IOException {
                         Resource requestedResource = location.createRelative(resourcePath);
 
                         // If the resource exists and is readable return it

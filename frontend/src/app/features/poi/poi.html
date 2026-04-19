@@ -60,8 +60,8 @@
     <div *ngFor="let poi of pois" class="card">
 
       <!-- Delete button -->
-      <button (click)="onDelete(poi.id!)" 
-              class="card-delete-button" 
+      <button (click)="onDelete(poi.id!)"
+              class="card-delete-button"
               title="Delete"
               [attr.aria-label]="'Delete ' + poi.name">
         ✕
@@ -76,8 +76,8 @@
       <div class="card-body">
         <div class="card-header-row">
           <p class="card-title">{{ poi.name }}</p>
-          <button (click)="startEdit(poi)" 
-                  class="btn-card-edit" 
+          <button (click)="startEdit(poi)"
+                  class="btn-card-edit"
                   title="Edit"
                   [attr.aria-label]="'Edit ' + poi.name">
             ✎
