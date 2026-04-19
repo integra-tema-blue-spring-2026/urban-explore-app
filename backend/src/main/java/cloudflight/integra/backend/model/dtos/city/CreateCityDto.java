@@ -1,6 +1,8 @@
 package cloudflight.integra.backend.model.dtos.city;
 
+import cloudflight.integra.backend.model.Coordinates;
 import cloudflight.integra.backend.model.utils.enums.CityStatus;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -32,4 +34,7 @@ public class CreateCityDto {
 
     private UUID id;
     private CityStatus status;
+    @NotNull(message = "Coordinates are required")
+    @Valid
+    private Coordinates coordinates;
 }

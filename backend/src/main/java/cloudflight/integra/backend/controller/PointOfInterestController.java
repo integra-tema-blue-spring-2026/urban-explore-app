@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("/pois")
@@ -29,16 +30,6 @@ public class PointOfInterestController {
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
-        return pointOfInterestService
-            .getAll()
-            .stream()
-            .map(pointOfInterestMapper::toDto)
-            .toList();
     }
 
     @GetMapping("/{id}")
@@ -63,6 +54,39 @@ public class PointOfInterestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable UUID id) {
         pointOfInterestService.deleteById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<PointOfInterestResponseDto> getPointsOfInterestWithFilter(
+        @RequestParam(required = false) String cityId,
+        @RequestParam(required = false) String cityName,
+        @RequestParam(required = false) String poiDescription,
+        @RequestParam(required = false) String poiName
+    ){
+
+        Predicate<PointOfInterest> filter = poi -> true;
+
+        if(cityId != null) {
+            filter = filter.and(poi -> poi.getCity().getId().toString().equals(cityId));
+        }
+
+        if(cityName != null) {
+            filter = filter.and(poi -> poi.getCity().getName().equals(cityName));
+        }
+
+        if(poiDescription != null) {
+            filter = filter.and(poi -> poi.getDescription().contains(poiDescription));
+        }
+
+        if(poiName != null) {
+            filter = filter.and(poi -> poi.getName().equalsIgnoreCase(poiName));
+        }
+
+        return pointOfInterestService.getAll().stream()
+            .filter(filter)
+            .map(pointOfInterestMapper::toDto)
+            .toList();
     }
 
 }

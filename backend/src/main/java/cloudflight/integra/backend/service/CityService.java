@@ -28,15 +28,22 @@ public class CityService {
         return cityRepository.findAll();
     }
 
+    public City getCityById(UUID id) {
+        Optional<City> city = cityRepository.findById(id);
+        return city.orElseThrow(() -> new CityNotFoundException("City with id " + id + " not found."));
+    }
+
     public City createCity(City city) {
         return cityRepository.save(city);
     }
 
     @Transactional
     public City updateCity(UUID id, City inputCity) {
-        if (isStringEmpty(inputCity.getDescription()) && isStringEmpty(inputCity.getImageUrl())) {
+        if (isStringEmpty(inputCity.getDescription())
+            && isStringEmpty(inputCity.getImageUrl())
+            && inputCity.getCoordinates() == null) {
             throw new UpdateCityException(
-                "At least one field (description or imageUrl) must be provided for update.");
+                "At least one field (description, imageUrl or coordinates) must be provided for update.");
         }
         Optional<City> existingCityOpt = cityRepository.findById(id);
         if (existingCityOpt.isPresent()) {
@@ -52,6 +59,12 @@ public class CityService {
                 inputCity.getImageUrl() == null ?
                     existingCity.getImageUrl() :
                     inputCity.getImageUrl()
+            );
+
+            existingCity.setCoordinates(
+                inputCity.getCoordinates() == null ?
+                    existingCity.getCoordinates() :
+                    inputCity.getCoordinates()
             );
             return cityRepository.save(existingCity);
         } else {

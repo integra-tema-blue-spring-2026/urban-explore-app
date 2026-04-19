@@ -18,7 +18,8 @@ public class PointOfInterestMapper {
             entity.getDescription(),
             entity.getAddress(),
             entity.getType(),
-            entity.getCity().getId()
+            entity.getCity().getId(),
+            entity.getCoordinates()
         );
     }
 
@@ -31,7 +32,8 @@ public class PointOfInterestMapper {
             dto.getDescription(),
             dto.getAddress(),
             dto.getType(),
-            city
+            city,
+            dto.getCoordinates()
         );
     }
 }

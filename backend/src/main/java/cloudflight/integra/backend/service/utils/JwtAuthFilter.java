@@ -27,7 +27,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private static final List<String> IGNORED_PATHS = List.of(
         "/users/auth/register",
-        "/users/auth/login"
+        "/users/auth/login",
+        "/swagger-ui",
+        "/swagger-ui.html",
+        "/v3/api-docs"
     );
 
     private final UserDetailsService userDetailsService;
@@ -35,6 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        System.out.println("Filtering request: " + request.getMethod() + " " + request.getServletPath());
         String path = request.getServletPath();
         return "OPTIONS".equalsIgnoreCase(request.getMethod())
             || IGNORED_PATHS.stream().anyMatch(path::startsWith);
@@ -45,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
         throws ServletException, IOException {
-
+        System.out.println("Processing authentication for request: " + request.getMethod() + " " + request.getServletPath());
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
@@ -55,6 +59,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 token = authHeader.substring(7);
                 username = jwtService.extractUsername(token);
             }
+
+            System.out.println("token: " + token + " username: " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

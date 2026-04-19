@@ -73,6 +73,14 @@
       >
     </div>
 
+    <div class="form-group">
+      <input formControlName="latitude" type="number" placeholder="Latitude" class="form-input" />
+    </div>
+
+    <div class="form-group">
+      <input formControlName="longitude" type="number" placeholder="Longitude" class="form-input" />
+    </div>
+
     <button type="submit" class="button-primary" [class.disabled]="!poiForm.valid">
       {{ editingId ? 'Update POI' : 'Add new point' }}
     </button>
@@ -87,6 +95,7 @@
     <div *ngFor="let poi of pois" class="card">
       <!-- Delete button -->
       <button (click)="onDelete(poi.id!)" class="card-delete-button">🗑️</button>
+      <button (click)="startEdit(poi)" class="card-delete-button">✏️</button>
 
       <!-- Image placeholder -->
       <div class="card-image">

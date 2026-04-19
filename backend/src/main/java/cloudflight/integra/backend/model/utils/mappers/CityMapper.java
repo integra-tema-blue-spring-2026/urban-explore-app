@@ -25,6 +25,7 @@ public class CityMapper {
             .population(city.getPopulation())
             .imageUrl(city.getImageUrl())
             .status(city.getStatus())
+            .coordinates(city.getCoordinates())
             .build();
     }
 
@@ -33,6 +34,7 @@ public class CityMapper {
         return City.builder()
             .description(dto.getDescription())
             .imageUrl(dto.getImageUrl())
+            .coordinates(dto.getCoordinates())
             .build();
     }
 
@@ -45,6 +47,7 @@ public class CityMapper {
             .population(dto.getPopulation())
             .imageUrl(dto.getImageUrl())
             .status(CityStatus.PENDING)
+            .coordinates(dto.getCoordinates())
             .build();
     }
 }

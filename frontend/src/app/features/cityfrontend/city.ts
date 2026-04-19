@@ -1,24 +1,25 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, inject} from '@angular/core';
 import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {
-  City,
-  CityStatus,
-  CreateCityRequest,
-  UpdateCityRequest,
-} from '../../shared/models/city.model';
+import { CityDto } from '../../core/api/generated/model/cityDto';
+import { CreateCityDto } from '../../core/api/generated/model/createCityDto';
+import { UpdateCityDto } from '../../core/api/generated/model/updateCityDto';
+import {ButtonDirective} from 'primeng/button';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-city',
   templateUrl: './city.html',
   styleUrl: './city.css',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ButtonDirective],
 })
 export class CityComponent implements OnInit {
-  cities: City[] = [];
+  cities: CityDto[] = [];
   editingId: string | null = null;
+
+  private readonly router = inject(Router);
 
   cityForm = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -29,6 +30,8 @@ export class CityComponent implements OnInit {
       validators: [Validators.required, Validators.min(1)],
     }),
     imageUrl: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    latitude: new FormControl(0, { nonNullable: true, validators: [Validators.required] }),
+    longitude: new FormControl(0, { nonNullable: true, validators: [Validators.required] }),
   });
 
   constructor(
@@ -47,9 +50,20 @@ export class CityComponent implements OnInit {
     });
   }
 
-  startEdit(c: City) {
-    this.editingId = c.id!;
-    this.cityForm.patchValue(c);
+  startEdit(c: CityDto) {
+    if (!c.id) {
+      return;
+    }
+    this.editingId = c.id;
+    this.cityForm.patchValue({
+      name: c.name ?? '',
+      country: c.country ?? '',
+      description: c.description ?? '',
+      population: c.population ?? 1,
+      imageUrl: c.imageUrl ?? '',
+      latitude: c.coordinates?.latitude ?? 0,
+      longitude: c.coordinates?.longitude ?? 0,
+    });
     this.cityForm.get('name')?.disable();
     this.cityForm.get('country')?.disable();
     this.cityForm.get('population')?.disable();
@@ -66,21 +80,29 @@ export class CityComponent implements OnInit {
     const rawValue = this.cityForm.getRawValue();
 
     if (this.editingId) {
-      const updateData: UpdateCityRequest = {
+      const updateData: UpdateCityDto = {
         description: rawValue.description,
         imageUrl: rawValue.imageUrl,
+        coordinates: {
+          latitude: rawValue.latitude,
+          longitude: rawValue.longitude,
+        },
       };
       this.cityService.updateCity(this.editingId, updateData).subscribe(() => {
         alert('City updated successfully!');
         this.finalizeAction();
       });
     } else {
-      const createData: CreateCityRequest = {
+      const createData: CreateCityDto = {
         name: rawValue.name,
         country: rawValue.country,
         description: rawValue.description,
         population: rawValue.population,
         imageUrl: rawValue.imageUrl,
+        coordinates: {
+          latitude: rawValue.latitude,
+          longitude: rawValue.longitude,
+        },
       };
       this.cityService.addCity(createData).subscribe(() => {
         alert('City added successfully!');
@@ -94,17 +116,22 @@ export class CityComponent implements OnInit {
     this.cityService.deleteCity(id).subscribe(() => this.loadCities());
   }
 
+  onShowOnMap(id: string | undefined) {
+    if(!id) return;
+    this.router.navigateByUrl('cities/' + id + '/map');
+  }
+
   cancelEdit() {
     this.editingId = null;
-    this.cityForm.reset({ population: 1 });
+    this.cityForm.reset({ population: 1, latitude: 0, longitude: 0 });
     this.enableAllFields();
   }
   private finalizeAction() {
     this.editingId = null;
     this.enableAllFields(); // Unlock
     this.loadCities();
-    this.cityForm.reset({ population: 1 });
+    this.cityForm.reset({ population: 1, latitude: 0, longitude: 0 });
   }
 
-  protected readonly CityStatus = CityStatus;
+  protected readonly CityStatus = CityDto.StatusEnum;
 }
