@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/pois")
+@RequestMapping("/api/pois")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class PointOfInterestController {
@@ -33,7 +33,14 @@ public class PointOfInterestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
+    public List<PointOfInterestResponseDto> getAll(@RequestParam(required = false) UUID cityId) {
+        if (cityId != null) {
+            return pointOfInterestService
+                    .getByCityId(cityId)
+                    .stream()
+                    .map(pointOfInterestMapper::toDto)
+                    .toList();
+        }
         return pointOfInterestService
             .getAll()
             .stream()

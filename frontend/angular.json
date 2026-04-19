@@ -14,12 +14,7 @@
       "sourceRoot": "src",
       "prefix": "app",
       "i18n": {
-        "sourceLocale": "en-US",
-        "locales": {
-          "ro": {
-            "translation": "src/locale/messages.ro.xlf"
-          }
-        }
+        "sourceLocale": "en-US"
       },
       "architect": {
         "build": {
@@ -27,7 +22,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "localize": true,
+            "localize": false,
             "i18nMissingTranslation": "warning",
             "assets": [
               {

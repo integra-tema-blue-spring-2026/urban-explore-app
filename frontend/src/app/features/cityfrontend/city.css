@@ -123,7 +123,32 @@ width: 30%;}
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.2s;
 }
 
 .btn-edit { background: #675ec2; }
 .btn-delete { background: #675ec2; }
+
+.btn-edit:hover, .btn-delete:hover {
+  opacity: 0.8;
+}
+
+.btn-view-poi {
+  padding: 5px 12px;
+  background: white;
+  color: #675ec2;
+  border: 1px solid #675ec2;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-view-poi:hover {
+  background: #675ec2;
+  color: white;
+}

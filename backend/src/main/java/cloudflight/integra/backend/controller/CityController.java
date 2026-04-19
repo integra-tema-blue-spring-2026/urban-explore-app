@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/api/cities")
 @RequiredArgsConstructor
 public class CityController {
     private final CityService cityService;

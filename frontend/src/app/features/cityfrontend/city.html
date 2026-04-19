@@ -48,6 +48,9 @@
       <td class="table-actions">
         <button (click)="startEdit(city)" class="btn-edit">Edit</button>
         <button (click)="onDelete(city.id)" class="btn-delete">Delete</button>
+        <a [routerLink]="['/cities', city.id, 'poi']" class="btn-view-poi">
+          View POIs →
+        </a>
       </td>
     </tr>
     </tbody>

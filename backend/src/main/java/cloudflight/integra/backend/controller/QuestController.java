@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/quests")
+@RequestMapping("/api/quests")
 public class QuestController {
     private final QuestService questService;
     private final QuestMapper mapper;
