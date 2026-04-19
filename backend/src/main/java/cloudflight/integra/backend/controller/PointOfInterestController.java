@@ -33,7 +33,14 @@ public class PointOfInterestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
+    public List<PointOfInterestResponseDto> getAll(@RequestParam(required = false) UUID cityId) {
+        if (cityId != null) {
+            return pointOfInterestService
+                    .getByCityId(cityId)
+                    .stream()
+                    .map(pointOfInterestMapper::toDto)
+                    .toList();
+        }
         return pointOfInterestService
             .getAll()
             .stream()

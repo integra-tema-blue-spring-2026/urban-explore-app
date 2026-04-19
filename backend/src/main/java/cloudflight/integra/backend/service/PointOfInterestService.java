@@ -33,6 +33,11 @@ public class PointOfInterestService {
     }
 
     @Transactional(readOnly = true)
+    public List<PointOfInterest> getByCityId(UUID cityId) {
+        return pointOfInterestRepository.findByCityId(cityId);
+    }
+
+    @Transactional(readOnly = true)
     public PointOfInterest findById(UUID id) {
         return pointOfInterestRepository.findById(id).orElseThrow(
             () -> new PointOfInterestNotFoundException("PointOfInterest with id " + id + " not found!")

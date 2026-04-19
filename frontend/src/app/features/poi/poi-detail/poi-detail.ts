@@ -64,6 +64,10 @@ export class PoiDetail implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/poi']);
+    if (this.poi?.cityId) {
+      this.router.navigate(['/cities', this.poi.cityId, 'poi']);
+    } else {
+      this.router.navigate(['/cities']);
+    }
   }
 }

@@ -29,8 +29,11 @@ export class Poi implements OnInit {
   });
 
   ngOnInit(): void {
-    this.cityId = this.route.snapshot.paramMap.get('cityId');
-    this.loadPois();
+    // Subscribe to paramMap to react to route changes
+    this.route.paramMap.subscribe(params => {
+      this.cityId = params.get('cityId');
+      this.loadPois();
+    });
   }
 
   startEdit(p: poi) {
@@ -49,13 +52,9 @@ export class Poi implements OnInit {
   }
 
   loadPois() {
-    this.poiService.getPois().subscribe({
+    this.poiService.getPois(this.cityId || undefined).subscribe({
       next: (data: poi[]) => {
-        if (this.cityId) {
-          this.pois = data.filter(p => p.cityId === this.cityId);
-        } else {
-          this.pois = data;
-        }
+        this.pois = data;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -66,14 +65,15 @@ export class Poi implements OnInit {
   }
 
   savePoi() {
-    if (!this.poiForm.valid) {
+    if (!this.poiForm.valid || !this.cityId) {
       this.poiForm.markAllAsTouched();
+      if (!this.cityId) alert('City ID is missing. Cannot save POI.');
       return;
     }
 
     const poiData: poi = {
       ...(this.poiForm.value as any),
-      cityId: this.cityId
+      cityId: this.cityId 
     };
 
     if (this.editingId) {
@@ -120,3 +120,4 @@ export class Poi implements OnInit {
     }
   }
 }
+

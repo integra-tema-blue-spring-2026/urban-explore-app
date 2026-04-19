@@ -6,11 +6,14 @@ import { poi } from '../utils/Poi-interface';
 @Injectable({ providedIn: 'root' })
 export class PoiService {
   private apiUrl = '/api/pois';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient = inject(HttpClient)) {}
-
-  getPois(): Observable<poi[]> {
-    return this.http.get<poi[]>(this.apiUrl);
+  getPois(cityId?: string): Observable<poi[]> {
+    const params: any = {};
+    if (cityId) {
+      params.cityId = cityId;
+    }
+    return this.http.get<poi[]>(this.apiUrl, { params });
   }
 
   addPoi(poiData: poi): Observable<poi> {
