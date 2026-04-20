@@ -55,9 +55,9 @@ public class ReviewService {
 
     public List<Review> getFilteredReviews(UUID poiId, UUID userId) {
         if(poiId != null && userId != null) {
-            return reviewRepository.findByPoiIdAndUserId(poiId, userId);
+            return reviewRepository.findByPointOfInterestIdAndUserId(poiId, userId);
         } else if (poiId != null) {
-            return reviewRepository.findByPoiId(poiId);
+            return reviewRepository.findByPointOfInterestId(poiId);
         } else if (userId != null) {
             return reviewRepository.findByUserId(userId);
         } else {
