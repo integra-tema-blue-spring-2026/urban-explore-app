@@ -1,0 +1,25 @@
+<div class="bg-[#675EC2] min-h-screen flex items-center justify-center">
+  <div class="w-2/9 flex flex-col items-center">
+    <div class="items-center justify-center flex-col">
+      <img src="i don't have a logo png :(" alt="Logo" class="w-16 h-16 m-8 mx-auto" />
+      <h1 class="text-4xl font-bold text-white m-8">Urban Explorer</h1>
+    </div>
+    <div class="w-full flex justify-center px-4 mb-12">
+      <p-selectButton
+        class="w-full"
+        styleClass="w-full"
+        [options]="options"
+        [(ngModel)]="selectedOption"
+        [allowEmpty]="false"
+      >
+      </p-selectButton>
+    </div>
+    <div class="w-full">
+      @if (selectedOption === 'register') {
+        <app-register></app-register>
+      } @else if (selectedOption === 'login') {
+        <app-login></app-login>
+      }
+    </div>
+  </div>
+</div>

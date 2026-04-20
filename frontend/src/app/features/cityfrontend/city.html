@@ -1,18 +1,25 @@
 <div class="city-manager-container">
-
   <h2 class="page-title">Manage Cities</h2>
 
   <form [formGroup]="cityForm" (ngSubmit)="saveCity()" class="city-form">
+    <input formControlName="name" placeholder="City Name" class="form-input input-flex-1" />
 
-    <input formControlName="name" placeholder="City Name" class="form-input input-flex-1">
+    <input formControlName="country" placeholder="Country" class="form-input input-flex-1" />
 
-    <input formControlName="country" placeholder="Country" class="form-input input-flex-1">
+    <input
+      formControlName="population"
+      type="number"
+      placeholder="Population"
+      class="form-input input-flex-small"
+    />
 
-    <input formControlName="population" type="number" placeholder="Population" class="form-input input-flex-small">
+    <input formControlName="imageUrl" placeholder="Image URL" class="form-input input-flex-large" />
 
-    <input formControlName="imageUrl" placeholder="Image URL" class="form-input input-flex-large">
-
-    <textarea formControlName="description" placeholder="Description" class="form-textarea"></textarea>
+    <textarea
+      formControlName="description"
+      placeholder="Description"
+      class="form-textarea"
+    ></textarea>
 
     <div class="form-actions">
       <button type="submit" [disabled]="!cityForm.valid" class="btn btn-primary">
@@ -26,31 +33,32 @@
 
   <table class="city-table">
     <thead>
-    <tr>
-      <th>Name</th>
-      <th>Country</th>
-      <th>Status</th>
-      <th>Population</th>
-      <th>Actions</th>
-    </tr>
+      <tr>
+        <th>Name</th>
+        <th>Country</th>
+        <th>Status</th>
+        <th>Population</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let city of cities">
-      <td>{{ city.name }}</td>
-      <td>{{ city.country }}</td>
-      <td>
-        <span [class.status-approved]="city.status === CityStatus.APPROVED"
-              [class.status-pending]="city.status !== CityStatus.APPROVED">
+      <tr *ngFor="let city of cities">
+        <td>{{ city.name }}</td>
+        <td>{{ city.country }}</td>
+        <td>
+          <span
+            [class.status-approved]="city.status === CityStatus.APPROVED"
+            [class.status-pending]="city.status !== CityStatus.APPROVED"
+          >
             {{ city.status }}
-        </span>
-      </td>
-      <td>{{ city.population | number }}</td>
-      <td class="table-actions">
-        <button (click)="startEdit(city)" class="btn-edit">Edit</button>
-        <button (click)="onDelete(city.id)" class="btn-delete">Delete</button>
-      </td>
-    </tr>
+          </span>
+        </td>
+        <td>{{ city.population | number }}</td>
+        <td class="table-actions">
+          <button (click)="startEdit(city)" class="btn-edit">Edit</button>
+          <button (click)="onDelete(city.id)" class="btn-delete">Delete</button>
+        </td>
+      </tr>
     </tbody>
   </table>
-
 </div>

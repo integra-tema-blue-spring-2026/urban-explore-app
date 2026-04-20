@@ -5,15 +5,19 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @jakarta.persistence.Entity
 @Table(name = "users")
 @Data
-public class User  {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,7 +26,7 @@ public class User  {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -59,5 +63,11 @@ public class User  {
     public void removeFollower(User follower) {
         this.followers.remove(follower);
         follower.getFollowing().remove(this);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        //TODO: Implement authorities based on UserRole
+        return List.of();
     }
 }
