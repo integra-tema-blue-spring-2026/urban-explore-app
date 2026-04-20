@@ -1,5 +1,7 @@
 package cloudflight.integra.backend.model.dtos.review;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

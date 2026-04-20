@@ -53,11 +53,22 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
+    public List<Review> getFilteredReviews(UUID poiId, UUID userId) {
+        if(poiId != null && userId != null) {
+            return reviewRepository.findByPoiIdAndUserId(poiId, userId);
+        } else if (poiId != null) {
+            return reviewRepository.findByPoiId(poiId);
+        } else if (userId != null) {
+            return reviewRepository.findByUserId(userId);
+        } else {
+            return reviewRepository.findAll();
+        }
+    }
+
     @Transactional
     public Review updateReview(UUID id, Review inputReview) {
         Review existingReview=reviewRepository.findById(id).orElseThrow(
             ()-> new ReviewException("Review with id: "+ id + " not found"));
-
         existingReview.setText(inputReview.getText());
         existingReview.setRating(
             inputReview.getRating() == null ?
@@ -70,10 +81,13 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(UUID id) {
+        log.info("Attempting to delete review with id: {}", id);
         if(!(reviewRepository.existsById(id))) {
+            log.warn("Review with id: {} not found", id);
             throw new ReviewException("Review with id: " + id + " not found");
         }
 
         reviewRepository.deleteById(id);
+        log.info("Review with id: {} deleted successfully", id);
     }
 }
