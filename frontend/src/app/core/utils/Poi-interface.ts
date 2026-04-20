@@ -1,4 +1,3 @@
-
 export interface poi {
     id?: string;
     name: string;

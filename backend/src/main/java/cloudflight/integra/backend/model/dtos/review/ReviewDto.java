@@ -28,7 +28,7 @@ public class ReviewDto {
     @NotNull(message = "Review must have a posted date")
     private LocalDateTime postedDate;
 
-    @NotNull(message = "Review must have a user ID")
+    @NotNull(message = "Review must have an user ID")
     private UUID userId;
 
     @NotNull(message = "Review must have a Point of Interest ID")
