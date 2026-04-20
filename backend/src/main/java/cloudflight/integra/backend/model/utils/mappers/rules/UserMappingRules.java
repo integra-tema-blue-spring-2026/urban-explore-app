@@ -2,7 +2,7 @@ package cloudflight.integra.backend.model.utils.mappers.rules;
 
 import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.model.utils.enums.UserRole;
-import cloudflight.integra.backend.model.dtos.user.UserCreateDto;
+import cloudflight.integra.backend.model.dtos.user.UserRegisterDto;
 import cloudflight.integra.backend.model.dtos.user.UserUpdateDto;
 import cloudflight.integra.backend.model.dtos.user.UserViewDto;
 
@@ -14,7 +14,7 @@ public final class UserMappingRules {
     private UserMappingRules() {
     }
 
-    public static final Function<UserCreateDto, User> TO_ENTITY_RULE = dto -> {
+    public static final Function<UserRegisterDto, User> TO_ENTITY_RULE = dto -> {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername());

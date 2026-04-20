@@ -11,7 +11,7 @@ import { ReviewComponent } from '../../../shared/components/review-component/rev
   templateUrl: './poi-detail.html',
   styleUrls: ['./poi-detail.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReviewComponent]
+  imports: [CommonModule, FormsModule, ReviewComponent],
 })
 export class PoiDetail implements OnInit {
   private route = inject(ActivatedRoute);
@@ -34,7 +34,7 @@ export class PoiDetail implements OnInit {
         error: (error) => {
           console.error('Error loading POI details:', error);
           alert('Failed to load POI details');
-        }
+        },
       });
     }
   }
@@ -55,7 +55,7 @@ export class PoiDetail implements OnInit {
       error: (error) => {
         console.error('Error updating POI:', error);
         alert('Failed to update POI');
-      }
+      },
     });
   }
 

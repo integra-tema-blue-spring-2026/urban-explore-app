@@ -1,5 +1,5 @@
-import {UserBio} from './user-bio';
-import {UserRole} from './user-role';
+import { UserBio } from './user-bio';
+import { UserRole } from './user-role';
 
 export interface User {
   id: string;
@@ -9,4 +9,3 @@ export interface User {
   bio: UserBio;
   avatarUrl: string;
 }
-

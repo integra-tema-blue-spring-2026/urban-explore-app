@@ -1,29 +1,47 @@
 package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.User;
-import cloudflight.integra.backend.model.dtos.user.UserCreateDto;
+import cloudflight.integra.backend.model.dtos.user.UserLoginDto;
+import cloudflight.integra.backend.model.dtos.user.UserRegisterDto;
 import cloudflight.integra.backend.model.dtos.user.UserUpdateDto;
 import cloudflight.integra.backend.model.dtos.user.UserViewDto;
 import cloudflight.integra.backend.model.utils.mappers.rules.UserMappingRules;
+import cloudflight.integra.backend.service.JwtService;
 import cloudflight.integra.backend.service.UsersService;
 import cloudflight.integra.backend.service.utils.Mapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UsersService service;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UsersService service) {
+    public UserController(
+        UsersService service,
+        AuthenticationManager authenticationManager,
+        JwtService jwtService,
+        PasswordEncoder passwordEncoder
+    ) {
         this.service = service;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // GET --------------------------------------------------
@@ -56,17 +74,28 @@ public class UserController {
     }
 
     // POST --------------------------------------------------
-    @PostMapping
-    public ResponseEntity<UserViewDto> createUser(@Valid @RequestBody UserCreateDto createDto) {
-        User newUser = Mapper.toEntity(createDto, UserMappingRules.TO_ENTITY_RULE);
-
+    @PostMapping("/auth/register")
+    public ResponseEntity<UserViewDto> registerUser(@Valid @RequestBody UserRegisterDto registerDto) {
+        User newUser = Mapper.toEntity(registerDto, UserMappingRules.TO_ENTITY_RULE);
+        newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         User savedUser = service.save(newUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(Mapper.toDto(savedUser, UserMappingRules.TO_DTO_RULE));
     }
 
+    @PostMapping("/auth/login")
+    public ResponseEntity<Map<String, String>> loginUser(@Valid @RequestBody UserLoginDto loginDto) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
+        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(Map.of("token", jwtService.generateToken(loginDto.getUsername())));
+    }
+
     //PUT --------------------------------------------------
+
     @PutMapping("/{id}")
     public ResponseEntity<UserViewDto> updateUser(
         @PathVariable UUID id,

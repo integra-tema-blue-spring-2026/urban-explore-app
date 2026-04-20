@@ -1,26 +1,32 @@
-import {inject, Injectable} from '@angular/core';
-import {City, CreateCityRequest, UpdateCityRequest} from '../../../shared/models/city.model';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {PointOfInterest, PointOfInterestFilter} from '../../../shared/models/point-of-interest.model';
+import { inject, Injectable } from '@angular/core';
+import { City, CreateCityRequest, UpdateCityRequest } from '../../../shared/models/city.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import {
+  PointOfInterest,
+  PointOfInterestFilter,
+} from '../../../shared/models/point-of-interest.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CityService {
   private apiPath = '/api/cities';
   private httpClient = inject(HttpClient);
 
   getCitiesWithName(name: string): Observable<City[]> {
-    if(!name.trim()) {
+    if (!name.trim()) {
       return throwError(() => new Error('Name must not be empty'));
     }
 
     return this.httpClient.get<City[]>(`${this.apiPath}/${encodeURIComponent(name)}`);
   }
 
-  getPointsOfInterestFromCitiesWithName(name: string, filter: PointOfInterestFilter = {}): Observable<PointOfInterest[]> {
-    if(!name.trim()) {
+  getPointsOfInterestFromCitiesWithName(
+    name: string,
+    filter: PointOfInterestFilter = {},
+  ): Observable<PointOfInterest[]> {
+    if (!name.trim()) {
       return throwError(() => new Error('Name must not be empty'));
     }
 
@@ -33,7 +39,10 @@ export class CityService {
       params = params.set('poiDescription', filter.description);
     }
 
-    return this.httpClient.get<PointOfInterest[]>(`${this.apiPath}/${encodeURIComponent(name)}/pois`, { params });
+    return this.httpClient.get<PointOfInterest[]>(
+      `${this.apiPath}/${encodeURIComponent(name)}/pois`,
+      { params },
+    );
   }
   getCities(): Observable<City[]> {
     return this.httpClient.get<City[]>(this.apiPath);
