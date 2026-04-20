@@ -1,0 +1,24 @@
+<p-toast [baseZIndex]="1000" styleClass="p-toast-large" position="top-center"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<hr>
+<br>
+<section class="review-shell">
+  <app-review-list
+    [reviews]="reviews"
+    [isLoading]="isLoading"
+    [isWriting]="showForm"
+    (createReview)="openCreateForm()"
+    (cancelEdit)="cancelEdit()"
+    (editReview)="startEdit($event)"
+    (deleteReview)="deleteReview($event)"
+  />
+  @if (showForm) {
+  <app-review-form
+    [form]="reviewForm"
+    [isWriting]="showForm"
+    [isSubmitting]="isSubmitting"
+    (submitReview)="submitReview()"
+    (cancelEdit)="cancelEdit()"
+  />
+}
+</section>
