@@ -1,11 +1,12 @@
 package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
-import cloudflight.integra.backend.repository.ReviewRepository;
+import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
+import cloudflight.integra.backend.repository.ReviewRepository;
 import cloudflight.integra.backend.repository.UserRepository;
-import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +21,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final PointOfInterestRepository pointOfInterestRepository;
     private final UserRepository userRepository;
+    private final PointOfInterestRepository pointOfInterestRepository;
 
     public Review createReview(Review inputReview) {
-        if (!pointOfInterestRepository.existsById(inputReview.getPoiId())) {
-            throw new PointOfInterestNotFoundException("POI with id: " + inputReview.getPoiId() + " not found");
+
+        if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
+            User user = userRepository.findById(inputReview.getUser().getId())
+                .orElseThrow(() -> new ReviewException(
+                    "User with id: " + inputReview.getUser().getId() + " not found"));
+            inputReview.setUser(user);
+        } else {
+            throw new ReviewException("Review must have a valid user ID");
         }
-            if (!userRepository.existsById(inputReview.getUserId())) {
-                throw new ReviewException("User with id: " + inputReview.getUserId() + " not found");
-            }
+
+        if (inputReview.getPointOfInterest() != null && inputReview.getPointOfInterest().getId() != null) {
+            PointOfInterest poi = pointOfInterestRepository.findById(inputReview.getPointOfInterest().getId())
+                .orElseThrow(() ->
+                new ReviewException("Point of Interest with id: " + inputReview.getPointOfInterest().getId() +
+                " not found"));
+            inputReview.setPointOfInterest(poi);
+        } else {
+            throw new ReviewException("Review must have a valid Point of Interest ID");
+        }
 
         inputReview.setPostedDate(LocalDateTime.now());
         return reviewRepository.save(inputReview);
@@ -41,9 +55,9 @@ public class ReviewService {
 
     public List<Review> getFilteredReviews(UUID poiId, UUID userId) {
         if(poiId != null && userId != null) {
-            return reviewRepository.findByPoiIdAndUserId(poiId, userId);
+            return reviewRepository.findByPointOfInterestIdAndUserId(poiId, userId);
         } else if (poiId != null) {
-            return reviewRepository.findByPoiId(poiId);
+            return reviewRepository.findByPointOfInterestId(poiId);
         } else if (userId != null) {
             return reviewRepository.findByUserId(userId);
         } else {

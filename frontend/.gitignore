@@ -39,6 +39,9 @@ testem.log
 /typings
 __screenshots__/
 
+# Generated API code (auto-generated from OpenAPI specification)
+/src/app/core/api/generated
+
 # System files
 .DS_Store
 Thumbs.db

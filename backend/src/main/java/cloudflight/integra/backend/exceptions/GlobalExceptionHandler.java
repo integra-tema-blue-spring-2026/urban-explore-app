@@ -81,8 +81,8 @@ public class GlobalExceptionHandler {
             .path(request.getRequestURI())
             .build();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
 
     @ExceptionHandler(CityNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleCityNotFound(CityNotFoundException ex,HttpServletRequest request) {

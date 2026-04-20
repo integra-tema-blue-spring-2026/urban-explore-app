@@ -25,7 +25,7 @@ public class ReviewDto {
     @Max(5)
     private Integer rating;
 
-    @NotBlank
+    @NotNull(message = "Review must have a posted date")
     private LocalDateTime postedDate;
 
     @NotNull(message = "Review must have an user ID")

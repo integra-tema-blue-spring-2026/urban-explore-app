@@ -24,19 +24,27 @@ public class Review {
     @Column(nullable=false)
     private LocalDateTime postedDate;
 
-    @Column(nullable=false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private User user;
 
-    @Column(nullable=false)
-    private UUID poiId;
+    @ManyToOne
+    @JoinColumn(name = "poi_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private PointOfInterest pointOfInterest;
 
     @Builder
-    public Review(UUID id, String text, Integer rating, LocalDateTime postedDate, UUID userId, UUID poiId) {
+    public Review(UUID id, String text,
+        Integer rating, LocalDateTime postedDate,
+        User user, PointOfInterest pointOfInterest) {
         this.id = id;
         this.text = text;
         this.rating = rating;
         this.postedDate = postedDate;
-        this.userId = userId;
-        this.poiId = poiId;
+        this.user = user;
+        this.pointOfInterest = pointOfInterest;
     }
 }

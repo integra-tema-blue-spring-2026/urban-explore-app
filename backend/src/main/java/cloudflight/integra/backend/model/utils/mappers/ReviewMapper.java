@@ -1,6 +1,8 @@
 package cloudflight.integra.backend.model.utils.mappers;
 
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
@@ -17,18 +19,29 @@ public class ReviewMapper {
             .text(review.getText())
             .rating(review.getRating())
             .postedDate(review.getPostedDate())
-            .userId(review.getUserId())
-            .poiId(review.getPoiId())
+            .userId(review.getUser() != null ? review.getUser().getId() : null)
+            .poiId(review.getPointOfInterest() != null ? review.getPointOfInterest().getId() : null)
             .build();
     }
 
     public Review toEntityFromCreateDto(ReviewCreateDto reviewDto) {
-        return Review.builder()
+        Review review = Review.builder()
             .text(reviewDto.getText())
             .rating(reviewDto.getRating())
-            .userId(reviewDto.getUserId())
-            .poiId(reviewDto.getPoiId())
             .build();
+
+        if (reviewDto.getUserId() != null) {
+            User user = new User();
+            user.setId(reviewDto.getUserId());
+            review.setUser(user);
+        }
+
+        if (reviewDto.getPoiId() != null) {
+            PointOfInterest poi = new PointOfInterest();
+            poi.setId(reviewDto.getPoiId());
+            review.setPointOfInterest(poi);
+        }
+        return review;
     }
 
     public Review toEntityFromUpdateDto(ReviewUpdateDto reviewDto) {

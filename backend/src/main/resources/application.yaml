@@ -18,6 +18,12 @@ server:
   servlet:
     context-path: /api
 
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
 jwt:
   secret: wb2H7b9etkXapRG4ewH1jdj1qetuz/sSPzyQi+ShjEg=
   expiration: 1800000
