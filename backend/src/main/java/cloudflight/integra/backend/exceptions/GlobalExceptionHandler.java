@@ -1,8 +1,9 @@
 package cloudflight.integra.backend.exceptions;
 
+import cloudflight.integra.backend.exceptions.custom.*;
+import cloudflight.integra.backend.exceptions.custom.user.UserFollowException;
+import cloudflight.integra.backend.exceptions.custom.user.UserUnfollowException;
 import cloudflight.integra.backend.model.dtos.ApiErrorResponse;
-import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
-import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -80,7 +81,73 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(UpdateCityException.class)
+    @ExceptionHandler(ReviewException.class)
+    public ResponseEntity<ApiErrorResponse> handleReviewException(
+        ReviewException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Review not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(QuestNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleQuestNotFound(
+        QuestNotFoundException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Quest not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PointOfInterestNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(
+        PointOfInterestNotFoundException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Point of Interest not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserFollowException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserFollowException(
+        UserFollowException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(Map.of("400", "User follow error"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserUnfollowException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserUnfollowException(
+        UserUnfollowException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(Map.of("400", "User unfollow error"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+        @ExceptionHandler(UpdateCityException.class)
     public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(
         UpdateCityException ex,
         HttpServletRequest request) {
