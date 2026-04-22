@@ -1,14 +1,13 @@
 package cloudflight.integra.backend.exceptions;
 
+import cloudflight.integra.backend.exceptions.custom.*;
+import cloudflight.integra.backend.exceptions.custom.user.UserFollowException;
+import cloudflight.integra.backend.exceptions.custom.user.UserUnfollowException;
 import cloudflight.integra.backend.model.dtos.ApiErrorResponse;
-import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
-import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,22 +54,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
-        AuthenticationException ex,
-        HttpServletRequest request) {
-
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.UNAUTHORIZED)
-            .errors(Map.of("401", "Unauthorized"))
-            .message("Invalid username or password.")
-            .path(request.getRequestURI())
-            .build();
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception ex, HttpServletRequest request) {
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
@@ -81,8 +64,8 @@ public class GlobalExceptionHandler {
             .path(request.getRequestURI())
             .build();
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
 
     @ExceptionHandler(CityNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleCityNotFound(CityNotFoundException ex,HttpServletRequest request) {
@@ -98,7 +81,73 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(UpdateCityException.class)
+    @ExceptionHandler(ReviewException.class)
+    public ResponseEntity<ApiErrorResponse> handleReviewException(
+        ReviewException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Review not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(QuestNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleQuestNotFound(
+        QuestNotFoundException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Quest not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PointOfInterestNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handlePoiNotFound(
+        PointOfInterestNotFoundException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Point of Interest not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserFollowException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserFollowException(
+        UserFollowException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(Map.of("400", "User follow error"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserUnfollowException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserUnfollowException(
+        UserUnfollowException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(Map.of("400", "User unfollow error"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+        @ExceptionHandler(UpdateCityException.class)
     public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(
         UpdateCityException ex,
         HttpServletRequest request) {
@@ -112,20 +161,5 @@ public class GlobalExceptionHandler {
             .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiErrorResponse> handleJwtException(
-        JwtException ex, HttpServletRequest request) {
-
-        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.UNAUTHORIZED)
-            .errors(Map.of("401", "Unauthorized"))
-            .message("Invalid or expired authentication token.")
-            .path(request.getRequestURI())
-            .build();
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 }
