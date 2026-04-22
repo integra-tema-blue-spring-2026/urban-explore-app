@@ -1,0 +1,71 @@
+<section class="review-form-card">
+  <div class="review-form-header">
+    <div>
+      <h3>Share your experience or tips</h3>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submitReview.emit()" class="review-form-grid">
+    <label class="review-field">
+      <span>Rating</span>
+      <input type="number" min="1" max="5" formControlName="rating" placeholder="1-5" />
+      @if (hasError('rating', 'required')) {
+        <small>Rating is required.</small>
+      }
+      @if (hasError('rating', 'min') || hasError('rating', 'max')) {
+        <small>Rating must be between 1 and 5.</small>
+      }
+    </label>
+
+    <label class="review-field review-field--wide">
+      <span>Review</span>
+      <textarea
+        rows="5"
+        formControlName="text"
+        placeholder="Describe your experience here, share tips, or provide any other helpful information about the place."
+      ></textarea>
+      @if (hasError('text', 'required')) {
+        <small>Review text is required.</small>
+      }
+      @if (hasError('text', 'maxlength')) {
+        <small>Review text must stay within 1000 characters.</small>
+      }
+    </label>
+
+    <label class="review-field">
+      <span>User ID</span>
+      <input type="text" formControlName="userId" placeholder="550e8400-e29b-41d4-a716-446655440000" />
+      @if (hasError('userId', 'required')) {
+        <small>User ID is required.</small>
+      }
+      @if (hasError('userId', 'invalidUuid')) {
+        <small>User ID must be a valid UUID.</small>
+      }
+    </label>
+
+    <label class="review-field">
+      <span>POI ID</span>
+      <input
+        type="text"
+        formControlName="poiId"
+        placeholder="550e8400-e29b-41d4-a716-446655440000"
+      />
+      @if (hasError('poiId', 'required')) {
+        <small>POI ID is required.</small>
+      }
+      @if (hasError('poiId', 'invalidUuid')) {
+        <small>POI ID must be a valid UUID.</small>
+      }
+    </label>
+
+    <div class="review-form-actions review-field--wide">
+      <button
+        class="primary-button"
+        type="submit"
+        [disabled]="form.invalid || isSubmitting || (!isWriting && !form.dirty)"
+      >
+          Submit review
+      </button>
+    </div>
+  </form>
+</section>

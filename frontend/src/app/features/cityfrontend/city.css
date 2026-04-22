@@ -1,7 +1,6 @@
-
 .city-manager-container {
   max-width: 1000px;
-  margin:auto;
+  margin: auto;
   padding: 0 20px;
   font-family: sans-serif;
   display: flex;
@@ -16,7 +15,8 @@
   align-content: center;
 }
 
-.form-input:disabled, .form-textarea:disabled {
+.form-input:disabled,
+.form-textarea:disabled {
   background-color: #e2e8f0;
   color: #64748b;
   cursor: not-allowed;
@@ -36,18 +36,32 @@
   border: 1px solid #e2e8f0;
 }
 
-.form-input, .form-select, .form-textarea {
+.form-input,
+.form-select,
+.form-textarea {
   padding: 8px 12px;
   border: 1px solid #ccc;
   background-color: #f8fafc;
   border-radius: 6px;
 }
 
-.input-flex-1 { flex: 1; min-width: 150px; }
-.input-flex-small { flex: 1; min-width: 120px; }
-.input-flex-large { flex: 1; min-width: 200px; }
+.input-flex-1 {
+  flex: 1;
+  min-width: 150px;
+}
+.input-flex-small {
+  flex: 1;
+  min-width: 120px;
+}
+.input-flex-large {
+  flex: 1;
+  min-width: 200px;
+}
 
-.form-select { flex: 1; min-width: 120px; }
+.form-select {
+  flex: 1;
+  min-width: 120px;
+}
 
 .form-textarea {
   width: 100%;
@@ -61,7 +75,6 @@
   gap: 10px;
   margin-top: 10px;
 }
-
 
 .btn {
   padding: 10px 16px;
@@ -81,15 +94,16 @@
   background: white;
   width: 70%;
 }
-.btn-secondary { background: #6b7280;
-width: 30%;}
-
+.btn-secondary {
+  background: #6b7280;
+  width: 30%;
+}
 
 .city-table {
   width: 90%;
   border-collapse: collapse;
   font-size: 14px;
-  color : black;
+  color: black;
 }
 
 .city-table th {
@@ -107,17 +121,22 @@ width: 30%;}
   padding: 10px 14px;
 }
 
-
-.status-approved { color: green; font-weight: bold; }
-.status-pending { color: orange; font-weight: bold; }
-
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
 
 .table-actions {
   display: flex;
   gap: 6px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 5px 12px;
   color: white;
   border: none;
@@ -125,5 +144,9 @@ width: 30%;}
   cursor: pointer;
 }
 
-.btn-edit { background: #675ec2; }
-.btn-delete { background: #675ec2; }
+.btn-edit {
+  background: #675ec2;
+}
+.btn-delete {
+  background: #675ec2;
+}

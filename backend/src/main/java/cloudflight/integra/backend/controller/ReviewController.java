@@ -8,6 +8,7 @@ import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
 import cloudflight.integra.backend.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
@@ -29,8 +31,9 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewDto>> getAllReviews(){
-        return new ResponseEntity<>(reviewService.getAllReviews().stream()
+    public ResponseEntity<List<ReviewDto>> getReviews(@RequestParam(required = false) UUID poiId,
+                                                        @RequestParam(required = false) UUID userId){
+        return new ResponseEntity<>(reviewService.getFilteredReviews(poiId, userId).stream()
             .map(reviewMapper::toDto)
             .toList(), HttpStatus.OK);
     }
@@ -46,8 +49,9 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable UUID id){
+        log.info("DELETE request received for review id: {}", id);
         reviewService.deleteReview(id);
+        log.info("Review id: {} deleted from controller", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

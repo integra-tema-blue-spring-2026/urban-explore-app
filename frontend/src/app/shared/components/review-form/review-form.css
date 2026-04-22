@@ -1,0 +1,106 @@
+.review-form-card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f4f4f4;
+  border: 1px solid #bcbcbc;
+  box-shadow: none;
+}
+
+.review-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.review-form-header h3 {
+  margin: 0;
+  color: #202020;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.review-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.review-field {
+  display: grid;
+  gap: 0.45rem;
+  color: #1e293b;
+}
+
+.review-field--wide {
+  grid-column: 1 / -1;
+}
+
+.review-field span {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.review-field input,
+.review-field textarea,
+.review-field select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #bdbdbd;
+  background: #ffffff;
+  color: #202020;
+  font-size: 1.5rem;
+}
+
+.review-field input:focus,
+.review-field textarea:focus,
+.review-field select:focus {
+  outline: 2px solid rgba(102, 90, 194, 0.2);
+  border-color: #665ac2;
+}
+
+.review-field small {
+  color: #dc2626;
+  font-size: 1.25rem;
+}
+
+.review-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.primary-button,
+.ghost-button {
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.primary-button {
+  background: #000000;
+  color: #ffffff;
+  margin-right: auto;
+  font-size: 1.50rem;
+}
+
+.ghost-button {
+  background: #ffffff;
+  border-color: #acacac;
+  color: #2a2a2a;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .review-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

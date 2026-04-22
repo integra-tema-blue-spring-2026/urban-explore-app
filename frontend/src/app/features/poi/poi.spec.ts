@@ -8,9 +8,8 @@ describe('Poi', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Poi]
-    })
-    .compileComponents();
+      imports: [Poi],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Poi);
     component = fixture.componentInstance;
