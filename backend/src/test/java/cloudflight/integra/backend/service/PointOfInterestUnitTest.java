@@ -84,45 +84,46 @@ public class PointOfInterestUnitTest {
         verify(pointOfInterestRepository, times(1)).findAll();
     }
 
-     @Test
+    @Test
     void findById_ShouldReturnPointOfInterest_WhenIdExists() {
-         when(pointOfInterestRepository.findById(testPointOfInterestId)).thenReturn(java.util.Optional.of(testPointOfInterest));
+        when(pointOfInterestRepository.findById(testPointOfInterestId))
+            .thenReturn(java.util.Optional.of(testPointOfInterest));
 
-         PointOfInterest result = pointOfInterestService.findById(testPointOfInterestId);
+        PointOfInterest result = pointOfInterestService.findById(testPointOfInterestId);
 
-         assertNotEquals(null, result);
-         assertEquals(testPointOfInterestId,result.getId());
-         verify(pointOfInterestRepository, times(1)).findById(testPointOfInterestId);
-     }
+        assertNotEquals(null, result);
+        assertEquals(testPointOfInterestId,result.getId());
+        verify(pointOfInterestRepository, times(1)).findById(testPointOfInterestId);
+    }
 
-     @Test
+    @Test
     void findById_ShouldThrowPointOfInterestNotFoundException_WhenIdDoesNotExist() {
-         when(pointOfInterestRepository.findById(testPointOfInterestId)).thenReturn(java.util.Optional.empty());
+        when(pointOfInterestRepository.findById(testPointOfInterestId)).thenReturn(java.util.Optional.empty());
 
-         PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
-             pointOfInterestService.findById(testPointOfInterestId);
-         });
+        PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
+         pointOfInterestService.findById(testPointOfInterestId);
+        });
 
         assertEquals("PointOfInterest with id " + testPointOfInterestId + " not found!", exception.getMessage());
         verify(pointOfInterestRepository, times(1)).findById(testPointOfInterestId);
      }
 
-     @Test
+    @Test
     void update_ShouldUpdatePointOfInterest_WhenValidDataProvided() {
-         when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(true);
-         when(cityRepository.existsById(testCityId)).thenReturn(true);
+        when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(true);
+        when(cityRepository.existsById(testCityId)).thenReturn(true);
 
-         pointOfInterestService.update(testPointOfInterest);
+        pointOfInterestService.update(testPointOfInterest);
 
-         verify(pointOfInterestRepository, times(1)).save(testPointOfInterest);
-     }
+        verify(pointOfInterestRepository, times(1)).save(testPointOfInterest);
+    }
 
-     @Test
+    @Test
     void update_ShouldThrowPointOfInterestNotFoundException_WhenPointOfInterestDoesNotExist() {
-         when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(false);
-         when(cityRepository.existsById(testCityId)).thenReturn(true);
+        when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(false);
+        when(cityRepository.existsById(testCityId)).thenReturn(true);
         PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
-            pointOfInterestService.update(testPointOfInterest);
+        pointOfInterestService.update(testPointOfInterest);
         });
 
         assertEquals("PointOfInterest with id " + testPointOfInterestId + " not found!", exception.getMessage());
@@ -131,35 +132,35 @@ public class PointOfInterestUnitTest {
 
     @Test
     void update_ShouldThrowCityNotFoundException_WhenCityDoesNotExist() {
-         when(cityRepository.existsById(testCityId)).thenReturn(false);
+        when(cityRepository.existsById(testCityId)).thenReturn(false);
 
         CityNotFoundException exception = assertThrows(CityNotFoundException.class, () -> {
-            pointOfInterestService.update(testPointOfInterest);
+        pointOfInterestService.update(testPointOfInterest);
         });
 
         assertEquals("City with id " + testCityId + " not found", exception.getMessage());
         verify(pointOfInterestRepository, times(0)).save(any(PointOfInterest.class));
     }
 
-     @Test
+    @Test
     void deleteById_ShouldDeletePointOfInterest_WhenIdExists() {
-         when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(true);
+        when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(true);
 
-         pointOfInterestService.deleteById(testPointOfInterestId);
+        pointOfInterestService.deleteById(testPointOfInterestId);
 
-         verify(pointOfInterestRepository, times(1)).deleteById(testPointOfInterestId);
-     }
+        verify(pointOfInterestRepository, times(1)).deleteById(testPointOfInterestId);
+    }
 
     @Test
     void  deleteById_ShouldThrowPointOfInterestNotFoundException_WhenIdDoesNotExist() {
-            when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(false);
+        when(pointOfInterestRepository.existsById(testPointOfInterestId)).thenReturn(false);
 
-            PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
-                pointOfInterestService.deleteById(testPointOfInterestId);
-            });
+        PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
+            pointOfInterestService.deleteById(testPointOfInterestId);
+        });
 
-            assertEquals("PointOfInterest with id " + testPointOfInterestId + " not found!", exception.getMessage());
-            verify(pointOfInterestRepository, times(0)).deleteById(any());
+        assertEquals("PointOfInterest with id " + testPointOfInterestId + " not found!", exception.getMessage());
+        verify(pointOfInterestRepository, times(0)).deleteById(any());
     }
 
 }

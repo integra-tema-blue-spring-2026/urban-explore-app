@@ -68,7 +68,8 @@ class QuestServiceIntegrationTest {
     void update_ShouldPersistChanges() {
         Quest saved = questService.create(buildQuest("Original Title", Difficulty.EASY, 50));
 
-        Quest updatePayload = new Quest(saved.getId(), "Updated Title", "Updated desc.", Difficulty.HARD, 300, testCityId);
+        Quest updatePayload = new Quest(
+            saved.getId(), "Updated Title", "Updated desc.", Difficulty.HARD, 300, testCityId);
         Quest updated = questService.update(saved.getId(), updatePayload);
 
         assertEquals("Updated Title", updated.getTitle());

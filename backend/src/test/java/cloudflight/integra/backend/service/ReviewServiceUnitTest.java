@@ -161,7 +161,8 @@ class ReviewServiceUnitTest {
 
         ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
 
-        assertEquals("Point of Interest with id: " + testReview.getPointOfInterest().getId() + " not found", exception.getMessage());
+        assertEquals("Point of Interest with id: "
+            + testReview.getPointOfInterest().getId() + " not found", exception.getMessage());
         verify(reviewRepository, never()).save(any());
     }
 
