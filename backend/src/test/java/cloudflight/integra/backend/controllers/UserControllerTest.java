@@ -5,16 +5,26 @@ import cloudflight.integra.backend.exceptions.custom.user.UserFollowException;
 import cloudflight.integra.backend.exceptions.custom.user.UserUnfollowException;
 import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.model.UserBio;
-import cloudflight.integra.backend.model.dtos.user.UserCreateDto;
+import cloudflight.integra.backend.model.dtos.user.UserLoginDto;
+import cloudflight.integra.backend.model.dtos.user.UserRegisterDto;
 import cloudflight.integra.backend.model.dtos.user.UserUpdateDto;
 import cloudflight.integra.backend.model.utils.enums.UserRole;
+import cloudflight.integra.backend.service.JwtService;
 import cloudflight.integra.backend.service.UsersService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,10 +33,15 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(
+    controllers = UserController.class,
+    excludeAutoConfiguration = UserDetailsServiceAutoConfiguration.class
+)
+@WithMockUser
 class UserControllerTest {
 
     @Autowired
@@ -34,6 +49,15 @@ class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private AuthenticationManager authenticationManager;
+
+    @MockitoBean
+    private PasswordEncoder passwordEncoder;
 
     @MockitoBean
     private UsersService usersService;
@@ -162,17 +186,18 @@ class UserControllerTest {
     }
 
     @Test
-    void createUser_ShouldReturn201WithMappedUser() throws Exception {
-        UserCreateDto createDto = new UserCreateDto();
+    void registerUser_ShouldReturn201WithMappedUser() throws Exception {
+        UserRegisterDto createDto = new UserRegisterDto();
         createDto.setEmail("user@example.com");
         createDto.setUsername("testuser");
         createDto.setPassword("password123");
 
         when(usersService.save(any(User.class))).thenReturn(testUser);
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createDto)))
+                .content(objectMapper.writeValueAsString(createDto))
+                .with(csrf()))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.email").value("user@example.com"))
             .andExpect(jsonPath("$.username").value("testuser"))
@@ -180,22 +205,78 @@ class UserControllerTest {
             .andExpect(jsonPath("$.avatarUrl").value("http://example.com/avatar.jpg"));
     }
 
+
+
     @Test
-    void createUser_ShouldAlwaysSetRoleToUser() throws Exception {
-        UserCreateDto createDto = new UserCreateDto();
-        createDto.setEmail("user@example.com");
+    void registerUser_ShouldReturn409Conflict_WhenEmailAlreadyExists() throws Exception {
+        UserRegisterDto createDto = new UserRegisterDto();
+        createDto.setEmail("duplicate@example.com");
         createDto.setUsername("testuser");
         createDto.setPassword("password123");
 
-        when(usersService.save(any(User.class))).thenReturn(testUser);
+        when(usersService.save(any(User.class)))
+            .thenThrow(new DataIntegrityViolationException("Email already exists"));
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/auth/register")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDto)))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.role").value("USER"));
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.message").value("Database Error"))
+            .andExpect(jsonPath("$.errors.database").value("Data integrity violation"));
     }
 
+    @Test
+    void registerUser_ShouldReturn400BadRequest_WhenDataIsInvalid() throws Exception {
+        UserRegisterDto invalidDto = new UserRegisterDto();
+
+        mockMvc.perform(post("/users/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("Validation Error"));
+
+        verify(usersService, never()).save(any(User.class));
+    }
+
+    @Test
+    void loginUser_ShouldReturn200AndToken_WhenCredentialsAreValid() throws Exception {
+        UserLoginDto loginDto = new UserLoginDto();
+        loginDto.setUsername("testuser");
+        loginDto.setPassword("correctpassword");
+
+        Authentication authentication = mock(Authentication.class);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+            .thenReturn(authentication);
+
+        when(jwtService.generateToken("testuser")).thenReturn("fake-jwt-token-12345");
+
+        mockMvc.perform(post("/users/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginDto)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.token").value("fake-jwt-token-12345"));
+    }
+
+    @Test
+    void loginUser_ShouldReturnUnauthorized_WhenCredentialsAreInvalid() throws Exception {
+        UserLoginDto loginDto = new UserLoginDto();
+        loginDto.setUsername("testuser");
+        loginDto.setPassword("wrongpassword");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+            .thenThrow(new BadCredentialsException("Bad credentials"));
+
+        mockMvc.perform(post("/users/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginDto)))
+            .andExpect(status().isUnauthorized());
+
+        verify(jwtService, never()).generateToken(anyString());
+    }
 
     @Test
     void updateUser_ShouldReturn200WithUpdatedFields() throws Exception {
@@ -216,7 +297,8 @@ class UserControllerTest {
 
         mockMvc.perform(put("/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username").value("updateduser"))
             .andExpect(jsonPath("$.avatarUrl").value("http://example.com/new-avatar.jpg"));
@@ -232,7 +314,8 @@ class UserControllerTest {
 
         mockMvc.perform(put("/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username").value("testuser"));
     }
@@ -246,7 +329,8 @@ class UserControllerTest {
 
         mockMvc.perform(put("/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
 
         verify(usersService, never()).save(any());
@@ -258,7 +342,8 @@ class UserControllerTest {
         when(usersService.followUser(followerId, userId)).thenReturn(testUser);
 
         mockMvc.perform(put("/users/follow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(userId.toString()))
             .andExpect(jsonPath("$.email").value("user@example.com"))
@@ -271,7 +356,8 @@ class UserControllerTest {
             .thenThrow(new UserFollowException("Follower not found"));
 
         mockMvc.perform(put("/users/follow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isBadRequest());
     }
 
@@ -281,7 +367,8 @@ class UserControllerTest {
             .thenThrow(new UserFollowException("Target User not found"));
 
         mockMvc.perform(put("/users/follow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isBadRequest());
     }
 
@@ -290,7 +377,8 @@ class UserControllerTest {
         when(usersService.unfollowUser(followerId, userId)).thenReturn(testUser);
 
         mockMvc.perform(put("/users/unfollow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(userId.toString()))
             .andExpect(jsonPath("$.email").value("user@example.com"))
@@ -303,7 +391,8 @@ class UserControllerTest {
             .thenThrow(new UserUnfollowException("Follower not found"));
 
         mockMvc.perform(put("/users/unfollow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isBadRequest());
     }
 
@@ -313,7 +402,8 @@ class UserControllerTest {
             .thenThrow(new UserUnfollowException("Target User not found"));
 
         mockMvc.perform(put("/users/unfollow/{id}", userId)
-                .param("followerId", followerId.toString()))
+                .param("followerId", followerId.toString())
+                .with(csrf()))
             .andExpect(status().isBadRequest());
     }
 
@@ -322,7 +412,8 @@ class UserControllerTest {
         when(usersService.findById(userId)).thenReturn(Optional.of(testUser));
         doNothing().when(usersService).delete(userId);
 
-        mockMvc.perform(delete("/users/{id}", userId))
+        mockMvc.perform(delete("/users/{id}", userId)
+                .with(csrf()))
             .andExpect(status().isNoContent());
 
         verify(usersService, times(1)).delete(userId);
@@ -332,7 +423,8 @@ class UserControllerTest {
     void deleteUser_ShouldReturn404_WhenUserNotFound() throws Exception {
         when(usersService.findById(userId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/users/{id}", userId))
+        mockMvc.perform(delete("/users/{id}", userId)
+                .with(csrf()))
             .andExpect(status().isNotFound());
 
         verify(usersService, never()).delete(any());

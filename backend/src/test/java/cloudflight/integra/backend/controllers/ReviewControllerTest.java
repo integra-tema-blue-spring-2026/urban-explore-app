@@ -2,11 +2,16 @@ package cloudflight.integra.backend.controllers;
 
 import cloudflight.integra.backend.controller.ReviewController;
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
+import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
 import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
+import cloudflight.integra.backend.service.JwtService;
 import cloudflight.integra.backend.service.ReviewService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,10 +31,12 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReviewController.class)
+@WithMockUser
 class ReviewControllerTest {
 
     @Autowired
@@ -36,6 +44,9 @@ class ReviewControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private ReviewService reviewService;
@@ -51,13 +62,35 @@ class ReviewControllerTest {
     void setUp() {
         reviewId = UUID.randomUUID();
 
+        User testUser = User.builder()
+            .id(UUID.randomUUID())
+            .username("testuser")
+            .email("user@gmail.com")
+            .password("password")
+            .build();
+
+        City testCity = City.builder()
+            .id(UUID.randomUUID())
+            .name("Cluj-Napoca")
+            .country("Romania")
+            .build();
+
+        PointOfInterest testPoi = PointOfInterest.builder()
+            .id(UUID.randomUUID())
+            .name("test poi")
+            .description("test desc")
+            .address("address 123")
+            .type(PointOfInterestType.MUSEUM)
+            .city(testCity)
+            .build();
+
         testReview = Review.builder()
             .id(reviewId)
             .text("Great place!")
             .rating(5)
             .postedDate(LocalDateTime.now())
-            .userId(1L)
-            .poiId(1L)
+            .user(testUser)
+            .pointOfInterest(testPoi)
             .build();
 
         testReviewDto = ReviewDto.builder()
@@ -66,7 +99,7 @@ class ReviewControllerTest {
             .rating(5)
             .postedDate(testReview.getPostedDate())
             .userId(UUID.randomUUID())
-            .poiId(1L)
+            .poiId(UUID.randomUUID())
             .build();
     }
 
@@ -85,7 +118,8 @@ class ReviewControllerTest {
 
         mockMvc.perform(post("/reviews")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createDto)))
+                .content(objectMapper.writeValueAsString(createDto))
+                .with(csrf()))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.text").value("Great place!"))
             .andExpect(jsonPath("$.rating").value(5));
@@ -93,10 +127,13 @@ class ReviewControllerTest {
 
     @Test
     void getAllReviews_ShouldReturn200WithReviewList() throws Exception {
-        when(reviewService.getAllReviews()).thenReturn(List.of(testReview));
+        when(reviewService.getFilteredReviews(testReview.getPointOfInterest().getId(),
+            testReview.getUser().getId())).thenReturn(List.of(testReview));
         when(reviewMapper.toDto(testReview)).thenReturn(testReviewDto);
 
-        mockMvc.perform(get("/reviews"))
+        mockMvc.perform(get("/reviews")
+                .param("userId", String.valueOf(testReview.getUser().getId()))
+                .param("poiId", String.valueOf(testReview.getPointOfInterest().getId())))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].text").value("Great place!"))
             .andExpect(jsonPath("$[0].rating").value(5));
@@ -133,7 +170,8 @@ class ReviewControllerTest {
 
         mockMvc.perform(put("/reviews/{id}", reviewId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.text").value("Updated text."))
             .andExpect(jsonPath("$.rating").value(4));
@@ -152,7 +190,8 @@ class ReviewControllerTest {
 
         mockMvc.perform(put("/reviews/{id}", reviewId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
@@ -160,7 +199,8 @@ class ReviewControllerTest {
     void deleteReview_ShouldReturn204_WhenReviewExists() throws Exception {
         doNothing().when(reviewService).deleteReview(reviewId);
 
-        mockMvc.perform(delete("/reviews/{id}", reviewId))
+        mockMvc.perform(delete("/reviews/{id}", reviewId)
+                .with(csrf()))
             .andExpect(status().isNoContent());
     }
 
@@ -169,7 +209,8 @@ class ReviewControllerTest {
         doThrow(new ReviewException("Review with id: " + reviewId + " not found"))
             .when(reviewService).deleteReview(reviewId);
 
-        mockMvc.perform(delete("/reviews/{id}", reviewId))
+        mockMvc.perform(delete("/reviews/{id}", reviewId)
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 }

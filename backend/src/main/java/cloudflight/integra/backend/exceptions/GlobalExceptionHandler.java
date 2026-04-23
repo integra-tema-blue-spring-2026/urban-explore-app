@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -145,6 +147,34 @@ public class GlobalExceptionHandler {
             .path(request.getRequestURI())
             .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserNotFoundException(
+        UsernameNotFoundException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED)
+            .errors(Map.of("401", "Bad credentials"))
+            .message("Invalid username or password")
+            .path(request.getRequestURI())
+            .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(
+        BadCredentialsException ex, HttpServletRequest request) {
+
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED)
+            .errors(Map.of("401", "Authentication failed"))
+            .message("Invalid username or password")
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
         @ExceptionHandler(UpdateCityException.class)

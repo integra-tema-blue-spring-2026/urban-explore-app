@@ -1,7 +1,14 @@
 package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
+import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.User;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
+import cloudflight.integra.backend.repository.CityRepository;
+import cloudflight.integra.backend.repository.PointOfInterestRepository;
+import cloudflight.integra.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +25,57 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReviewServiceIntegrationTest {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private PointOfInterestRepository poiRepository;
+
+    @Autowired
     private ReviewService reviewService;
 
     private Review testReview;
+    private User testUser1;
+    private User testUser2;
+    private PointOfInterest testPoi;
 
     @BeforeEach
     void setUp() {
+        testUser1 = User.builder()
+            .username("testuser1")
+            .email("user1@gmail.com")
+            .password("password")
+            .build();
+        userRepository.save(testUser1);
+        testUser2 = User.builder()
+            .username("testuser2")
+            .email("user2@gmail.com")
+            .password("password")
+            .build();
+        userRepository.save(testUser2);
+
+        City testCity = City.builder()
+            .name("Cluj-Napoca")
+            .country("Romania")
+            .build();
+        cityRepository.save(testCity);
+
+
+        testPoi = PointOfInterest.builder()
+            .name("test poi")
+            .description("test desc")
+            .address("address 123")
+            .type(PointOfInterestType.MUSEUM)
+            .city(testCity)
+            .build();
+        poiRepository.save(testPoi);
         testReview = Review.builder()
             .text("Great place!")
             .rating(5)
-            .userId(1L)
-            .poiId(1L)
+            .user(testUser1)
+            .pointOfInterest(testPoi)
             .build();
     }
 
@@ -44,8 +91,16 @@ class ReviewServiceIntegrationTest {
 
     @Test
     void getAllReviews_ShouldReturnAllPersistedReviews() {
-        reviewService.createReview(Review.builder().text("First").rating(3).userId(1L).poiId(1L).build());
-        reviewService.createReview(Review.builder().text("Second").rating(4).userId(2L).poiId(1L).build());
+        reviewService.createReview(Review.builder()
+            .text("First")
+            .rating(3)
+            .user(testUser1)
+            .pointOfInterest(testPoi).build());
+        reviewService.createReview(Review.builder()
+            .text("Second")
+            .rating(4)
+            .user(testUser2)
+            .pointOfInterest(testPoi).build());
 
         List<Review> all = reviewService.getAllReviews();
 

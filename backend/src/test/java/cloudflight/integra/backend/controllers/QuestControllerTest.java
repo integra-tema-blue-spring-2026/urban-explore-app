@@ -7,6 +7,7 @@ import cloudflight.integra.backend.model.dtos.quest.CreateQuestDto;
 import cloudflight.integra.backend.model.dtos.quest.QuestDto;
 import cloudflight.integra.backend.model.utils.enums.Enums.Difficulty;
 import cloudflight.integra.backend.model.utils.mappers.QuestMapper;
+import cloudflight.integra.backend.service.JwtService;
 import cloudflight.integra.backend.service.QuestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,10 +26,12 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(QuestController.class)
+@WithMockUser
 class QuestControllerTest {
 
     @Autowired
@@ -35,6 +39,9 @@ class QuestControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private QuestService questService;
@@ -122,7 +129,8 @@ class QuestControllerTest {
 
         mockMvc.perform(post("/quests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createQuestDto)))
+                .content(objectMapper.writeValueAsString(createQuestDto))
+                .with(csrf()))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.title").value("Explore the Old Town"))
             .andExpect(jsonPath("$.difficulty").value("EASY"));
@@ -152,7 +160,8 @@ class QuestControllerTest {
 
         mockMvc.perform(put("/quests/{id}", questId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").value("Updated Title"))
             .andExpect(jsonPath("$.difficulty").value("HARD"));
@@ -166,7 +175,8 @@ class QuestControllerTest {
 
         mockMvc.perform(put("/quests/{id}", questId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createQuestDto)))
+                .content(objectMapper.writeValueAsString(createQuestDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
@@ -175,7 +185,8 @@ class QuestControllerTest {
     void delete_ShouldReturn200_WhenQuestExists() throws Exception {
         doNothing().when(questService).delete(questId);
 
-        mockMvc.perform(delete("/quests/{id}", questId))
+        mockMvc.perform(delete("/quests/{id}", questId)
+                .with(csrf()))
             .andExpect(status().isOk());
     }
 
@@ -184,7 +195,8 @@ class QuestControllerTest {
         doThrow(new QuestNotFoundException("Quest with ID " + questId + " not found"))
             .when(questService).delete(questId);
 
-        mockMvc.perform(delete("/quests/{id}", questId))
+        mockMvc.perform(delete("/quests/{id}", questId)
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 }

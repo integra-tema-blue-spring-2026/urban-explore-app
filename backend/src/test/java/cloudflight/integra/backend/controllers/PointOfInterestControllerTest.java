@@ -9,6 +9,7 @@ import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
+import cloudflight.integra.backend.service.JwtService;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,10 +27,12 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PointOfInterestController.class)
+@WithMockUser
 class PointOfInterestControllerTest {
 
     @Autowired
@@ -36,6 +40,9 @@ class PointOfInterestControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private PointOfInterestService pointOfInterestService;
@@ -92,7 +99,8 @@ class PointOfInterestControllerTest {
 
         mockMvc.perform(post("/pois")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testPoiRequestDto)))
+                .content(objectMapper.writeValueAsString(testPoiRequestDto))
+                .with(csrf()))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name").value("Central Park"))
             .andExpect(jsonPath("$.type").value("PARK"));
@@ -106,7 +114,8 @@ class PointOfInterestControllerTest {
 
         mockMvc.perform(post("/pois")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testPoiRequestDto)))
+                .content(objectMapper.writeValueAsString(testPoiRequestDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
@@ -174,7 +183,8 @@ class PointOfInterestControllerTest {
 
         mockMvc.perform(put("/pois/{id}", poiId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDto)))
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("Updated Park"))
             .andExpect(jsonPath("$.description").value("Updated description."));
@@ -188,7 +198,8 @@ class PointOfInterestControllerTest {
 
         mockMvc.perform(put("/pois/{id}", poiId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testPoiRequestDto)))
+                .content(objectMapper.writeValueAsString(testPoiRequestDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
@@ -200,7 +211,8 @@ class PointOfInterestControllerTest {
 
         mockMvc.perform(put("/pois/{id}", poiId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testPoiRequestDto)))
+                .content(objectMapper.writeValueAsString(testPoiRequestDto))
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
@@ -208,7 +220,8 @@ class PointOfInterestControllerTest {
     void deleteById_ShouldReturn204_WhenPoiExists() throws Exception {
         doNothing().when(pointOfInterestService).deleteById(poiId);
 
-        mockMvc.perform(delete("/pois/{id}", poiId))
+        mockMvc.perform(delete("/pois/{id}", poiId)
+                .with(csrf()))
             .andExpect(status().isNoContent());
     }
 
@@ -217,7 +230,8 @@ class PointOfInterestControllerTest {
         doThrow(new PointOfInterestNotFoundException("PointOfInterest with id " + poiId + " not found!"))
             .when(pointOfInterestService).deleteById(poiId);
 
-        mockMvc.perform(delete("/pois/{id}", poiId))
+        mockMvc.perform(delete("/pois/{id}", poiId)
+            .with(csrf()))
             .andExpect(status().isNotFound());
     }
 }

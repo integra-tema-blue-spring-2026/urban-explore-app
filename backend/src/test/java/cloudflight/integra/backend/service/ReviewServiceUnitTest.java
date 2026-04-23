@@ -1,12 +1,17 @@
 package cloudflight.integra.backend.service;
 
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
+import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
+import cloudflight.integra.backend.model.User;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
+import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import cloudflight.integra.backend.repository.ReviewRepository;
+import cloudflight.integra.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,49 +32,139 @@ class ReviewServiceUnitTest {
     @Mock
     private ReviewRepository reviewRepository;
 
+    @Mock
+    private PointOfInterestRepository poiRepo;
+
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private ReviewService reviewService;
 
     private Review testReview;
     private UUID testReviewId;
+    private User testUser1;
+    private PointOfInterest testPoi;
 
     @BeforeEach
     void setUp() {
+        testUser1 = User.builder()
+            .id(UUID.randomUUID())
+            .username("testuser1")
+            .email("user1@gmail.com")
+            .password("password")
+            .build();
+
+        City testCity = City.builder()
+            .id(UUID.randomUUID())
+            .name("Cluj-Napoca")
+            .country("Romania")
+            .build();
+
+        testPoi = PointOfInterest.builder()
+            .id(UUID.randomUUID())
+            .name("test poi")
+            .description("test desc")
+            .address("address 123")
+            .type(PointOfInterestType.MUSEUM)
+            .city(testCity)
+            .build();
+
         testReviewId = UUID.randomUUID();
         testReview = Review.builder()
             .id(testReviewId)
             .text("Great place!")
             .rating(5)
             .postedDate(LocalDateTime.now())
-            .userId(1L)
-            .poiId(1L)
+            .user(testUser1)
+            .pointOfInterest(testPoi)
             .build();
     }
 
+
     @Test
-    void createReview_ShouldSetPostedDateAndSave() {
-        when(reviewRepository.save(any(Review.class))).thenAnswer(inv -> inv.getArgument(0));
+    void createReview_ShouldReturnCreatedReview_OnValidData() {
+        when(userRepository.findById(testReview.getUser().getId())).thenReturn(Optional.of(testUser1));
+        when(poiRepo.findById(testReview.getPointOfInterest().getId())).thenReturn(Optional.of(testPoi));
+        when(reviewRepository.save(testReview)).thenReturn(testReview);
 
         Review result = reviewService.createReview(testReview);
 
         assertNotNull(result.getPostedDate());
         assertTrue(result.getPostedDate().isBefore(LocalDateTime.now().plusSeconds(1)));
+        assertEquals("Great place!", result.getText());
+        assertEquals(5, result.getRating());
+        assertEquals(PointOfInterestType.MUSEUM, result.getPointOfInterest().getType());
 
-        ArgumentCaptor<Review> captor = ArgumentCaptor.forClass(Review.class);
-        verify(reviewRepository, times(1)).save(captor.capture());
-        assertNotNull(captor.getValue().getPostedDate());
+        verify(userRepository, times(1)).findById(testUser1.getId());
+        verify(poiRepo, times(1)).findById(testPoi.getId());
+        verify(reviewRepository, times(1)).save(testReview);
     }
 
     @Test
-    void createReview_ShouldReturnSavedReview() {
-        when(reviewRepository.save(any(Review.class))).thenReturn(testReview);
+    void createReview_ShouldThrowReviewException_WhenUserIsNull() {
+        testReview.setUser(null);
 
-        Review result = reviewService.createReview(testReview);
+        ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
 
-        assertNotNull(result);
-        assertEquals("Great place!", result.getText());
-        assertEquals(5, result.getRating());
+        assertEquals("Review must have a valid user ID", exception.getMessage());
+        verify(reviewRepository, never()).save(any());
     }
+
+    @Test
+    void createReview_ShouldThrowReviewException_WhenUserIdIsNull() {
+        testReview.getUser().setId(null);
+
+        ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
+
+        assertEquals("Review must have a valid user ID", exception.getMessage());
+        verify(reviewRepository, never()).save(any());
+    }
+
+    @Test
+    void createReview_ShouldThrowReviewException_OnNonPersistedUser() {
+        when(userRepository.findById(testReview.getUser().getId())).thenReturn(Optional.empty());
+
+        ReviewException exception = assertThrows( ReviewException.class, () -> reviewService.createReview(testReview));
+
+        assertEquals("User with id: " + testReview.getUser().getId() + " not found", exception.getMessage());
+        verify(reviewRepository, never()).save(any(Review.class));
+        verify(poiRepo, never()).findById(any());
+    }
+
+    @Test
+    void createReview_ShouldThrowReviewException_WhenPoiIsNull() {
+        when(userRepository.findById(testReview.getUser().getId())).thenReturn(Optional.of(testUser1));
+        testReview.setPointOfInterest(null);
+
+        ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
+
+        assertEquals("Review must have a valid Point of Interest ID", exception.getMessage());
+        verify(reviewRepository, never()).save(any());
+    }
+
+    @Test
+    void createReview_ShouldThrowReviewException_WhenPoiIdIsNull() {
+        when(userRepository.findById(testReview.getUser().getId())).thenReturn(Optional.of(testUser1));
+        testReview.getPointOfInterest().setId(null);
+
+        ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
+
+        assertEquals("Review must have a valid Point of Interest ID", exception.getMessage());
+        verify(reviewRepository, never()).save(any());
+    }
+
+    @Test
+    void createReview_ShouldThrowReviewException_OnNonPersistedPoi() {
+        when(userRepository.findById(testReview.getUser().getId())).thenReturn(Optional.of(testUser1));
+        when(poiRepo.findById(testReview.getPointOfInterest().getId())).thenReturn(Optional.empty());
+
+        ReviewException exception = assertThrows(ReviewException.class, () -> reviewService.createReview(testReview));
+
+        assertEquals("Point of Interest with id: " + testReview.getPointOfInterest().getId() + " not found", exception.getMessage());
+        verify(reviewRepository, never()).save(any());
+    }
+
 
     @Test
     void getAllReviews_ShouldReturnAllReviews() {
@@ -90,6 +185,51 @@ class ReviewServiceUnitTest {
 
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    void getFilteredReviews_ShouldReturnByPoiIdAndUserId() {
+        when(reviewRepository.findByPointOfInterestIdAndUserId(testPoi.getId(), testUser1.getId()))
+            .thenReturn(List.of(testReview));
+
+        List<Review> result = reviewService.getFilteredReviews(testPoi.getId(), testUser1.getId());
+
+        assertEquals(1, result.size());
+        verify(reviewRepository, times(1)).findByPointOfInterestIdAndUserId(testPoi.getId(), testUser1.getId());
+    }
+
+    @Test
+    void getFilteredReviews_ShouldReturnByPoiIdOnly() {
+        when(reviewRepository.findByPointOfInterestId(testPoi.getId()))
+            .thenReturn(List.of(testReview));
+
+        List<Review> result = reviewService.getFilteredReviews(testPoi.getId(), null);
+
+        assertEquals(1, result.size());
+        verify(reviewRepository, times(1)).findByPointOfInterestId(testPoi.getId());
+    }
+
+    @Test
+    void getFilteredReviews_ShouldReturnByUserIdOnly() {
+        when(reviewRepository.findByUserId(testUser1.getId()))
+            .thenReturn(List.of(testReview));
+
+        List<Review> result = reviewService.getFilteredReviews(null, testUser1.getId());
+
+        assertEquals(1, result.size());
+        verify(reviewRepository, times(1)).findByUserId(testUser1.getId());
+    }
+
+    @Test
+    void getFilteredReviews_ShouldReturnAll_WhenBothFiltersAreNull() {
+        when(reviewRepository.findAll())
+            .thenReturn(List.of(testReview));
+
+        List<Review> result = reviewService.getFilteredReviews(null, null);
+
+        assertEquals(1, result.size());
+        verify(reviewRepository, times(1)).findAll();
+    }
+
 
     @Test
     void updateReview_ShouldUpdateText_WhenProvided() {
@@ -126,6 +266,7 @@ class ReviewServiceUnitTest {
         assertEquals("Review with id: " + testReviewId + " not found", exception.getMessage());
         verify(reviewRepository, never()).save(any());
     }
+
 
     @Test
     void deleteReview_ShouldDelete_WhenReviewExists() {

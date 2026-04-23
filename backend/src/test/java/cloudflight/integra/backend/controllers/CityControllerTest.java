@@ -11,12 +11,14 @@ import cloudflight.integra.backend.model.utils.enums.CityStatus;
 import cloudflight.integra.backend.model.utils.mappers.CityMapper;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.CityService;
+import cloudflight.integra.backend.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,10 +29,12 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CityController.class)
+@WithMockUser
 class CityControllerTest {
 
     @Autowired
@@ -41,6 +45,9 @@ class CityControllerTest {
 
     @MockitoBean
     private CityService cityService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @MockitoBean
     private CityMapper cityMapper;
@@ -112,6 +119,7 @@ class CityControllerTest {
         when(cityMapper.toDto(testCity)).thenReturn(testCityDto);
 
         mockMvc.perform(post("/cities")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDto)))
             .andExpect(status().isOk())
@@ -139,6 +147,7 @@ class CityControllerTest {
         when(cityMapper.toDto(testCity)).thenReturn(updatedDto);
 
         mockMvc.perform(put("/cities/{id}", cityId)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
             .andExpect(status().isOk())
@@ -154,6 +163,7 @@ class CityControllerTest {
             .thenThrow(new CityNotFoundException("City not found with id: " + cityId));
 
         mockMvc.perform(put("/cities/{id}", cityId)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
             .andExpect(status().isNotFound());
@@ -169,6 +179,7 @@ class CityControllerTest {
                 "At least one field (description or imageUrl) must be provided for update."));
 
         mockMvc.perform(put("/cities/{id}", cityId)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
             .andExpect(status().isBadRequest());
@@ -178,7 +189,8 @@ class CityControllerTest {
     void deleteCity_ShouldReturn200_WhenCityExists() throws Exception {
         doNothing().when(cityService).deleteCity(cityId);
 
-        mockMvc.perform(delete("/cities/{id}", cityId))
+        mockMvc.perform(delete("/cities/{id}", cityId)
+                .with(csrf()))
             .andExpect(status().isOk());
     }
 
@@ -187,7 +199,8 @@ class CityControllerTest {
         doThrow(new CityNotFoundException("City not found with id: " + cityId))
             .when(cityService).deleteCity(cityId);
 
-        mockMvc.perform(delete("/cities/{id}", cityId))
+        mockMvc.perform(delete("/cities/{id}", cityId)
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 
