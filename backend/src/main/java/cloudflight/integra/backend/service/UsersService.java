@@ -4,6 +4,7 @@ import cloudflight.integra.backend.exceptions.custom.user.UserFollowException;
 import cloudflight.integra.backend.exceptions.custom.user.UserUnfollowException;
 import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.repository.UserRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Primary
 public class UsersService implements UserDetailsService {
     protected final UserRepository repository;
 
@@ -57,7 +59,7 @@ public class UsersService implements UserDetailsService {
         User targetUser = repository.findById(targetUserId).orElseThrow(
             () -> new UserUnfollowException("Target User not found"));
 
-        follower.removeFollower(targetUser);
+        targetUser.removeFollower(follower);
 
         repository.save(follower);
         return repository.save(targetUser);

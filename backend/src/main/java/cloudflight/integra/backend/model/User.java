@@ -2,9 +2,7 @@ package cloudflight.integra.backend.model;
 
 import cloudflight.integra.backend.model.utils.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +15,9 @@ import java.util.UUID;
 @jakarta.persistence.Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -48,11 +49,13 @@ public class User implements UserDetails {
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<User> followers = new HashSet<>();
 
     @ManyToMany(mappedBy = "followers")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private  Set<User> following = new HashSet<>();
 
     public void addFollower(User follower) {
