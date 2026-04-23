@@ -101,12 +101,12 @@ public class PointOfInterestUnitTest {
         when(pointOfInterestRepository.findById(testPointOfInterestId)).thenReturn(java.util.Optional.empty());
 
         PointOfInterestNotFoundException exception = assertThrows(PointOfInterestNotFoundException.class, () -> {
-         pointOfInterestService.findById(testPointOfInterestId);
+            pointOfInterestService.findById(testPointOfInterestId);
         });
 
         assertEquals("PointOfInterest with id " + testPointOfInterestId + " not found!", exception.getMessage());
         verify(pointOfInterestRepository, times(1)).findById(testPointOfInterestId);
-     }
+    }
 
     @Test
     void update_ShouldUpdatePointOfInterest_WhenValidDataProvided() {
