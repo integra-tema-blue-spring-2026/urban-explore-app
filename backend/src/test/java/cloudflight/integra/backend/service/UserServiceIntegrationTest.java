@@ -100,4 +100,17 @@ class UserServiceIntegrationTest {
         assertThrows(UserUnfollowException.class,
             () -> usersService.unfollowUser(follower.getId(), UUID.randomUUID()));
     }
+
+    @Test
+    void unfollowUser_ShouldPersistUnfollowerRelationship() {
+        User updatedTarget = usersService.unfollowUser(follower.getId(), targetUser.getId());
+
+        assertTrue(updatedTarget.getFollowers().stream()
+            .noneMatch(f -> f.getId().equals(follower.getId())));
+        Optional<User> reloadedFollower = usersService.findById(follower.getId());
+        assertTrue(reloadedFollower.isPresent());
+        assertTrue(reloadedFollower.get().getFollowing().stream()
+            .noneMatch(u -> u.getId().equals(targetUser.getId())));
+
+    }
 }

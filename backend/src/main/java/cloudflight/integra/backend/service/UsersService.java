@@ -59,7 +59,7 @@ public class UsersService implements UserDetailsService {
         User targetUser = repository.findById(targetUserId).orElseThrow(
             () -> new UserUnfollowException("Target User not found"));
 
-        follower.removeFollower(targetUser);
+        targetUser.removeFollower(follower);
 
         repository.save(follower);
         return repository.save(targetUser);

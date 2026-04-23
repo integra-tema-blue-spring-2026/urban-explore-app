@@ -49,11 +49,13 @@ public class User implements UserDetails {
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<User> followers = new HashSet<>();
 
     @ManyToMany(mappedBy = "followers")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private  Set<User> following = new HashSet<>();
 
     public void addFollower(User follower) {

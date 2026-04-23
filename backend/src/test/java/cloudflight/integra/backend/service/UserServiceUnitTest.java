@@ -137,6 +137,8 @@ class UserServiceUnitTest {
 
         usersService.unfollowUser(followerId, targetUserId);
 
+        assertFalse(targetUser.getFollowers().contains(follower));
+        assertFalse(follower.getFollowing().contains(targetUser));
         verify(userRepository, times(2)).save(any(User.class));
     }
 

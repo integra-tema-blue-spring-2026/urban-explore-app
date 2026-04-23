@@ -91,7 +91,7 @@ public class PointOfInterestUnitTest {
 
         PointOfInterest result = pointOfInterestService.findById(testPointOfInterestId);
 
-        assertNotEquals(null, result);
+        assertNotNull(result);
         assertEquals(testPointOfInterestId,result.getId());
         verify(pointOfInterestRepository, times(1)).findById(testPointOfInterestId);
     }

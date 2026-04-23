@@ -113,7 +113,7 @@ class ReviewControllerIntegrationTest extends BaseControllerIntegrationTest {
 
     @Test
     void getAllReviews_ShouldReturn200WithEmptyList_WhenNoFilters() {
-        when(reviewService.getAllReviews()).thenReturn(Collections.emptyList());
+        when(reviewService.getFilteredReviews(null,null)).thenReturn(Collections.emptyList());
 
         ResponseEntity<List> response = restTemplate.exchange(
             "/reviews", HttpMethod.GET, authEntity(token), List.class);

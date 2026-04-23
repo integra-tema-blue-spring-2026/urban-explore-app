@@ -86,15 +86,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ReviewException.class)
     public ResponseEntity<ApiErrorResponse> handleReviewException(
         ReviewException ex, HttpServletRequest request) {
+        HttpStatus status = resolveReviewExceptionStatus(ex);
+        String errorMessage = status == HttpStatus.BAD_REQUEST ?
+            "Invalid review request" : "Review not found";
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
-            .status(HttpStatus.NOT_FOUND)
-            .errors(Map.of("404", "Review not found"))
+            .status(status)
+            .errors(Map.of(String.valueOf(status.value()), errorMessage))
             .message(ex.getMessage())
             .path(request.getRequestURI())
             .build();
+        return ResponseEntity.status(status).body(errorResponse);
+    }
 
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    private HttpStatus resolveReviewExceptionStatus(ReviewException ex) {
+        String message = ex.getMessage();
+        if (message == null) {
+            return HttpStatus.NOT_FOUND;
+        }
+        String normalizedMessage = message.toLowerCase();
+        if (normalizedMessage.contains("invalid")
+            || normalizedMessage.contains("missing")
+            || normalizedMessage.contains("required")
+            || normalizedMessage.contains("must not be null")) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return HttpStatus.NOT_FOUND;
     }
 
     @ExceptionHandler(QuestNotFoundException.class)
@@ -177,7 +194,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-        @ExceptionHandler(UpdateCityException.class)
+    @ExceptionHandler(UpdateCityException.class)
     public ResponseEntity<ApiErrorResponse> handleUpdateCityBadRequest(
         UpdateCityException ex,
         HttpServletRequest request) {

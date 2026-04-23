@@ -141,7 +141,7 @@ class ReviewControllerTest {
 
     @Test
     void getAllReviews_ShouldReturn200WithEmptyList_WhenNoReviewsExist() throws Exception {
-        when(reviewService.getAllReviews()).thenReturn(Collections.emptyList());
+        when(reviewService.getFilteredReviews(any(), any())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/reviews"))
             .andExpect(status().isOk())
