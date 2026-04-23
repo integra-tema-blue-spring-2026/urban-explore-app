@@ -53,22 +53,47 @@
           and hidden street art. My goal is to visit every European capital by 2027.
         </p> <footer class="bio-footer">Member since 2024</footer> </div>
     </section>
-
     <section class="content-section">
       <h2 class="section-title">Reviewed POIs</h2>
 
-      <div class="city-list">
-        <div class="city-card">
-          <img src="/images/Roma.png" alt="POI Image" class="city-img">
-          <div class="city-details">
-            <h3>Colosseum</h3> <div class="city-meta">
-            <span><i class="icon-poi icon-muted"></i> Historical Site</span>
-            <span><i class="icon-challenges-flag icon-muted"></i> Reviewed on Oct 12</span>
-          </div>
-          </div>
-          <button class="btn-primary">View POI</button>
+      @if (userReviews && userReviews.length > 0) {
+        <div class="city-list">
+          @for (review of userReviews.slice(0, 3); track review.id) {
+            <div class="city-card">
+
+              @if (!imageErrors[review.id]) {
+                <img [src]="review.poiImageUrl"
+                     [alt]="review.poiName"
+                     class="city-img"
+                     (error)="handleImageError(review.id)">
+              } @else {
+                <div class="city-img placeholder-box">
+                  <span>{{ review.cityName }}</span>
+                </div>
+              }
+
+              <div class="city-details">
+                <h3>{{ review.poiName }}</h3>
+                <div class="city-meta">
+              <span class="rating-stars">
+                Rating: {{ review.rating }}/5
+              </span>
+                  <p class="review-text">"{{ review.text }}"</p>
+                </div>
+              </div>
+
+              <button class="btn-primary" [routerLink]="['/poi/details', review.poiId]">
+                View POI
+              </button>
+            </div>
+          }
         </div>
-      </div>
+      } @else {
+        <div class="empty-reviews-state">
+          <i class="icon-info-circle"></i>
+          <p>No Reviews by this user</p>
+        </div>
+      }
     </section>
 
     <section class="content-section">

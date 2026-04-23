@@ -6,6 +6,7 @@ import cloudflight.integra.backend.model.dtos.review.ReviewDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
 import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
 import cloudflight.integra.backend.model.dtos.review.UserProfileReviewDto;
+
 import cloudflight.integra.backend.service.ReviewService;
 
 import jakarta.validation.Valid;
@@ -62,4 +63,6 @@ public class ReviewController {
     public ResponseEntity<List<UserProfileReviewDto>> getReviewsForProfile(@PathVariable UUID userId) {
         return ResponseEntity.ok(reviewService.getUserProfileReviews(userId));
     }
+
+
 }

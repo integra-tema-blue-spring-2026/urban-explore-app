@@ -282,7 +282,30 @@
   flex-direction: column;
   gap: 12px;
 }
+.empty-reviews-state {
+  text-align: center;
+  padding: 40px;
+  background: #f9fafb;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-muted);
+}
 
+.empty-reviews-state p {
+  margin-top: 8px;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.review-text {
+  margin-top: 8px;
+  font-style: italic;
+  color: var(--text-dark);
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit text to 2 lines if it's too long */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .achievement-card {
   display: flex;
   align-items: center;

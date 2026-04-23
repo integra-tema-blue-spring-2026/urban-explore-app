@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'cities', canActivate: [authGuard], component: CityComponent },
   { path: 'poi', canActivate: [authGuard], component: Poi },
   { path: 'poi/details/:id', canActivate: [authGuard], component: PoiDetail },
-  { path: 'profile', component: Profile },
+  { path: 'profile/:id', canActivate: [authGuard], component: Profile },
   { path: '**', redirectTo: '' },
 
 ];

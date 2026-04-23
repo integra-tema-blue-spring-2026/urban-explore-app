@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ReviewDto } from '../models/reviewDto';
 import { ReviewCreateDto } from '../models/reviewCreateDto';
 import { ReviewUpdateDto } from '../models/reviewUpdateDto';
+import {UserProfileReviewDto} from '../models/user/user-profile-review.dto';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +14,10 @@ export class ReviewController {
 
     public addReview(review: ReviewCreateDto): Observable<ReviewDto> {
       return this.http.post<ReviewDto>(this.apiUrl, review);
+    }
+
+    public getUserProfileReviews(userId: string): Observable<UserProfileReviewDto[]> {
+      return this.http.get<UserProfileReviewDto[]>(`${this.apiUrl}/user/${userId}/profile-view`);
     }
 
     public updateReview(id: string, review: ReviewUpdateDto): Observable<ReviewDto> {
@@ -34,5 +39,7 @@ export class ReviewController {
       console.log('Fetching reviews with params:', params);
       return this.http.get<ReviewDto[]>(this.apiUrl, { params });
     }
+
+
   }
 
