@@ -1,0 +1,336 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.reset {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 75vh;
+}
+.hero {
+  margin-top: -1rem;
+  background-image: url('/images/NewYork Background.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(7, 0, 83, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+
+.hero-content {
+
+}
+
+
+.hero-overlay {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 530;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: black;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  color: black;
+  transition: all 0.3s ease;
+
+}
+
+.feature-section {
+  padding:4% 8%;
+
+}
+
+/*
+.feature-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(7, 0, 83, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+*/
+
+.purple-bg {
+  background-color: rgba(7, 0, 83, 0.5);
+}
+
+.feature-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 60px;
+}
+
+.feature-text {
+  flex: 1;
+  color: black;
+}
+
+.feature-text h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+
+
+.feature-text p {
+  font-size: 1.8rem;
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+
+.review{
+  width: 100vw;
+  height: 85vh;
+  display: block;
+
+}
+
+.feature-image {
+  flex: 1;
+}
+
+
+
+.rounded-img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.chat-icon{
+  width: 35vw;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+
+}
+.feature-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 80px 10%;
+  gap: 50px;
+}
+
+
+.feature-row.mirrored,
+.feature-section.mirrored .feature-container {
+  flex-direction: row-reverse;
+}
+.mirrored .feature-text {
+  text-align: left;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.gray-bg { background-color: #e6e6e6; }
+
+.how-it-works {
+  background-color: white;
+  padding: 100px 10%; /* Lots of vertical space to make it look clean */
+  color: black;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 60px; /* Space between title and grid */
+}
+
+/* 1. Creating the Grid */
+.grid-layout {
+  display: grid;
+  /* This creates 2 columns, each taking up exactly 50% (1fr) of the space */
+  grid-template-columns: 1fr 1fr;
+
+  /* Space between columns (x) and rows (y) */
+  column-gap: 80px;
+  row-gap: 40px;
+
+  max-width: 1100px;
+  margin: 0 auto; /* Centers the whole grid on the screen */
+}
+
+/* 2. Styling the Grid Items */
+.grid-card {
+  /* This adds the horizontal line seen in your design */
+  border-top: 1px solid #e0e0e0;
+  padding-top: 25px;
+}
+
+.grid-card h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.grid-card p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555; /* Slightly lighter gray for the body text */
+}
+
+
+.final-cta {
+  background-color: #070053; /* Dark background as seen in design */
+  color: white;
+  padding: 3% 3%;
+  height:40vh;
+  display: flex;
+  justify-content: center; /* Vertical center if you give it a height */
+  align-items: center;     /* Horizontal center */
+  text-align: center;
+}
+
+.final-cta h2 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 2%;
+  font-family: Inter;
+}
+
+.site-footer {
+  background-color: white;
+  padding: 40px 8%; /* Matches the side margins of your other sections */
+  border-top: 1px solid #f0f0f0; /* A very light line to separate from the blue section */
+}
+
+.footer-container {
+
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; /* Pushes Logo to left, Links to middle, Socials to right */
+  align-items: center;            /* Keeps everything perfectly level horizontally */
+}
+
+/* Brand/Logo Styling */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo-icon {
+  width: 100%;
+  height: auto;
+}
+
+.brand-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: black;
+}
+
+/* Navigation Links */
+.footer-links {
+  display: flex;
+  gap: 35px;
+  /* If you want the links closer to the logo like in the image: */
+  margin-right: auto;
+  margin-left: 60px;
+}
+
+.footer-links a {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #757575; /* The soft gray from your design */
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: black; /* Darkens when you hover over them */
+}
+
+/* Social Icons */
+.footer-social {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-social img {
+  width: 150%; 
+  height: auto;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.footer-social img:hover {
+  opacity: 1;
+}

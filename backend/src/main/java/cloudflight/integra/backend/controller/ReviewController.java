@@ -5,13 +5,16 @@ import cloudflight.integra.backend.model.dtos.review.ReviewCreateDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewDto;
 import cloudflight.integra.backend.model.dtos.review.ReviewUpdateDto;
 import cloudflight.integra.backend.model.utils.mappers.ReviewMapper;
+import cloudflight.integra.backend.model.dtos.review.UserProfileReviewDto;
 import cloudflight.integra.backend.service.ReviewService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -53,5 +56,10 @@ public class ReviewController {
         reviewService.deleteReview(id);
         log.info("Review id: {} deleted from controller", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/user/{userId}/profile-view")
+    public ResponseEntity<List<UserProfileReviewDto>> getReviewsForProfile(@PathVariable UUID userId) {
+        return ResponseEntity.ok(reviewService.getUserProfileReviews(userId));
     }
 }

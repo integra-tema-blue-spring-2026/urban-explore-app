@@ -4,6 +4,7 @@ import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
 import cloudflight.integra.backend.model.User;
+import cloudflight.integra.backend.model.dtos.review.UserProfileReviewDto;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import cloudflight.integra.backend.repository.UserRepository;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,6 +52,38 @@ public class ReviewService {
         return reviewRepository.save(inputReview);
     }
 
+
+
+    public List<UserProfileReviewDto> getUserProfileReviews(UUID userId) {
+        List<Review> reviews = reviewRepository.findByUserId(userId);
+
+        List<UUID> poiIds = reviews.stream()
+            .map(review -> review.getPointOfInterest().getId())
+            .distinct()
+            .toList();
+
+
+        Map<UUID, PointOfInterest> poiMap = pointOfInterestRepository.findAllByIdWithCity(poiIds)
+            .stream()
+            .collect(Collectors.toMap(PointOfInterest::getId, poi -> poi));
+
+
+        return reviews.stream().map(r -> {
+
+            PointOfInterest poi = poiMap.get(r.getPointOfInterest().getId());
+
+            return UserProfileReviewDto.builder()
+                .id(r.getId())
+                .text(r.getText())
+                .rating(r.getRating())
+                .postedDate(r.getPostedDate())
+                .poiId(poi.getId())
+                .poiName(poi.getName())
+                .poiImageUrl(poi.getCity() != null ? poi.getCity().getImageUrl() : null)
+                .cityName(poi.getCity() != null ? poi.getCity().getName() : "Unknown City")
+                .build();
+        }).toList();
+    }
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
