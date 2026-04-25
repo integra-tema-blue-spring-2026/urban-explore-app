@@ -47,6 +47,15 @@ export class CityService {
   getCities(): Observable<City[]> {
     return this.httpClient.get<City[]>(this.apiPath);
   }
+
+  getCitiesByStatus(status: string): Observable<City[]> {
+    const params = new HttpParams().set('status', status);
+    return this.httpClient.get<City[]>(this.apiPath, { params });
+  }
+
+  getPendingCities(): Observable<City[]> {
+    return this.httpClient.get<City[]>(`${this.apiPath}/pending`);
+  }
   addCity(city: CreateCityRequest): Observable<City> {
     return this.httpClient.post<City>(this.apiPath, city);
   }

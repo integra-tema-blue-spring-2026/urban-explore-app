@@ -5,4 +5,11 @@ export interface poi {
   address: string;
   type: string;
   cityId: string;
+  status?: PoiStatus;
+}
+
+export enum PoiStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }

@@ -1,6 +1,7 @@
 export enum CityStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 export interface City {
