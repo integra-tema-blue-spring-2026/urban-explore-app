@@ -19,7 +19,7 @@ public final class UserMappingRules {
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
-        user.setRole(UserRole.USER);
+        user.setRole(dto.getRole() != null ? dto.getRole() : UserRole.USER);
         user.setBio(dto.getBio());
         return user;
     };

@@ -90,8 +90,10 @@ public class UserController {
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
         );
 
+        User currentUser = (User) service.loadUserByUsername(loginDto.getUsername());
+
         return ResponseEntity.status(HttpStatus.OK)
-            .body(Map.of("token", jwtService.generateToken(loginDto.getUsername())));
+            .body(Map.of("token", jwtService.generateToken(loginDto.getUsername(), currentUser.getRole().name())));
     }
 
     //PUT --------------------------------------------------

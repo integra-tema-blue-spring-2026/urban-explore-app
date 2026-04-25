@@ -28,6 +28,12 @@ public class JwtService {
         return createToken(claims, username);
     }
 
+    public String generateToken(String username, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        return createToken(claims, username);
+    }
+
     private String createToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
             .claims(claims)
