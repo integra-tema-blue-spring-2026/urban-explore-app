@@ -150,3 +150,15 @@
 .btn-delete {
   background: #675ec2;
 }
+
+
+.admin-page-button {
+  background: #675ec2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
