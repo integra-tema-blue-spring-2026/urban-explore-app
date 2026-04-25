@@ -1,0 +1,93 @@
+.admin-dashboard {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tables {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.approve,
+.reject {
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 0.35rem 0.65rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.approve {
+  background: #166534;
+}
+
+.reject {
+  background: #b91c1c;
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.status-select {
+  min-width: 120px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.4rem 0.55rem;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.loading,
+.error,
+.empty {
+  color: #475569;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    margin: 1rem;
+    padding: 0;
+  }
+
+  th,
+  td {
+    font-size: 0.9rem;
+  }
+}

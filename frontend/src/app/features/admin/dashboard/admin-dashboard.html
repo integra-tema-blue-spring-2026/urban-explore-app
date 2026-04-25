@@ -1,0 +1,88 @@
+<section class="admin-dashboard">
+  <header class="dashboard-header">
+    <h2>Moderation Dashboard</h2>
+  </header>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <p *ngIf="loading" class="loading">Loading pending items...</p>
+
+  <div class="tables" *ngIf="!loading && !errorMessage">
+    <article class="panel">
+      <h3>Pending Cities</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let city of pendingCities; trackBy: trackByCityId">
+            <td>{{ city.name }}</td>
+            <td>{{ city.country }}</td>
+            <td>{{ city.status }}</td>
+            <td>
+              <ng-container *ngIf="city.id as cityId">
+                <div class="status-actions">
+                  <select class="status-select" [(ngModel)]="cityStatusDrafts[cityId]">
+                    <option *ngFor="let option of statusOptions" [ngValue]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <button type="button" class="approve" (click)="applyCityStatus(cityId)">
+                    Update Status
+                  </button>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+          <tr *ngIf="pendingCities.length === 0">
+            <td colspan="4" class="empty">No pending city submissions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+    <article class="panel">
+      <h3>Pending POIs</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pendingPois; trackBy: trackByPoiId">
+            <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.status }}</td>
+            <td>
+              <ng-container *ngIf="item.id as poiId">
+                <div class="status-actions">
+                  <select class="status-select" [(ngModel)]="poiStatusDrafts[poiId]">
+                    <option *ngFor="let option of statusOptions" [ngValue]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <button type="button" class="approve" (click)="applyPoiStatus(poiId)">
+                    Update Status
+                  </button>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+          <tr *ngIf="pendingPois.length === 0">
+            <td colspan="5" class="empty">No pending POI submissions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </div>
+</section>
