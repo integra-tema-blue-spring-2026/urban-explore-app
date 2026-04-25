@@ -3,6 +3,7 @@ package cloudflight.integra.backend.service;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
 import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestStatus;
 import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,17 @@ public class PointOfInterestService {
             throw new CityNotFoundException("City with id " + newPointOfInterest.getCity().getId() + " not found");
         }
 
+        newPointOfInterest.setStatus(PointOfInterestStatus.PENDING);
+
         return pointOfInterestRepository.save(newPointOfInterest);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PointOfInterest> getAllByStatus(PointOfInterestStatus status){
+        if (status == null) {
+            return pointOfInterestRepository.findAll();
+        }
+        return pointOfInterestRepository.findAllByStatus(status);
     }
 
     @Transactional(readOnly = true)
@@ -41,16 +52,21 @@ public class PointOfInterestService {
 
     @Transactional
     public PointOfInterest update(PointOfInterest updatedPointOfInterest) {
-        if(!pointOfInterestRepository.existsById(updatedPointOfInterest.getId())) {
-            throw new PointOfInterestNotFoundException(
-                "PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!");
-        }
+        PointOfInterest existingPointOfInterest = pointOfInterestRepository.findById(updatedPointOfInterest.getId())
+            .orElseThrow(() -> new PointOfInterestNotFoundException(
+                "PointOfInterest with id " + updatedPointOfInterest.getId() + " not found!"));
 
         if (!cityRepository.existsById(updatedPointOfInterest.getCity().getId())){
             throw new CityNotFoundException("City with id " + updatedPointOfInterest.getCity().getId() + " not found");
         }
 
-        return pointOfInterestRepository.save(updatedPointOfInterest);
+        existingPointOfInterest.setName(updatedPointOfInterest.getName());
+        existingPointOfInterest.setDescription(updatedPointOfInterest.getDescription());
+        existingPointOfInterest.setAddress(updatedPointOfInterest.getAddress());
+        existingPointOfInterest.setType(updatedPointOfInterest.getType());
+        existingPointOfInterest.setCity(updatedPointOfInterest.getCity());
+
+        return pointOfInterestRepository.save(existingPointOfInterest);
     }
 
     @Transactional
