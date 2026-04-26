@@ -49,7 +49,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
         throws ServletException, IOException {
-        System.out.println("Processing authentication for request: " + request.getMethod() + " " + request.getServletPath());
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;

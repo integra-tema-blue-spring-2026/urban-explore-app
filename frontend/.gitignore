@@ -41,6 +41,7 @@ __screenshots__/
 
 # Generated API code (auto-generated from OpenAPI specification)
 /src/app/core/api/generated
+openapi.yaml.json
 
 # System files
 .DS_Store
