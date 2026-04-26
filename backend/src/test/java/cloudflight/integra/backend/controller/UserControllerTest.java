@@ -78,10 +78,13 @@ class UserControllerTest {
     void loginUserReturnsToken() {
         UserLoginDto loginDto = new UserLoginDto("jane_doe", "secret123");
         Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
+        User currentUser = new User();
+        currentUser.setRole(UserRole.USER);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenReturn(authentication);
-        when(jwtService.generateToken("jane_doe")).thenReturn("jwt-token");
+        when(service.loadUserByUsername("jane_doe")).thenReturn(currentUser);
+        when(jwtService.generateToken("jane_doe", UserRole.USER.name())).thenReturn("jwt-token");
 
         ResponseEntity<Map<String, String>> response = controller.loginUser(loginDto);
 
