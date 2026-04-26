@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PointOfInterestRepository extends JpaRepository<PointOfInterest, UUID> {
-	List<PointOfInterest> findAllByStatus(PointOfInterestStatus status);
+    List<PointOfInterest> findAllByStatus(PointOfInterestStatus status);
 }

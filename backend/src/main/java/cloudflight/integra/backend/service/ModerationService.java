@@ -25,10 +25,10 @@ public class ModerationService {
 
         if ("city".equals(normalizedEntity)) {
             updateCityStatus(id, status);
-        } 
+        }
         else if ("poi".equals(normalizedEntity)) {
             updatePointOfInterestStatus(id, status);
-        } 
+        }
         else {
             throw new IllegalArgumentException("Invalid entity type: " + entity);
         }
