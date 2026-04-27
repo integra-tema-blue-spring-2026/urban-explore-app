@@ -56,8 +56,8 @@ export class Poi implements OnInit {
 
   loadPois() {
     this.poiService.getPois().subscribe({
-      next: (data: PointOfInterestResponseDto[] | unknown) => {
-        this.pois = Array.isArray(data) ? (data as PointOfInterestResponseDto[]) : [];
+      next: (data: PointOfInterestResponseDto[]) => {
+        this.pois = data;
         this.cdr.detectChanges();
       },
       error: (error) => {

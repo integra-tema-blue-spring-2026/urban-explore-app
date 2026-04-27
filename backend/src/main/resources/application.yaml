@@ -26,4 +26,9 @@ springdoc:
     path: /v3/api-docs
 jwt:
   secret: wb2H7b9etkXapRG4ewH1jdj1qetuz/sSPzyQi+ShjEg=
-  expiration: 18000000
+  expiration: 1800000
+
+app:
+  cors:
+    allowed-origin: http://localhost:4200
+

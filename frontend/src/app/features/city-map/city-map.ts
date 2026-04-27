@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 
 @Component({
   selector: 'app-city-map',
+  standalone: true,
   imports: [],
   templateUrl: './city-map.html',
   styleUrl: './city-map.css',
@@ -17,8 +18,10 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
   private readonly cityService = inject(CityService);
   private cityLatitude = 0;
   private cityLongitude = 0;
+  private hasCityCoordinates = false;
+  private isViewReady = false;
   private pois: PointOfInterestResponseDto[] = [];
-  private map!: L.Map;
+  private map: L.Map | null = null;
   private router = inject(Router);
   private zone: NgZone = inject(NgZone);
   private fixDefaultIcon(): void {
@@ -43,7 +46,8 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
           console.log(`Loaded city details: ${city.name} with coordinates [${city.coordinates?.latitude}, ${city.coordinates?.longitude}]`);
           this.cityLatitude = city.coordinates?.latitude ?? 0;
           this.cityLongitude = city.coordinates?.longitude ?? 0;
-          this.initMap();
+          this.hasCityCoordinates = true;
+          this.tryInitializeMap();
         },
         error: (error) => {
           console.error('Error loading city details:', error);
@@ -67,15 +71,27 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (this.cityLatitude !== 0 && this.cityLongitude !== 0) {
-      this.initMap();
+    this.isViewReady = true;
+    this.tryInitializeMap();
+  }
+
+  private tryInitializeMap(): void {
+    if (!this.isViewReady || !this.hasCityCoordinates || this.map) {
+      return;
     }
+
+    this.initMap();
+
     if (this.pois.length > 0) {
       this.addMarkers();
     }
   }
 
   private initMap(): void {
+    if (this.map) {
+      return;
+    }
+
     console.log(`Initializing map at coordinates: [${this.cityLatitude}, ${this.cityLongitude}]`);
     this.map = L.map('map', {
       center: [this.cityLatitude, this.cityLongitude],
@@ -88,14 +104,21 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addMarkers(): void {
+    if (!this.map) {
+      return;
+    }
+
+    const map = this.map;
     this.pois.forEach(poi => {
       console.log(`Adding marker for POI: ${poi.name} at [${poi.coordinates?.latitude}, ${poi.coordinates?.longitude}]`);
-      const marker = L.marker([poi.coordinates?.latitude ?? 0, poi.coordinates?.longitude ?? 0]).addTo(this.map)
+      const marker = L.marker([poi.coordinates?.latitude ?? 0, poi.coordinates?.longitude ?? 0]).addTo(map)
 
       const container = document.createElement('div');
       const link = document.createElement('a');
+      const nameEl = document.createElement('b');
+      const typeEl = document.createElement('b');
 
-      link.innerText = `View details for ${poi.name}`;
+      link.textContent = `View details for ${poi.name}`;
       link.href = `/poi/details/${poi.id}`;
       link.style.cssText = 'color: #007bff; text-decoration: underline; cursor: pointer;';
 
@@ -106,7 +129,12 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
         });
       });
 
-      container.innerHTML = `<b>${poi.name}</b><br><b>${poi.type}</b><br>`;
+      nameEl.textContent = poi.name ?? '';
+      typeEl.textContent = poi.type ?? '';
+      container.appendChild(nameEl);
+      container.appendChild(document.createElement('br'));
+      container.appendChild(typeEl);
+      container.appendChild(document.createElement('br'));
       container.appendChild(link);
 
       marker.bindPopup(container);
@@ -114,6 +142,9 @@ export class CityMap implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.map) this.map.remove();
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
   }
 }

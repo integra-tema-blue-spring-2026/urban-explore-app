@@ -15,29 +15,27 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 
 @RestController
 @RequestMapping("/cities")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class CityController {
     private final CityService cityService;
     private final CityMapper cityMapper;
-    private final PointOfInterestMapper pointOfInterestMapper;
 
     @GetMapping
     public List<CityDto> getAllCities(@RequestParam(required = false) String name) {
-        Predicate<City> filter = (city) -> true;
-
         if(name != null) {
-            filter = filter.and(city -> city.getName().equalsIgnoreCase(name));
+            return cityService.getCitiesByName(name)
+                .stream()
+                .map(cityMapper::toDto)
+                .toList();
         }
 
         return cityService.getAllCities()
             .stream()
-            .filter(filter)
             .map(cityMapper::toDto)
             .toList();
     }

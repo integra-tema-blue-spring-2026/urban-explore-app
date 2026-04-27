@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        System.out.println("Filtering request: " + request.getMethod() + " " + request.getServletPath());
         String path = request.getServletPath();
         return "OPTIONS".equalsIgnoreCase(request.getMethod())
             || IGNORED_PATHS.stream().anyMatch(path::startsWith);
@@ -58,8 +57,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 token = authHeader.substring(7);
                 username = jwtService.extractUsername(token);
             }
-
-            System.out.println("token: " + token + " username: " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -17,7 +17,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/quests")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class QuestController {
     private final QuestService questService;
     private final QuestMapper mapper;

@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("/pois")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class PointOfInterestController {
     private final PointOfInterestService pointOfInterestService;
     private final PointOfInterestMapper pointOfInterestMapper;
@@ -59,32 +58,12 @@ public class PointOfInterestController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<PointOfInterestResponseDto> getPointsOfInterestWithFilter(
-        @RequestParam(required = false) String cityId,
+        @RequestParam(required = false) UUID cityId,
         @RequestParam(required = false) String cityName,
         @RequestParam(required = false) String poiDescription,
         @RequestParam(required = false) String poiName
-    ){
-
-        Predicate<PointOfInterest> filter = poi -> true;
-
-        if(cityId != null) {
-            filter = filter.and(poi -> poi.getCity().getId().toString().equals(cityId));
-        }
-
-        if(cityName != null) {
-            filter = filter.and(poi -> poi.getCity().getName().equals(cityName));
-        }
-
-        if(poiDescription != null) {
-            filter = filter.and(poi -> poi.getDescription().contains(poiDescription));
-        }
-
-        if(poiName != null) {
-            filter = filter.and(poi -> poi.getName().equalsIgnoreCase(poiName));
-        }
-
-        return pointOfInterestService.getAll().stream()
-            .filter(filter)
+    ) {
+        return pointOfInterestService.getFiltered(cityId, cityName, poiDescription, poiName).stream()
             .map(pointOfInterestMapper::toDto)
             .toList();
     }
