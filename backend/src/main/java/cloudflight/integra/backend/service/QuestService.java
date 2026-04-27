@@ -4,17 +4,25 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cloudflight.integra.backend.model.Quest;
+import cloudflight.integra.backend.model.User;
+import cloudflight.integra.backend.model.UserQuestCompletion;
 import cloudflight.integra.backend.repository.QuestRepository;
+import cloudflight.integra.backend.repository.UserQuestCompletionRepository;
 
 import cloudflight.integra.backend.exceptions.custom.QuestNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class QuestService {
     private final QuestRepository questRepo;
-
-    public QuestService(QuestRepository questRepo){ this.questRepo = questRepo; }
+    private final UserQuestCompletionRepository userQuestCompletionRepository;
+    private final ActivityService activityService;
 
     public List<Quest> getAllQuests(){
         return questRepo.findAll();
@@ -42,5 +50,28 @@ public class QuestService {
         }
         quest.setId(id);
         return questRepo.save(quest);
+    }
+
+    @Transactional
+    public UserQuestCompletion completeQuest(UUID questId, User user) {
+        Quest quest = findById(questId);
+ 
+        var existingCompletion = userQuestCompletionRepository.findByUserIdAndQuestId(user.getId(), questId);
+        if (existingCompletion.isPresent()) {
+            log.warn("User {} has already completed quest {}", user.getId(), questId);
+            return existingCompletion.get();
+        }
+
+        UserQuestCompletion completion = UserQuestCompletion.builder()
+            .user(user)
+            .quest(quest)
+            .build();
+
+        UserQuestCompletion saved = userQuestCompletionRepository.save(completion);
+        
+        activityService.createQuestCompletionActivity(questId, quest.getTitle(), user);
+        
+        log.info("User {} completed quest {}", user.getId(), questId);
+        return saved;
     }
 }

@@ -3,7 +3,9 @@ package cloudflight.integra.backend.model;
 import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -11,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table
+@Builder
 public class PointOfInterest {
 
     @Id
@@ -35,4 +38,14 @@ public class PointOfInterest {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private City city;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private User creator;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }

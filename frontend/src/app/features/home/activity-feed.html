@@ -1,0 +1,58 @@
+<div class="activity-feed-container">
+  <div class="feed-header">
+    <h3>Friends' Recent Activities</h3>
+    <p class="feed-subtitle">Discover what your friends are exploring</p>
+  </div>
+
+  <!-- Error Message -->
+  <p-message
+    *ngIf="error"
+    severity="error"
+    [text]="error"
+    [styleClass]="'w-full mb-4'"
+  ></p-message>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="activity-list">
+    <p-skeleton *ngFor="let i of [1, 2, 3, 4, 5]" height="120px" styleClass="mb-4"></p-skeleton>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && activities.length === 0" class="empty-state">
+    <p-message
+      severity="info"
+      text="No activities yet. Start following friends to see their activities!"
+    ></p-message>
+  </div>
+
+  <!-- Activity List -->
+  <div *ngIf="!isLoading && activities.length > 0" class="activity-list">
+    <div *ngFor="let activity of activities" class="activity-card">
+      <div class="activity-header">
+        <div class="user-info">
+          <img
+            *ngIf="activity.userAvatarUrl"
+            [src]="activity.userAvatarUrl"
+            alt="User avatar"
+            class="user-avatar"
+          />
+          <div class="user-details">
+            <span class="username">{{ activity.username }}</span>
+            <span class="activity-time">{{ formatDate(activity.createdAt) }}</span>
+          </div>
+        </div>
+        <div
+          class="activity-icon"
+          [style.color]="getActivityColor(activity.activityType)"
+        >
+          <i [class]="getActivityIcon(activity.activityType)"></i>
+        </div>
+      </div>
+
+      <div class="activity-content">
+        <p class="activity-text">{{ getActivityText(activity) }}</p>
+        <span class="activity-type">{{ activity.activityType | titlecase }}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 package cloudflight.integra.backend.model;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Lob;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
@@ -10,8 +10,9 @@ public class UserBio {
 
     private String header;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String body;
+    
     private String footer;
 
 }

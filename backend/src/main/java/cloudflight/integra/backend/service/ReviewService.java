@@ -7,7 +7,7 @@ import cloudflight.integra.backend.model.User;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import cloudflight.integra.backend.repository.ReviewRepository;
 import cloudflight.integra.backend.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final PointOfInterestRepository pointOfInterestRepository;
+    private final ActivityService activityService;
 
+    @Transactional
     public Review createReview(Review inputReview) {
 
         if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
@@ -46,13 +48,19 @@ public class ReviewService {
         }
 
         inputReview.setPostedDate(LocalDateTime.now());
-        return reviewRepository.save(inputReview);
+        Review savedReview = reviewRepository.save(inputReview);
+        
+        activityService.createReviewActivity(savedReview);
+        
+        return savedReview;
     }
 
+    @Transactional(readOnly = true)
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Review> getFilteredReviews(UUID poiId, UUID userId) {
         if(poiId != null && userId != null) {
             return reviewRepository.findByPointOfInterestIdAndUserId(poiId, userId);

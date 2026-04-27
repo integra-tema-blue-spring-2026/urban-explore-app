@@ -5,9 +5,11 @@ import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
+import cloudflight.integra.backend.service.UsersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.UUID;
 public class PointOfInterestController {
     private final PointOfInterestService pointOfInterestService;
     private final PointOfInterestMapper pointOfInterestMapper;
+    private final UsersService usersService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -27,6 +30,13 @@ public class PointOfInterestController {
         @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
 
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
+        
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        var user = usersService.findByUsername(username);
+        if (user.isPresent()) {
+            newPointOfInterest.setCreator(user.get());
+        }
+        
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
