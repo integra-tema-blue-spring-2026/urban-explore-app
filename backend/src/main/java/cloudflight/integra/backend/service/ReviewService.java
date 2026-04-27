@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.service;
 
+import cloudflight.integra.backend.events.ReviewCreatedEvent;
 import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.Review;
@@ -10,6 +11,7 @@ import cloudflight.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final PointOfInterestRepository pointOfInterestRepository;
@@ -46,7 +51,11 @@ public class ReviewService {
         }
 
         inputReview.setPostedDate(LocalDateTime.now());
-        return reviewRepository.save(inputReview);
+        Review savedReview = reviewRepository.save(inputReview);
+
+        applicationEventPublisher.publishEvent(new ReviewCreatedEvent(savedReview));
+
+        return savedReview;
     }
 
     public List<Review> getAllReviews() {

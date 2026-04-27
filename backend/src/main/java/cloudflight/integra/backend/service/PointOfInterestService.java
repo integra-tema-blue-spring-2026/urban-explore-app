@@ -1,11 +1,13 @@
 package cloudflight.integra.backend.service;
 
+import cloudflight.integra.backend.events.PoIAddedEvent;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
 import cloudflight.integra.backend.exceptions.custom.PointOfInterestNotFoundException;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PointOfInterestService {
+
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final PointOfInterestRepository pointOfInterestRepository;
     private final CityRepository cityRepository;
 
@@ -24,7 +29,10 @@ public class PointOfInterestService {
             throw new CityNotFoundException("City with id " + newPointOfInterest.getCity().getId() + " not found");
         }
 
-        return pointOfInterestRepository.save(newPointOfInterest);
+        PointOfInterest savedPoI = pointOfInterestRepository.save(newPointOfInterest);
+
+        applicationEventPublisher.publishEvent(new PoIAddedEvent(savedPoI));
+        return savedPoI;
     }
 
     @Transactional(readOnly = true)
