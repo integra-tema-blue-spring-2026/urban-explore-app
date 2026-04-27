@@ -26,11 +26,11 @@ public class PointOfInterestService {
         }
 
         PointOfInterest savedPoi = pointOfInterestRepository.save(newPointOfInterest);
-        
+
         if (newPointOfInterest.getCreator() != null) {
             activityService.createPoiActivity(savedPoi, newPointOfInterest.getCreator());
         }
-        
+
         return savedPoi;
     }
 

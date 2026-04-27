@@ -33,7 +33,7 @@ public class Activity {
     private UUID targetId;
 
     @Column(nullable = false)
-    private String targetType; 
+    private String targetType;
 
     @Column
     private String targetName;

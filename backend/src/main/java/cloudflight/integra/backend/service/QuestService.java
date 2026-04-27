@@ -55,7 +55,7 @@ public class QuestService {
     @Transactional
     public UserQuestCompletion completeQuest(UUID questId, User user) {
         Quest quest = findById(questId);
- 
+
         var existingCompletion = userQuestCompletionRepository.findByUserIdAndQuestId(user.getId(), questId);
         if (existingCompletion.isPresent()) {
             log.warn("User {} has already completed quest {}", user.getId(), questId);
@@ -68,9 +68,9 @@ public class QuestService {
             .build();
 
         UserQuestCompletion saved = userQuestCompletionRepository.save(completion);
-        
+
         activityService.createQuestCompletionActivity(questId, quest.getTitle(), user);
-        
+
         log.info("User {} completed quest {}", user.getId(), questId);
         return saved;
     }

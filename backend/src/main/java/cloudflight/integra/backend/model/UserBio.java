@@ -12,7 +12,7 @@ public class UserBio {
 
     @Column(columnDefinition = "TEXT")
     private String body;
-    
+
     private String footer;
 
 }

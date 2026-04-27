@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Transactional(readOnly = true)
 public interface ActivityRepository extends JpaRepository<Activity, UUID> {
-    
+
     @Query(value = """
-        SELECT a.* FROM activities a 
+        SELECT a.* FROM activities a
         WHERE a.user_id IN (
             SELECT u.id FROM users u
             JOIN user_followers f ON u.id = f.user_id

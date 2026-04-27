@@ -11,21 +11,21 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    
+
     @Query("""
-        SELECT r FROM Review r 
-        LEFT JOIN FETCH r.user 
-        LEFT JOIN FETCH r.pointOfInterest 
+        SELECT r FROM Review r
+        LEFT JOIN FETCH r.user
+        LEFT JOIN FETCH r.pointOfInterest
         WHERE r.pointOfInterest.id = :poiId
     """)
     List<Review> findByPointOfInterestId(@Param("poiId") UUID poiId);
-    
+
     List<Review> findByUserId(UUID userId);
-    
+
     @Query("""
-        SELECT r FROM Review r 
-        LEFT JOIN FETCH r.user 
-        LEFT JOIN FETCH r.pointOfInterest 
+        SELECT r FROM Review r
+        LEFT JOIN FETCH r.user
+        LEFT JOIN FETCH r.pointOfInterest
         WHERE r.pointOfInterest.id = :poiId AND r.user.id = :userId
     """)
     List<Review> findByPointOfInterestIdAndUserId(@Param("poiId") UUID poiId, @Param("userId") UUID userId);

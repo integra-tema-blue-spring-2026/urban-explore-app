@@ -30,13 +30,13 @@ public class PointOfInterestController {
         @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
 
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
-        
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var user = usersService.findByUsername(username);
         if (user.isPresent()) {
             newPointOfInterest.setCreator(user.get());
         }
-        
+
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
     }

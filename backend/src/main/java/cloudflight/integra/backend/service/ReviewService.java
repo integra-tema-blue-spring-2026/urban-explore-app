@@ -49,9 +49,9 @@ public class ReviewService {
 
         inputReview.setPostedDate(LocalDateTime.now());
         Review savedReview = reviewRepository.save(inputReview);
-        
+
         activityService.createReviewActivity(savedReview);
-        
+
         return savedReview;
     }
 
