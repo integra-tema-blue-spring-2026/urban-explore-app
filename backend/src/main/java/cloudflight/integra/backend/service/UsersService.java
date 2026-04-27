@@ -25,6 +25,10 @@ public class UsersService implements UserDetailsService {
         return repository.findById(id);
     }
 
+    public Optional<User> findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
     @Transactional
     public User save(User t) {
         return repository.save(t);

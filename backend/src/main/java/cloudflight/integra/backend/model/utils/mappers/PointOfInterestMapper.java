@@ -25,13 +25,12 @@ public class PointOfInterestMapper {
     public PointOfInterest toEntity(PointOfInterestRequestDto dto) {
         City city = City.builder().id(dto.getCityId()).build();
 
-        return new PointOfInterest(
-            null,
-            dto.getName(),
-            dto.getDescription(),
-            dto.getAddress(),
-            dto.getType(),
-            city
-        );
+        return PointOfInterest.builder()
+            .name(dto.getName())
+            .description(dto.getDescription())
+            .address(dto.getAddress())
+            .type(dto.getType())
+            .city(city)
+            .build();
     }
 }

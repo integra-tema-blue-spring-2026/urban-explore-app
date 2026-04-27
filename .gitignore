@@ -18,3 +18,5 @@ backend/test.http
 
 # SQL files
 *.sql
+
+*.md

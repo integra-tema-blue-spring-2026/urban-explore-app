@@ -17,6 +17,7 @@ import java.util.UUID;
 public class PointOfInterestService {
     private final PointOfInterestRepository pointOfInterestRepository;
     private final CityRepository cityRepository;
+    private final ActivityService activityService;
 
     @Transactional
     public PointOfInterest save(PointOfInterest newPointOfInterest) {
@@ -24,7 +25,13 @@ public class PointOfInterestService {
             throw new CityNotFoundException("City with id " + newPointOfInterest.getCity().getId() + " not found");
         }
 
-        return pointOfInterestRepository.save(newPointOfInterest);
+        PointOfInterest savedPoi = pointOfInterestRepository.save(newPointOfInterest);
+
+        if (newPointOfInterest.getCreator() != null) {
+            activityService.createPoiActivity(savedPoi, newPointOfInterest.getCreator());
+        }
+
+        return savedPoi;
     }
 
     @Transactional(readOnly = true)

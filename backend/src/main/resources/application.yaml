@@ -4,6 +4,10 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 10
+      minimum-idle: 5
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,6 +16,10 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          fetch_size: 50
+          batch_size: 20
+          use_scrollable_resultset: true
 
 server:
   port: 8080
