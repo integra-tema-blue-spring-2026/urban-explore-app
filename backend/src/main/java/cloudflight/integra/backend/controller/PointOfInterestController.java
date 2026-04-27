@@ -24,10 +24,11 @@ public class PointOfInterestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PointOfInterestResponseDto savePointOfInterest(
+        @RequestParam UUID userId,
         @Valid @RequestBody PointOfInterestRequestDto pointOfInterestRequestDto) {
 
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
-        PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
+        PointOfInterest savedPointOfInterest = pointOfInterestService.save(userId, newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
 

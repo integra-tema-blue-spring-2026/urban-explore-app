@@ -40,6 +40,9 @@ public class User implements UserDetails {
 
     private String avatarUrl;
 
+    @Column()
+    private Integer xpPoints;
+
     @ManyToMany
     @JoinTable(
         name = "user_followers",

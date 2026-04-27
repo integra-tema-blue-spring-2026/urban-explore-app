@@ -29,7 +29,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final PointOfInterestRepository pointOfInterestRepository;
 
-    public Review createReview(Review inputReview) {
+    public Review createReview(UUID userId, Review inputReview) {
 
         if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
             User user = userRepository.findById(inputReview.getUser().getId())
@@ -53,7 +53,7 @@ public class ReviewService {
         inputReview.setPostedDate(LocalDateTime.now());
         Review savedReview = reviewRepository.save(inputReview);
 
-        applicationEventPublisher.publishEvent(new ReviewCreatedEvent(savedReview));
+        applicationEventPublisher.publishEvent(new ReviewCreatedEvent(userId, savedReview));
 
         return savedReview;
     }

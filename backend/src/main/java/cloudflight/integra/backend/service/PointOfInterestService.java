@@ -24,14 +24,14 @@ public class PointOfInterestService {
     private final CityRepository cityRepository;
 
     @Transactional
-    public PointOfInterest save(PointOfInterest newPointOfInterest) {
+    public PointOfInterest save(UUID userId, PointOfInterest newPointOfInterest) {
         if (!cityRepository.existsById(newPointOfInterest.getCity().getId())){
             throw new CityNotFoundException("City with id " + newPointOfInterest.getCity().getId() + " not found");
         }
 
         PointOfInterest savedPoI = pointOfInterestRepository.save(newPointOfInterest);
 
-        applicationEventPublisher.publishEvent(new PoIAddedEvent(savedPoI));
+        applicationEventPublisher.publishEvent(new PoIAddedEvent(userId, savedPoI));
         return savedPoI;
     }
 

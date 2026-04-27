@@ -70,4 +70,10 @@ public class UsersService implements UserDetailsService {
             new UsernameNotFoundException("User not found with username: " + username)
         );
     }
+
+    public Integer getUserXpPoints(UUID userId) {
+        return repository.findById(userId)
+            .map(User::getXpPoints)
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    }
 }

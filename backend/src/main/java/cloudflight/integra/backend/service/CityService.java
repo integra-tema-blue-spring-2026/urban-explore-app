@@ -32,10 +32,10 @@ public class CityService {
         return cityRepository.findAll();
     }
 
-    public City createCity(City city) {
+    public City createCity(UUID userId, City city) {
         City savedCity = cityRepository.save(city);
 
-        applicationEventPublisher.publishEvent(new CityAddedEvent(savedCity));
+        applicationEventPublisher.publishEvent(new CityAddedEvent(userId, savedCity));
         return savedCity;
     }
 
