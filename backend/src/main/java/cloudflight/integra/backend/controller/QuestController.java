@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cloudflight.integra.backend.model.dtos.quest.CreateQuestDto;
 import cloudflight.integra.backend.model.dtos.quest.QuestDto;
+import cloudflight.integra.backend.model.dtos.quest.UpdateQuestProgressDto;
 import cloudflight.integra.backend.service.QuestService;
 import cloudflight.integra.backend.model.utils.mappers.QuestMapper;
 import jakarta.validation.Valid;
@@ -58,5 +59,13 @@ public class QuestController {
     @DeleteMapping("/{id}")
     public void delete(@Valid @PathVariable UUID id){
         questService.delete(id);
+    }
+
+    @PutMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateQuestProgress(
+        @PathVariable UUID userId,
+        @Valid @RequestBody UpdateQuestProgressDto updateDto) {
+        questService.updateQuestProgress(userId, updateDto.getQuestId(), updateDto.getStatus());
     }
 }

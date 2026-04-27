@@ -40,8 +40,8 @@ public class User implements UserDetails {
 
     private String avatarUrl;
 
-    @Column()
-    private Integer xpPoints;
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    private Integer xpPoints = 0;
 
     @ManyToMany
     @JoinTable(

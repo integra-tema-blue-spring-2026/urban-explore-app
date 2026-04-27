@@ -32,6 +32,7 @@ public class CityService {
         return cityRepository.findAll();
     }
 
+    @Transactional
     public City createCity(UUID userId, City city) {
         City savedCity = cityRepository.save(city);
 

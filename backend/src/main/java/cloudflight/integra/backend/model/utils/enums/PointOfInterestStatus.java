@@ -1,5 +1,5 @@
 package cloudflight.integra.backend.model.utils.enums;
 
-public enum CityStatus {
+public enum PointOfInterestStatus {
     PENDING, APPROVED, REJECTED
 }

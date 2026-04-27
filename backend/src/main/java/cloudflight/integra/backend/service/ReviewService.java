@@ -29,6 +29,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final PointOfInterestRepository pointOfInterestRepository;
 
+    @Transactional
     public Review createReview(UUID userId, Review inputReview) {
 
         if (inputReview.getUser() != null && inputReview.getUser().getId() != null) {
