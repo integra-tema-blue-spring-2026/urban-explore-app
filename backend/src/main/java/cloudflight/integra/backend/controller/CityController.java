@@ -1,12 +1,10 @@
 package cloudflight.integra.backend.controller;
 
 import cloudflight.integra.backend.model.City;
-import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
 import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
 import cloudflight.integra.backend.model.dtos.city.CityDto;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
-import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.mappers.CityMapper;
 import cloudflight.integra.backend.service.CityService;
 import jakarta.validation.Valid;
@@ -17,20 +15,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 
 @RestController
 @RequestMapping("/cities")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class CityController {
     private final CityService cityService;
     private final CityMapper cityMapper;
-    private final PointOfInterestMapper pointOfInterestMapper;
 
     @GetMapping
-    public List<CityDto> getAllCities() {
-        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
+    public List<CityDto> getAllCities(@RequestParam(required = false) String name) {
+        if(name != null) {
+            return cityService.getCitiesByName(name)
+                .stream()
+                .map(cityMapper::toDto)
+                .toList();
+        }
+
+        return cityService.getAllCities()
+            .stream()
+            .map(cityMapper::toDto)
+            .toList();
     }
 
     @PostMapping
@@ -50,36 +57,11 @@ public class CityController {
         cityService.deleteCity(id);
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<CityDto> getCitiesByName(@PathVariable String name) {
-        return cityService.getCitiesByName(name)
-            .stream()
-            .map(cityMapper::toDto)
-            .toList();
-    }
-
-    @GetMapping("/{name}/pois")
-    @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getPointsOfInterestFromCityWithName(
-        @PathVariable String name,
-        @RequestParam(required = false) String poiDescription,
-        @RequestParam(required = false) String poiName) {
-
-        Predicate<PointOfInterest> filter = poi -> true;
-        if(poiDescription != null) {
-            filter = filter.and(poi -> poi.getDescription().contains(poiDescription));
-        }
-
-        if(poiName != null) {
-            filter = filter.and(poi -> poi.getName().equalsIgnoreCase(poiName));
-        }
-
-        return cityService.getCitiesByName(name)
-            .stream()
-            .flatMap(city -> city.getPointOfInterests().stream())
-            .filter(filter)
-            .map(pointOfInterestMapper::toDto)
-            .toList();
+    public CityDto getCityById(@PathVariable UUID id) {
+        return cityMapper.toDto(
+            cityService.getCityById(id)
+        );
     }
 }

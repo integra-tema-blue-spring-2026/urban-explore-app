@@ -14,8 +14,8 @@
         <button (click)="cancelEdit()" class="button-secondary">✕</button>
       </ng-container>
       <ng-template #showName>
-        <h1 class="title">{{ poi.name }}</h1>
-        <button (click)="startEdit('name', poi.name)" class="button-edit">
+        <h1 class="title">{{ poi.name ?? '' }}</h1>
+        <button (click)="startEdit('name', poi.name ?? '')" class="button-edit">
           Edit
         </button>
       </ng-template>
@@ -29,8 +29,8 @@
         <button (click)="cancelEdit()" class="button-secondary">✕</button>
       </ng-container>
       <ng-template #showAddress>
-        <p class="text-secondary">{{ poi.address }}</p>
-        <button (click)="startEdit('address', poi.address)" class="button-edit">
+        <p class="text-secondary">{{ poi.address ?? '' }}</p>
+        <button (click)="startEdit('address', poi.address ?? '')" class="button-edit">
           Edit
         </button>
       </ng-template>
@@ -54,8 +54,8 @@
         </div>
       </ng-container>
       <ng-template #showDescription>
-        <p class="text-secondary flex-grow">{{ poi.description }}</p>
-        <button (click)="startEdit('description', poi.description)" class="button-edit">
+        <p class="text-secondary flex-grow">{{ poi.description ?? '' }}</p>
+        <button (click)="startEdit('description', poi.description ?? '')" class="button-edit">
           Edit
         </button>
       </ng-template>
@@ -69,8 +69,8 @@
         <button (click)="cancelEdit()" class="button-secondary">✕</button>
       </ng-container>
       <ng-template #showType>
-        <p class="text-tertiary">{{ poi.type }}</p>
-        <button (click)="startEdit('type', poi.type)" class="button-edit">
+        <p class="text-tertiary">{{ poi.type ?? '' }}</p>
+        <button (click)="startEdit('type', poi.type ?? '')" class="button-edit">
           Edit
         </button>
       </ng-template>

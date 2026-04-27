@@ -5,6 +5,7 @@ import { Auth } from './features/auth/auth';
 import { Poi } from './features/poi/poi';
 import { PoiDetail } from './features/poi/poi-detail/poi-detail';
 import { authGuard } from './core/services/auth.guard';
+import {CityMap} from './features/city-map/city-map';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: Home },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'cities', canActivate: [authGuard], component: CityComponent },
   { path: 'poi', canActivate: [authGuard], component: Poi },
   { path: 'poi/details/:id', canActivate: [authGuard], component: PoiDetail },
+  { path: 'cities/:id/map', canActivate: [authGuard], component: CityMap },
   { path: '**', redirectTo: '' },
 ];

@@ -20,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;

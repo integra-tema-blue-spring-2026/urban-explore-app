@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PoiService } from '../../../core/services/poi';
-import { poi } from '../../../core/utils/Poi-interface';
+import { PointOfInterestRequestDto } from '../../../core/api/generated/model/pointOfInterestRequestDto';
+import { PointOfInterestResponseDto } from '../../../core/api/generated/model/pointOfInterestResponseDto';
 import { ReviewComponent } from '../../../shared/components/review-component/review-component';
 
 @Component({
@@ -19,15 +20,15 @@ export class PoiDetail implements OnInit {
   private poiService = inject(PoiService);
   private cdr = inject(ChangeDetectorRef);
 
-  poi: poi | null = null;
+  poi: PointOfInterestResponseDto | null = null;
   editingField: string | null = null;
-  editingValue: string = '';
+  editingValue = '';
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.poiService.getPoiById(id).subscribe({
-        next: (data: poi) => {
+        next: (data: PointOfInterestResponseDto) => {
           this.poi = data;
           this.cdr.detectChanges();
         },
@@ -39,16 +40,36 @@ export class PoiDetail implements OnInit {
     }
   }
 
-  startEdit(field: string, currentValue: string) {
+  startEdit(field: string, currentValue?: string) {
     this.editingField = field;
-    this.editingValue = currentValue;
+    this.editingValue = currentValue ?? '';
   }
 
   saveEdit() {
     if (!this.poi || !this.editingField) return;
-    (this.poi as any)[this.editingField] = this.editingValue;
+    const poiId = this.poi.id;
+    if (!poiId) return;
+
+    const updatedPoi: PointOfInterestResponseDto = {
+      ...this.poi,
+      [this.editingField]: this.editingValue,
+    };
+
+    const requestDto: PointOfInterestRequestDto = {
+      name: updatedPoi.name ?? '',
+      description: updatedPoi.description ?? '',
+      address: updatedPoi.address ?? '',
+      type: (updatedPoi.type ?? PointOfInterestRequestDto.TypeEnum.Museum) as PointOfInterestRequestDto.TypeEnum,
+      cityId: updatedPoi.cityId ?? '',
+      coordinates: {
+        latitude: updatedPoi.coordinates?.latitude ?? 0,
+        longitude: updatedPoi.coordinates?.longitude ?? 0,
+      },
+    };
+
+    this.poi = updatedPoi;
     this.editingField = null;
-    this.poiService.updatePoi(this.poi.id!, this.poi).subscribe({
+    this.poiService.updatePoi(poiId, requestDto).subscribe({
       next: () => {
         alert('POI updated successfully!');
       },

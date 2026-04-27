@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { PoiService } from '../../core/services/poi';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { poi } from '../../core/utils/Poi-interface';
 import { RouterLink } from '@angular/router';
+import { PointOfInterestRequestDto, PointOfInterestResponseDto } from '../../core/api/generated';
 
 @Component({
   selector: 'app-poi',
@@ -16,29 +16,36 @@ export class Poi implements OnInit {
   private poiService = inject(PoiService);
   private cdr = inject(ChangeDetectorRef);
 
-  pois: poi[] = [];
+  pois: PointOfInterestResponseDto[] = [];
   editingId: string | null = null;
 
   poiForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    address: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
-    cityId: new FormControl('', Validators.required),
+    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    description: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    address: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    type: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    cityId: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    latitude: new FormControl(0, { nonNullable: true, validators: [Validators.required] }),
+    longitude: new FormControl(0, { nonNullable: true, validators: [Validators.required] }),
   });
 
   ngOnInit(): void {
     this.loadPois();
   }
 
-  startEdit(p: poi) {
-    this.editingId = p.id!;
+  startEdit(p: PointOfInterestResponseDto) {
+    if (!p.id) {
+      return;
+    }
+    this.editingId = p.id;
     this.poiForm.setValue({
-      name: p.name,
-      description: p.description,
-      address: p.address,
-      type: p.type,
-      cityId: p.cityId,
+      name: p.name ?? '',
+      description: p.description ?? '',
+      address: p.address ?? '',
+      type: p.type ?? '',
+      cityId: p.cityId ?? '',
+      latitude: p.coordinates?.latitude ?? 0,
+      longitude: p.coordinates?.longitude ?? 0,
     });
   }
 
@@ -49,7 +56,7 @@ export class Poi implements OnInit {
 
   loadPois() {
     this.poiService.getPois().subscribe({
-      next: (data: poi[]) => {
+      next: (data: PointOfInterestResponseDto[]) => {
         this.pois = data;
         this.cdr.detectChanges();
       },
@@ -66,8 +73,21 @@ export class Poi implements OnInit {
       return;
     }
 
+    const rawValue = this.poiForm.getRawValue();
+    const poiRequestDto: PointOfInterestRequestDto = {
+      name: rawValue.name,
+      description: rawValue.description,
+      address: rawValue.address,
+      type: rawValue.type as PointOfInterestRequestDto.TypeEnum,
+      cityId: rawValue.cityId,
+      coordinates: {
+        latitude: rawValue.latitude,
+        longitude: rawValue.longitude,
+      },
+    };
+
     if (this.editingId) {
-      this.poiService.updatePoi(this.editingId, this.poiForm.value as poi).subscribe({
+      this.poiService.updatePoi(this.editingId, poiRequestDto).subscribe({
         next: () => {
           this.loadPois();
           this.editingId = null;
@@ -80,7 +100,7 @@ export class Poi implements OnInit {
         },
       });
     } else {
-      this.poiService.addPoi(this.poiForm.value as poi).subscribe({
+      this.poiService.addPoi(poiRequestDto).subscribe({
         next: () => {
           this.loadPois();
           this.poiForm.reset();

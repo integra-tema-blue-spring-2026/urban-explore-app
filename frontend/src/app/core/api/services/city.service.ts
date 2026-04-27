@@ -1,59 +1,99 @@
 import { inject, Injectable } from '@angular/core';
-import { City, CreateCityRequest, UpdateCityRequest } from '../../../shared/models/city.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { from, Observable, of, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import {
-  PointOfInterest,
-  PointOfInterestFilter,
-} from '../../../shared/models/point-of-interest.model';
+  CityControllerService,
+  CityDto,
+  CreateCityDto,
+  UpdateCityDto,
+} from '../generated';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CityService {
-  private apiPath = '/api/cities';
-  private httpClient = inject(HttpClient);
+  private cityController = inject(CityControllerService);
 
-  getCitiesWithName(name: string): Observable<City[]> {
-    if (!name.trim()) {
+  private normalizeCityListResponse(response: unknown): Observable<CityDto[]> {
+    if (Array.isArray(response)) {
+      return of(response as CityDto[]);
+    }
+
+    if (response instanceof Blob) {
+      return from(response.text()).pipe(
+        switchMap((text) => {
+          try {
+            const parsed = JSON.parse(text);
+            return of(Array.isArray(parsed) ? (parsed as CityDto[]) : []);
+          } catch {
+            return of([]);
+          }
+        }),
+      );
+    }
+
+    return of([]);
+  }
+
+  private normalizeSingleCityResponse(response: unknown): Observable<CityDto> {
+    if (response && typeof response === 'object' && !Array.isArray(response) && !(response instanceof Blob)) {
+      return of(response as CityDto);
+    }
+
+    if (response instanceof Blob) {
+      return from(response.text()).pipe(
+        switchMap((text) => {
+          try {
+            const parsed = JSON.parse(text);
+            return of(parsed as CityDto);
+          } catch {
+            return throwError(() => new Error('Failed to parse City JSON from Blob'));
+          }
+        })
+      );
+    }
+
+    return throwError(() => new Error('Invalid response format for CityDto'));
+  }
+
+  getCitiesWithName(cityName: string): Observable<CityDto[]> {
+    if (!cityName.trim()) {
       return throwError(() => new Error('Name must not be empty'));
     }
 
-    return this.httpClient.get<City[]>(`${this.apiPath}/${encodeURIComponent(name)}`);
+    return this.cityController
+      .getAllCities({name: cityName}, 'body', false, { httpHeaderAccept: 'application/json' as any })
+      .pipe(
+        switchMap((response) => this.normalizeCityListResponse(response)),
+        catchError(() => of([])),
+      );
   }
 
-  getPointsOfInterestFromCitiesWithName(
-    name: string,
-    filter: PointOfInterestFilter = {},
-  ): Observable<PointOfInterest[]> {
-    if (!name.trim()) {
-      return throwError(() => new Error('Name must not be empty'));
-    }
-
-    let params = new HttpParams();
-    if (filter.name) {
-      params = params.set('poiName', filter.name);
-    }
-
-    if (filter.description) {
-      params = params.set('poiDescription', filter.description);
-    }
-
-    return this.httpClient.get<PointOfInterest[]>(
-      `${this.apiPath}/${encodeURIComponent(name)}/pois`,
-      { params },
-    );
+  getCities(): Observable<CityDto[]> {
+    return this.cityController
+      .getAllCities({}, 'body', false, { httpHeaderAccept: 'application/json' as any })
+      .pipe(
+        switchMap((response) => this.normalizeCityListResponse(response)),
+        catchError(() => of([])),
+      );
   }
-  getCities(): Observable<City[]> {
-    return this.httpClient.get<City[]>(this.apiPath);
+  addCity(city: CreateCityDto): Observable<CityDto> {
+    return this.cityController.createCity({ createCityDto: city });
   }
-  addCity(city: CreateCityRequest): Observable<City> {
-    return this.httpClient.post<City>(this.apiPath, city);
-  }
-  updateCity(id: string, city: UpdateCityRequest): Observable<City> {
-    return this.httpClient.put<City>(`${this.apiPath}/${id}`, city);
+  updateCity(id: string, city: UpdateCityDto): Observable<CityDto> {
+    return this.cityController.updateCity({ id: id, updateCityDto: city });
   }
   deleteCity(id: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiPath}/${id}`);
+    return this.cityController.deleteCity({ id: id });
+  }
+  getCityById(id: string): Observable<CityDto> {
+    return this.cityController.getCityById({ id: id }, 'body', false, { httpHeaderAccept: 'application/json' as any })
+      .pipe(
+        switchMap((response) => this.normalizeSingleCityResponse(response)),
+        catchError((error) => {
+          console.error('Error fetching city by ID:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }

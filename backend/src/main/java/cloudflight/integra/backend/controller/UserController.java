@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class UserController {
 
     private final UsersService service;

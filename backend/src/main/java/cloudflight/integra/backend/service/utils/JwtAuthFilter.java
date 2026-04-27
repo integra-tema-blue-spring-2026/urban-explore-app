@@ -27,7 +27,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private static final List<String> IGNORED_PATHS = List.of(
         "/users/auth/register",
-        "/users/auth/login"
+        "/users/auth/login",
+        "/swagger-ui",
+        "/swagger-ui.html",
+        "/v3/api-docs"
     );
 
     private final UserDetailsService userDetailsService;
@@ -45,7 +48,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
         throws ServletException, IOException {
-
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;

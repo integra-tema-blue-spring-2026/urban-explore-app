@@ -15,6 +15,20 @@
 
     <input formControlName="imageUrl" placeholder="Image URL" class="form-input input-flex-large" />
 
+    <input
+      formControlName="latitude"
+      type="number"
+      placeholder="Latitude"
+      class="form-input input-flex-small"
+    />
+
+    <input
+      formControlName="longitude"
+      type="number"
+      placeholder="Longitude"
+      class="form-input input-flex-small"
+    />
+
     <textarea
       formControlName="description"
       placeholder="Description"
@@ -47,8 +61,8 @@
         <td>{{ city.country }}</td>
         <td>
           <span
-            [class.status-approved]="city.status === CityStatus.APPROVED"
-            [class.status-pending]="city.status !== CityStatus.APPROVED"
+            [class.status-approved]="city.status === CityStatus.Approved"
+            [class.status-pending]="city.status !== CityStatus.Approved"
           >
             {{ city.status }}
           </span>
@@ -57,6 +71,7 @@
         <td class="table-actions">
           <button (click)="startEdit(city)" class="btn-edit">Edit</button>
           <button (click)="onDelete(city.id)" class="btn-delete">Delete</button>
+          <button pButton (click)="onShowOnMap(city.id)" class="bg-[#675EC2]! text-white">Show on map</button>
         </td>
       </tr>
     </tbody>

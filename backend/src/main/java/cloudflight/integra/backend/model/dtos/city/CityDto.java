@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.model.dtos.city;
 
+import cloudflight.integra.backend.model.Coordinates;
 import cloudflight.integra.backend.model.utils.enums.CityStatus;
 
 import lombok.*;
@@ -17,4 +18,5 @@ public class CityDto {
     private Integer population;
     private String imageUrl;
     private CityStatus status;
+    private Coordinates coordinates;
 }

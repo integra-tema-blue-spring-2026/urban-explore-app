@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/pois")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origin}")
 public class PointOfInterestController {
     private final PointOfInterestService pointOfInterestService;
     private final PointOfInterestMapper pointOfInterestMapper;
@@ -29,16 +29,6 @@ public class PointOfInterestController {
         PointOfInterest newPointOfInterest = pointOfInterestMapper.toEntity(pointOfInterestRequestDto);
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
-        return pointOfInterestService
-            .getAll()
-            .stream()
-            .map(pointOfInterestMapper::toDto)
-            .toList();
     }
 
     @GetMapping("/{id}")
@@ -63,6 +53,19 @@ public class PointOfInterestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable UUID id) {
         pointOfInterestService.deleteById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<PointOfInterestResponseDto> getPointsOfInterestWithFilter(
+        @RequestParam(required = false) UUID cityId,
+        @RequestParam(required = false) String cityName,
+        @RequestParam(required = false) String poiDescription,
+        @RequestParam(required = false) String poiName
+    ) {
+        return pointOfInterestService.getFiltered(cityId, cityName, poiDescription, poiName).stream()
+            .map(pointOfInterestMapper::toDto)
+            .toList();
     }
 
 }

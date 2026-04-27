@@ -6,6 +6,7 @@ import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.repository.CityRepository;
 import cloudflight.integra.backend.repository.PointOfInterestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,40 @@ public class PointOfInterestService {
     @Transactional(readOnly = true)
     public List<PointOfInterest> getAll(){
         return pointOfInterestRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PointOfInterest> getFiltered(UUID cityId, String cityName, String poiDescription, String poiName) {
+        Specification<PointOfInterest> specification = Specification.unrestricted();
+
+        if (cityId != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("city").get("id"), cityId)
+            );
+        }
+
+        if (cityName != null && !cityName.isBlank()) {
+            specification = specification.and(
+                (root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("city").get("name"), "%" + cityName + "%")
+            );
+        }
+
+        if (poiDescription != null && !poiDescription.isBlank()) {
+            specification = specification.and(
+                (root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("description"), "%" + poiDescription + "%")
+            );
+        }
+
+        if (poiName != null && !poiName.isBlank()) {
+            specification = specification.and(
+                (root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(root.get("name"), "%" + poiName + "%")
+            );
+        }
+
+        return pointOfInterestRepository.findAll(specification);
     }
 
     @Transactional(readOnly = true)

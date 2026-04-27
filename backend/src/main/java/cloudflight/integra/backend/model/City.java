@@ -2,6 +2,8 @@ package cloudflight.integra.backend.model;
 
 import cloudflight.integra.backend.model.utils.enums.CityStatus;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -39,4 +41,9 @@ public class City {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<PointOfInterest> pointOfInterests;
+
+    @Embedded
+    @NotNull(message = "Coordinates are required")
+    @Valid
+    private Coordinates coordinates;
 }
