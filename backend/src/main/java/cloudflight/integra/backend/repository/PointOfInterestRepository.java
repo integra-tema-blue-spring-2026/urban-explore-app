@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.UUID;
 
 public interface PointOfInterestRepository extends JpaRepository<PointOfInterest, UUID>,
-	JpaSpecificationExecutor<PointOfInterest> {
+    JpaSpecificationExecutor<PointOfInterest> {
 
 }
