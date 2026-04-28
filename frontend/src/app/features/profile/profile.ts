@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ReviewController } from '../../shared/service/review-controller';
 import { UserProfileReviewDto } from '../../shared/models/user/user-profile-review.dto';
@@ -13,23 +13,26 @@ import { UserProfileReviewDto } from '../../shared/models/user/user-profile-revi
 export class Profile implements OnInit {
   private route = inject(ActivatedRoute);
   private reviewService = inject(ReviewController);
+  private cdr = inject(ChangeDetectorRef);
 
-  userId: string | null = null;
+  user: string | null = null;
   userReviews: UserProfileReviewDto[] = [];
   imageErrors: { [key: string]: boolean } = {};
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id');
+    this.user = this.route.snapshot.paramMap.get('id');
 
-    if (this.userId) {
-      this.loadUserReviews(this.userId);
+
+    if (this.user) {
+      this.loadUserReviews(this.user);
     }
   }
 
-  loadUserReviews(userId: string): void {
-    this.reviewService.getUserProfileReviews(userId).subscribe({
+  loadUserReviews(user: string): void {
+    this.reviewService.getUserProfileReviews(user).subscribe({
       next: (reviews) => {
         this.userReviews = reviews;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Could not load reviews:', err);

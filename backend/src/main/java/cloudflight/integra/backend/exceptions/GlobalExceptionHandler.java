@@ -2,9 +2,11 @@ package cloudflight.integra.backend.exceptions;
 
 import cloudflight.integra.backend.model.dtos.ApiErrorResponse;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
+import cloudflight.integra.backend.exceptions.custom.ReviewException;
 import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -71,8 +74,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
+    @ExceptionHandler(ReviewException.class)
+    public ResponseEntity<ApiErrorResponse> handleReviewException(ReviewException ex, HttpServletRequest request) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND)
+            .errors(Map.of("404", "Resource not found"))
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled exception on {}: {}", request.getRequestURI(), ex.getMessage(), ex);
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.INTERNAL_SERVER_ERROR)

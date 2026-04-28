@@ -1,0 +1,133 @@
+### ============================================================
+### STEP 1 — Register a test user
+### Response body contains: { id, username, email, role, ... }
+### Copy the `id` field into @userId below
+### ============================================================
+
+# @name register
+POST http://localhost:8080/api/users/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "username": "testuser",
+  "password": "password123"
+}
+
+> {%
+  client.global.set("userId", response.body.id);
+%}
+
+### ============================================================
+### STEP 2 — Login → auto-stores the JWT token for all later requests
+### ============================================================
+
+# @name login
+POST http://localhost:8080/api/users/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+> {%
+  client.global.set("token", response.body.token);
+%}
+
+### ============================================================
+### STEP 3 — Create a city
+### Response body contains: { id, name, country, ... }
+### The response-script stores the id automatically
+### ============================================================
+
+# @name createCity
+POST http://localhost:8080/api/cities
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Cluj-Napoca",
+  "country": "Romania",
+  "description": "Heart of Transylvania.",
+  "population": 350000,
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cluj-Napoca_view.jpg/800px-Cluj-Napoca_view.jpg"
+}
+
+> {%
+  client.global.set("cityId", response.body.id);
+%}
+
+### ============================================================
+### STEP 4 — Create a Point of Interest inside that city
+### Valid `type` values: MUSEUM | PARK | CAFE
+### ============================================================
+
+# @name createPoi
+POST http://localhost:8080/api/pois
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "National History Museum",
+  "description": "A fascinating look at Romanian history.",
+  "address": "Piata Unirii 1, Cluj-Napoca",
+  "type": "MUSEUM",
+  "cityId": "{{cityId}}"
+}
+
+> {%
+  client.global.set("poiId", response.body.id);
+%}
+
+### ============================================================
+### STEP 5 — Create a review linking the test user + POI
+### `userId` must be the UUID from step 1 (stored automatically)
+### `rating` must be 1–5
+### ============================================================
+
+# @name createReview
+POST http://localhost:8080/api/reviews
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "text": "Absolutely stunning place, highly recommended!",
+  "rating": 5,
+  "userId": "{{userId}}",
+  "poiId": "{{poiId}}"
+}
+
+### ============================================================
+### STEP 6 — The profile-view endpoint (this is what the frontend calls)
+### Replace `testuser` with whichever username you want to test
+### The path param is the USERNAME, not the UUID
+### ============================================================
+
+GET http://localhost:8080/api/reviews/user/testuser/profile-view
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### ============================================================
+### EXTRAS — useful for debugging
+### ============================================================
+
+### Get all reviews (filter-free)
+GET http://localhost:8080/api/reviews
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get reviews for a specific user by UUID
+GET http://localhost:8080/api/reviews?userId={{userId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get all cities (verify city was created)
+GET http://localhost:8080/api/cities
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get all POIs (verify POI was created)
+GET http://localhost:8080/api/pois
+Accept: application/json
+Authorization: Bearer {{token}}

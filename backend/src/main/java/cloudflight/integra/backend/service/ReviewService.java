@@ -54,8 +54,11 @@ public class ReviewService {
 
 
 
-    public List<UserProfileReviewDto> getUserProfileReviews(UUID userId) {
+    public List<UserProfileReviewDto> getUserProfileReviews(String user) {
+        UUID userId = userRepository.findByUsername(user).map(User::getId).orElse(null);
         List<Review> reviews = reviewRepository.findByUserId(userId);
+
+        if (reviews.isEmpty()) return List.of();
 
         List<UUID> poiIds = reviews.stream()
             .map(review -> review.getPointOfInterest().getId())

@@ -1,4 +1,4 @@
-
+/* --- Base Reset & General Styles --- */
 * {
   margin: 0;
   padding: 0;
@@ -15,6 +15,8 @@
   margin-right: -50vw;
   height: 75vh;
 }
+
+/* --- Hero Section --- */
 .hero {
   margin-top: -1rem;
   background-image: url('/images/NewYork Background.png');
@@ -33,12 +35,6 @@
   backdrop-filter: blur(4px);
   z-index: 1;
 }
-
-
-.hero-content {
-
-}
-
 
 .hero-overlay {
   height: 100%;
@@ -66,13 +62,13 @@
   margin-bottom: 2rem;
 }
 
-
 .hero-buttons {
   display: flex;
   gap: 20px;
   justify-content: center;
 }
 
+/* --- Buttons --- */
 .btn {
   padding: 12px 30px;
   border-radius: 10px;
@@ -92,30 +88,19 @@
   border: 2px solid rgba(0, 0, 0, 0.1);
   color: black;
   transition: all 0.3s ease;
-
 }
 
+/* --- Feature Sections --- */
 .feature-section {
-  padding:4% 8%;
-
+  padding: 4% 8%;
 }
-
-/*
-.feature-section::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  background-color: rgba(7, 0, 83, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1;
-}
-*/
 
 .purple-bg {
   background-color: rgba(7, 0, 83, 0.5);
+}
+
+.gray-bg {
+  background-color: #e6e6e6;
 }
 
 .feature-container {
@@ -137,27 +122,15 @@
   margin-bottom: 1.5rem;
 }
 
-
-
 .feature-text p {
   font-size: 1.8rem;
   font-weight: 500;
   opacity: 0.5;
 }
 
-
-.review{
-  width: 100vw;
-  height: 85vh;
-  display: block;
-
-}
-
 .feature-image {
   flex: 1;
 }
-
-
 
 .rounded-img {
   width: 100%;
@@ -165,42 +138,64 @@
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
-.chat-icon{
+.chat-icon {
   width: 35vw;
   height: 70vh;
   display: flex;
   align-items: center;
-
-}
-.feature-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 80px 10%;
-  gap: 50px;
 }
 
-
-.feature-row.mirrored,
 .feature-section.mirrored .feature-container {
   flex-direction: row-reverse;
 }
-.mirrored .feature-text {
-  text-align: left;
+
+.review {
+  width: 100vw;
+  height: 85vh;
+  display: block;
 }
 
-.grid-layout {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* --- Image Hover Zoom Effect --- */
+.rounded-img,
+.chat-icon {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
-.gray-bg { background-color: #e6e6e6; }
 
+.rounded-img:hover,
+.chat-icon:hover {
+  transform: scale(1.08);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Scroll Slide-Up Animations --- */
+/* Initial State: Invisible and shifted down */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  visibility: hidden;
+}
+
+/* Active State: Triggered via IntersectionObserver in home.ts */
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+/* Staggering effects for content inside a revealed section */
+.reveal-visible .feature-text {
+  transition-delay: 0.1s;
+}
+.reveal-visible .feature-image {
+  transition-delay: 0.3s;
+}
+
+/* --- How It Works Section --- */
 .how-it-works {
   background-color: white;
-  padding: 100px 10%; /* Lots of vertical space to make it look clean */
+  padding: 100px 10%;
   color: black;
 }
 
@@ -208,26 +203,19 @@
   text-align: center;
   font-size: 2.5rem;
   font-weight: 600;
-  margin-bottom: 60px; /* Space between title and grid */
+  margin-bottom: 60px;
 }
 
-/* 1. Creating the Grid */
 .grid-layout {
   display: grid;
-  /* This creates 2 columns, each taking up exactly 50% (1fr) of the space */
   grid-template-columns: 1fr 1fr;
-
-  /* Space between columns (x) and rows (y) */
   column-gap: 80px;
   row-gap: 40px;
-
   max-width: 1100px;
-  margin: 0 auto; /* Centers the whole grid on the screen */
+  margin: 0 auto;
 }
 
-/* 2. Styling the Grid Items */
 .grid-card {
-  /* This adds the horizontal line seen in your design */
   border-top: 1px solid #e0e0e0;
   padding-top: 25px;
 }
@@ -241,47 +229,45 @@
 .grid-card p {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #555; /* Slightly lighter gray for the body text */
+  color: #555;
 }
 
-
+/* --- Final Call to Action --- */
 .final-cta {
-  background-color: #070053; /* Dark background as seen in design */
+  background-color: #070053;
   color: white;
   padding: 3% 3%;
-  height:40vh;
+  height: 40vh;
   display: flex;
-  justify-content: center; /* Vertical center if you give it a height */
-  align-items: center;     /* Horizontal center */
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
 .final-cta h2 {
   font-size: 3rem;
   font-weight: 900;
-  margin-bottom: 2%;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
 }
 
+/* --- Footer --- */
 .site-footer {
   background-color: white;
-  padding: 40px 8%; /* Matches the side margins of your other sections */
-  border-top: 1px solid #f0f0f0; /* A very light line to separate from the blue section */
+  padding: 40px 8%;
+  border-top: 1px solid #f0f0f0;
 }
 
 .footer-container {
-
   margin: 0 auto;
   display: flex;
-  justify-content: space-between; /* Pushes Logo to left, Links to middle, Socials to right */
-  align-items: center;            /* Keeps everything perfectly level horizontally */
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Brand/Logo Styling */
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .footer-logo-icon {
@@ -296,11 +282,9 @@
   color: black;
 }
 
-/* Navigation Links */
 .footer-links {
   display: flex;
   gap: 35px;
-  /* If you want the links closer to the logo like in the image: */
   margin-right: auto;
   margin-left: 60px;
 }
@@ -309,23 +293,22 @@
   font-family: 'Inter', sans-serif;
   font-size: 1.5rem;
   font-weight: 500;
-  color: #757575; /* The soft gray from your design */
+  color: #757575;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: black; /* Darkens when you hover over them */
+  color: black;
 }
 
-/* Social Icons */
 .footer-social {
   display: flex;
   gap: 20px;
 }
 
 .footer-social img {
-  width: 150%; 
+  width: 150%;
   height: auto;
   opacity: 0.9;
   transition: opacity 0.2s ease;
