@@ -18,7 +18,10 @@
   <div class="profile-card">
     <header class="profile-header">
       <div class="avatar-container">
-        <img src="/images/London.png" alt="User Avatar" class="avatar">
+        <img [src]="profileUser?.avatarUrl || '/images/London.png'"
+             alt="{{ profileUser?.username }}'s Avatar"
+             class="avatar"
+             (error)="handleAvatarError($event)">
       </div>
       <div class="profile-info">
         <div class="name-badge-row">

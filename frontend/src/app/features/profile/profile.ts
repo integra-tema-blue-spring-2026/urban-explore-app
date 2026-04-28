@@ -63,6 +63,7 @@ export class Profile implements OnInit {
     }
 
 
+
     this.userService.getUserByUsername(username).subscribe({
       next: profileUser => {
         this.profileUser = profileUser;
@@ -95,6 +96,8 @@ export class Profile implements OnInit {
         }
       },
     });
+
+
   }
 
   private computeIsFollowing(): void {
@@ -114,6 +117,10 @@ export class Profile implements OnInit {
     }
   }
 
+  handleAvatarError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = '/images/London.png'; 
+  }
   toggleFollow(): void {
     if (!this.profileUser || !this.currentUser) return;
 
