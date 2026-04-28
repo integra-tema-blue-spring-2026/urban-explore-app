@@ -44,9 +44,9 @@ export class CityService {
       { params },
     );
   }
-  getCities(): Observable<City[]> {
-    return this.httpClient.get<City[]>(this.apiPath);
-  }
+  // getCities(): Observable<City[]> {
+  //   return this.httpClient.get<City[]>(this.apiPath);
+  // }
 
   getCitiesByStatus(status: string): Observable<City[]> {
     const params = new HttpParams().set('status', status);

@@ -35,15 +35,15 @@ public class PointOfInterestController {
         return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
 
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
-        return pointOfInterestService
-            .getAll()
-            .stream()
-            .map(pointOfInterestMapper::toDto)
-            .toList();
-    }
+//    @GetMapping("/all")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<PointOfInterestResponseDto> getAll() {
+//        return pointOfInterestService
+//            .getAll()
+//            .stream()
+//            .map(pointOfInterestMapper::toDto)
+//            .toList();
+//    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

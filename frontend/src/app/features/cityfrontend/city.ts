@@ -46,7 +46,7 @@ export class CityComponent implements OnInit {
   }
 
   loadCities() {
-    this.cityService.getCities().subscribe((data) => {
+    this.cityService.getCitiesByStatus("APPROVED").subscribe((data) => {
       this.cities = data;
       this.cdr.markForCheck();
     });

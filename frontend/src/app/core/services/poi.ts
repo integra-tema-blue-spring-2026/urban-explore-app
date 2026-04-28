@@ -9,9 +9,9 @@ export class PoiService {
   private apiUrl = '/api/pois';
   http = inject(HttpClient)
 
-  getPois(): Observable<poi[]> {
-    return this.http.get<poi[]>(this.apiUrl);
-  }
+  // getPois(): Observable<poi[]> {
+  //   return this.http.get<poi[]>(this.apiUrl);
+  // }
 
   getPoisByStatus(status: string): Observable<poi[]> {
     const params = new HttpParams().set('status', status);

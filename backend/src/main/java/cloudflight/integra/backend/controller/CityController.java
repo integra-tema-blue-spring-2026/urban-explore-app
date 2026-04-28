@@ -32,10 +32,10 @@ public class CityController {
     private final CityMapper cityMapper;
     private final PointOfInterestMapper pointOfInterestMapper;
 
-    @GetMapping("/all")
-    public List<CityDto> getAllCities() {
-        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
-    }
+//    @GetMapping("/all")
+//    public List<CityDto> getAllCities() {
+//        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
+//    }
 
     @GetMapping
     public List<CityDto> getAllCitiesByStatus(

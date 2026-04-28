@@ -48,7 +48,7 @@ export class Poi implements OnInit {
   }
 
   loadPois() {
-    this.poiService.getPois().subscribe({
+    this.poiService.getPoisByStatus("APPROVED").subscribe({
       next: (data: poi[]) => {
         this.pois = data;
         this.cdr.detectChanges();
