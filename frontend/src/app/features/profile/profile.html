@@ -6,6 +6,15 @@
     </div>
   </div>
 
+  @if (userNotFound) {
+    <div class="profile-card" style="text-align:center; padding: 3rem;">
+      <h2>User not found</h2>
+      <p>This user does not exist.</p>
+      <a routerLink="/home" class="btn-primary">Back to homepage</a>
+    </div>
+  }
+
+  @if (!userNotFound) {
   <div class="profile-card">
     <header class="profile-header">
       <div class="avatar-container">
@@ -13,18 +22,23 @@
       </div>
       <div class="profile-info">
         <div class="name-badge-row">
-          <h1>Alex Thompson</h1>
-          <span class="role-badge">EXPLORER</span> </div>
-        <p class="bio-header">World explorer | Love discovering hidden gems</p>
+          <h1>{{ profileUser?.username }}</h1>
+          <span class="role-badge">{{ profileUser?.role }}</span>
+        </div>
+        <p class="bio-header">{{ profileUser?.bio?.header }}</p>
       </div>
 
       <div class="header-actions">
-        <button class="btn-secondary follow-btn">
-          <i class="icon-follow"></i> Follow
-        </button>
-        <button class="btn-primary edit-btn">
-          <i class="icon-edit-pencil"></i> Edit Profile
-        </button>
+        @if (!isOwnProfile) {
+          <button class="btn-secondary follow-btn" (click)="toggleFollow()">
+            <i class="icon-follow"></i> {{ isFollowing ? 'Unfollow' : 'Follow' }}
+          </button>
+        }
+        @if (isOwnProfile) {
+          <button class="btn-primary edit-btn" [routerLink]="['/profile', profileUser?.username, 'edit']">
+            <i class="icon-edit-pencil"></i> Edit Profile
+          </button>
+        }
       </div>
     </header>
 
@@ -34,11 +48,13 @@
         <span class="stat-label">Cities Visited</span>
       </div>
       <div class="stat-box">
-        <span class="stat-value">124</span>
-        <span class="stat-label">Followers</span> </div>
+        <span class="stat-value">{{ followerCount }}</span>
+        <span class="stat-label">Followers</span>
+      </div>
       <div class="stat-box">
-        <span class="stat-value">86</span>
-        <span class="stat-label">Following</span> </div>
+        <span class="stat-value">{{ followingCount }}</span>
+        <span class="stat-label">Following</span>
+      </div>
       <div class="stat-box">
         <span class="stat-value"><i class="icon-xp-trophy"></i> 650</span>
         <span class="stat-label">XP Earned</span>
@@ -48,11 +64,11 @@
     <section class="content-section bio-detailed">
       <h2 class="section-title">About Me</h2>
       <div class="bio-content">
-        <p class="bio-body">
-          I've been traveling for over 5 years, focusing on urban architecture
-          and hidden street art. My goal is to visit every European capital by 2027.
-        </p> <footer class="bio-footer">Member since 2024</footer> </div>
+        <p class="bio-body">{{ profileUser?.bio?.body }}</p>
+        <footer class="bio-footer">{{ profileUser?.bio?.footer }}</footer>
+      </div>
     </section>
+
     <section class="content-section">
       <h2 class="section-title">Reviewed POIs</h2>
 
@@ -75,9 +91,7 @@
               <div class="city-details">
                 <h3>{{ review.poiName }}</h3>
                 <div class="city-meta">
-              <span class="rating-stars">
-                Rating: {{ review.rating }}/5
-              </span>
+                  <span class="rating-stars">Rating: {{ review.rating }}/5</span>
                   <p class="review-text">"{{ review.text }}"</p>
                 </div>
               </div>
@@ -112,4 +126,5 @@
       </div>
     </section>
   </div>
+  }
 </div>

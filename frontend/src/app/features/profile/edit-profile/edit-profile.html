@@ -1,0 +1,65 @@
+<div class="page-wrapper reset">
+  <div class="top-banner">
+    <div class="banner-icons">
+      <a class="back-link" [routerLink]="['/profile', form.value.username]"><- Back to profile</a>
+    </div>
+  </div>
+
+  <div class="profile-card">
+    <header class="profile-header">
+      <div class="profile-info">
+        <h1>Edit Profile</h1>
+      </div>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="edit-form">
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" class="form-input" placeholder="Username" />
+        @if (form.get('username')?.invalid && form.get('username')?.touched) {
+          <span class="form-error">Username must be 5–40 characters.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="avatarUrl">Avatar URL</label>
+        <input id="avatarUrl" type="text" formControlName="avatarUrl" class="form-input" placeholder="https://..." />
+      </div>
+
+      <h2 class="section-title" style="margin-top: 1.5rem;">About Me</h2>
+
+      <div class="form-group">
+        <label for="bioHeader">Short tagline</label>
+        <input id="bioHeader" type="text" formControlName="bioHeader" class="form-input" placeholder="e.g. World explorer | Love hidden gems" />
+        @if (form.get('bioHeader')?.hasError('maxlength')) {
+          <span class="form-error">Max 100 characters.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bioBody">About me</label>
+        <textarea id="bioBody" formControlName="bioBody" class="form-input form-textarea" rows="4" placeholder="Tell others about yourself..."></textarea>
+        @if (form.get('bioBody')?.hasError('maxlength')) {
+          <span class="form-error">Max 1000 characters.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="bioFooter">Footer (e.g. Member since 2024)</label>
+        <input id="bioFooter" type="text" formControlName="bioFooter" class="form-input" placeholder="e.g. Member since 2024" />
+        @if (form.get('bioFooter')?.hasError('maxlength')) {
+          <span class="form-error">Max 100 characters.</span>
+        }
+      </div>
+
+      <div class="header-actions" style="margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || saving">
+          {{ saving ? 'Saving...' : 'Save Changes' }}
+        </button>
+        <a class="btn-secondary" [routerLink]="['/profile', form.value.username]">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -53,24 +53,32 @@ public class UserController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<UserViewDto> getUserByUsername(@PathVariable String username) {
+        return service.findByUsername(username)
+            .map(UserMappingRules.TO_DTO_RULE)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{id}/followers")
     public ResponseEntity<Set<UserViewDto>> getFollowers(@PathVariable UUID id) {
-        return service.findById(id)
-                .map(user -> user.getFollowers().stream()
-                .map(follower -> Mapper.toDto(follower, UserMappingRules.TO_DTO_RULE))
-                .collect(Collectors.toSet()))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (service.findById(id).isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+            service.getFollowers(id).stream()
+                .map(UserMappingRules.TO_DTO_RULE)
+                .collect(Collectors.toSet())
+        );
     }
 
     @GetMapping("/{id}/following")
     public ResponseEntity<Set<UserViewDto>> getFollowing(@PathVariable UUID id) {
-        return service.findById(id)
-                .map(user -> user.getFollowing().stream()
-                .map(following -> Mapper.toDto(following, UserMappingRules.TO_DTO_RULE))
-                .collect(Collectors.toSet()))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (service.findById(id).isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+            service.getFollowing(id).stream()
+                .map(UserMappingRules.TO_DTO_RULE)
+                .collect(Collectors.toSet())
+        );
     }
 
     // POST --------------------------------------------------

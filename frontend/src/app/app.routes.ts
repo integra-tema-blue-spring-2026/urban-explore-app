@@ -6,6 +6,7 @@ import { Poi } from './features/poi/poi';
 import { PoiDetail } from './features/poi/poi-detail/poi-detail';
 import { authGuard } from './core/services/auth.guard';
 import { Profile } from './features/profile/profile';
+import { EditProfile } from './features/profile/edit-profile/edit-profile';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: Home },
@@ -13,7 +14,7 @@ export const routes: Routes = [
   { path: 'cities', canActivate: [authGuard], component: CityComponent },
   { path: 'poi', canActivate: [authGuard], component: Poi },
   { path: 'poi/details/:id', canActivate: [authGuard], component: PoiDetail },
+  { path: 'profile/:id/edit', canActivate: [authGuard], component: EditProfile },
   { path: 'profile/:id', canActivate: [authGuard], component: Profile },
   { path: '**', redirectTo: '' },
-
 ];

@@ -10,7 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -61,6 +64,25 @@ public class UsersService implements UserDetailsService {
 
         repository.save(follower);
         return repository.save(targetUser);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<User> getFollowers(UUID userId) {
+        return repository.findById(userId)
+            .map(user -> new HashSet<>(user.getFollowers()))
+            .orElse(new HashSet<>());
+    }
+
+    @Transactional(readOnly = true)
+    public Set<User> getFollowing(UUID userId) {
+        return repository.findById(userId)
+            .map(user -> new HashSet<>(user.getFollowing()))
+            .orElse(new HashSet<>());
     }
 
     @Override
