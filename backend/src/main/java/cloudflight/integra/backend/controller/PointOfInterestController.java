@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.controller.utils.AdminChecker;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+import static cloudflight.integra.backend.controller.utils.AdminChecker.isAdmin;
 
 @RestController
 @RequestMapping("/pois")
@@ -34,16 +37,6 @@ public class PointOfInterestController {
         PointOfInterest savedPointOfInterest = pointOfInterestService.save(newPointOfInterest);
         return pointOfInterestMapper.toDto(savedPointOfInterest);
     }
-
-//    @GetMapping("/all")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<PointOfInterestResponseDto> getAll() {
-//        return pointOfInterestService
-//            .getAll()
-//            .stream()
-//            .map(pointOfInterestMapper::toDto)
-//            .toList();
-//    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -98,7 +91,7 @@ public class PointOfInterestController {
         PointOfInterestStatus requestedStatus,
         Authentication authentication) {
 
-        if (isAdmin(authentication)) {
+        if (AdminChecker.isAdmin(authentication)) {
             return requestedStatus;
         }
 
@@ -108,12 +101,4 @@ public class PointOfInterestController {
 
         return PointOfInterestStatus.APPROVED;
     }
-
-    private boolean isAdmin(Authentication authentication) {
-        return authentication != null
-            && authentication.getAuthorities() != null
-            && authentication.getAuthorities().stream()
-            .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-    }
-
 }

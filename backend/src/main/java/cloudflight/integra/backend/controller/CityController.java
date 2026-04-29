@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.controller.utils.AdminChecker;
 import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import static cloudflight.integra.backend.controller.utils.AdminChecker.isAdmin;
+
 
 @RestController
 @RequestMapping("/cities")
@@ -31,11 +34,6 @@ public class CityController {
     private final CityService cityService;
     private final CityMapper cityMapper;
     private final PointOfInterestMapper pointOfInterestMapper;
-
-//    @GetMapping("/all")
-//    public List<CityDto> getAllCities() {
-//        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
-//    }
 
     @GetMapping
     public List<CityDto> getAllCitiesByStatus(
@@ -102,7 +100,7 @@ public class CityController {
     }
 
     private CityStatus resolveStatusFilterForCurrentUser(CityStatus requestedStatus, Authentication authentication) {
-        if (isAdmin(authentication)) {
+        if (AdminChecker.isAdmin(authentication)) {
             return requestedStatus;
         }
 
@@ -111,12 +109,5 @@ public class CityController {
         }
 
         return CityStatus.APPROVED;
-    }
-
-    private boolean isAdmin(Authentication authentication) {
-        return authentication != null
-            && authentication.getAuthorities() != null
-            && authentication.getAuthorities().stream()
-            .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 }
