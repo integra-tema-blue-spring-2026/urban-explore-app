@@ -1,17 +1,24 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.controller.utils.AdminChecker;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestRequestDto;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestStatus;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.service.PointOfInterestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+import static cloudflight.integra.backend.controller.utils.AdminChecker.isAdmin;
 
 @RestController
 @RequestMapping("/pois")
@@ -33,9 +40,24 @@ public class PointOfInterestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PointOfInterestResponseDto> getAll() {
+    public List<PointOfInterestResponseDto> getAllByStatus(
+        @RequestParam(required = false) PointOfInterestStatus status,
+        Authentication authentication) {
+
+        PointOfInterestStatus effectiveStatus = resolveStatusFilterForCurrentUser(status, authentication);
         return pointOfInterestService
-            .getAll()
+            .getAllByStatus(effectiveStatus)
+            .stream()
+            .map(pointOfInterestMapper::toDto)
+            .toList();
+    }
+
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PointOfInterestResponseDto> getPending() {
+        return pointOfInterestService
+            .getAllByStatus(PointOfInterestStatus.PENDING)
             .stream()
             .map(pointOfInterestMapper::toDto)
             .toList();
@@ -65,4 +87,18 @@ public class PointOfInterestController {
         pointOfInterestService.deleteById(id);
     }
 
+    private PointOfInterestStatus resolveStatusFilterForCurrentUser(
+        PointOfInterestStatus requestedStatus,
+        Authentication authentication) {
+
+        if (AdminChecker.isAdmin(authentication)) {
+            return requestedStatus;
+        }
+
+        if (requestedStatus != null && requestedStatus != PointOfInterestStatus.APPROVED) {
+            throw new AccessDeniedException("Only admins can query non-approved points of interest.");
+        }
+
+        return PointOfInterestStatus.APPROVED;
+    }
 }

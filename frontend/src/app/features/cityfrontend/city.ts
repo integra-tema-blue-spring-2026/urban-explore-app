@@ -2,23 +2,26 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CityService } from '../../core/api/services/city.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import {
   City,
   CityStatus,
   CreateCityRequest,
   UpdateCityRequest,
 } from '../../shared/models/city.model';
+import { TokenService } from '../../core/services/token.service';
 
 @Component({
   selector: 'app-city',
   templateUrl: './city.html',
   styleUrl: './city.css',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
 })
 export class CityComponent implements OnInit {
   cities: City[] = [];
   editingId: string | null = null;
+  isAdminUser = false;
 
   cityForm = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -34,14 +37,16 @@ export class CityComponent implements OnInit {
   constructor(
     private cityService: CityService,
     private cdr: ChangeDetectorRef,
+    private tokenService: TokenService,
   ) {}
 
   ngOnInit(): void {
+    this.isAdminUser = this.tokenService.isAdmin();
     this.loadCities();
   }
 
   loadCities() {
-    this.cityService.getCities().subscribe((data) => {
+    this.cityService.getCitiesByStatus("APPROVED").subscribe((data) => {
       this.cities = data;
       this.cdr.markForCheck();
     });

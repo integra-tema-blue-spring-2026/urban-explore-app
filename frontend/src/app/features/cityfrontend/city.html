@@ -1,6 +1,8 @@
 <div class="city-manager-container">
   <h2 class="page-title">Manage Cities</h2>
-
+  <button *ngIf="isAdminUser" class="admin-page-button" [routerLink]="'/admin/dashboard'">
+    Go to Admin Dashboard
+  </button>
   <form [formGroup]="cityForm" (ngSubmit)="saveCity()" class="city-form">
     <input formControlName="name" placeholder="City Name" class="form-input input-flex-1" />
 

@@ -3,6 +3,7 @@ package cloudflight.integra.backend.service;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
 import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import cloudflight.integra.backend.model.City;
+import cloudflight.integra.backend.model.utils.enums.CityStatus;
 
 
 import cloudflight.integra.backend.repository.CityRepository;
@@ -28,6 +29,12 @@ public class CityService {
         return cityRepository.findAll();
     }
 
+    public List<City> getCitiesByStatus(CityStatus status) {
+        if (status == null) {
+            return cityRepository.findAll();
+        }
+        return cityRepository.findAllByStatus(status);
+    }
     public City createCity(City city) {
         return cityRepository.save(city);
     }

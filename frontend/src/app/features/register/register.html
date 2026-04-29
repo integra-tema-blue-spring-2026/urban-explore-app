@@ -24,6 +24,17 @@
       placeholder="Password"
       class="w-full focus:border-[#675EC2]!"
     />
+    <div class="flex flex-col gap-2">
+      <label for="role" class="font-medium">Account type</label>
+      <p-selectButton
+        id="role"
+        formControlName="role"
+        [options]="roleOptions"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="w-full"
+      ></p-selectButton>
+    </div>
     <div formGroupName="bio" class="flex flex-col gap-3">
       <h3 class="font-semibold">Bio</h3>
       <input

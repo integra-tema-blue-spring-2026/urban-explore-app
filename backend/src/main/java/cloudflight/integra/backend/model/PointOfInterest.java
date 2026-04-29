@@ -1,6 +1,7 @@
 package cloudflight.integra.backend.model;
 
 import cloudflight.integra.backend.model.utils.enums.PointOfInterestType;
+import cloudflight.integra.backend.model.utils.enums.PointOfInterestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,10 @@ public class PointOfInterest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PointOfInterestType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "varchar(255) default 'PENDING'")
+    private PointOfInterestStatus status;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)

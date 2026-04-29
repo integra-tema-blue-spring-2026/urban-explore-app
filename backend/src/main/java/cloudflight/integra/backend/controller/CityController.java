@@ -1,10 +1,12 @@
 package cloudflight.integra.backend.controller;
 
+import cloudflight.integra.backend.controller.utils.AdminChecker;
 import cloudflight.integra.backend.model.City;
 import cloudflight.integra.backend.model.PointOfInterest;
 import cloudflight.integra.backend.model.dtos.city.CreateCityDto;
 import cloudflight.integra.backend.model.dtos.city.UpdateCityDto;
 import cloudflight.integra.backend.model.dtos.city.CityDto;
+import cloudflight.integra.backend.model.utils.enums.CityStatus;
 import cloudflight.integra.backend.model.utils.mappers.PointOfInterestMapper;
 import cloudflight.integra.backend.model.dtos.poi.PointOfInterestResponseDto;
 import cloudflight.integra.backend.model.utils.mappers.CityMapper;
@@ -13,11 +15,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import static cloudflight.integra.backend.controller.utils.AdminChecker.isAdmin;
 
 
 @RestController
@@ -29,10 +36,19 @@ public class CityController {
     private final PointOfInterestMapper pointOfInterestMapper;
 
     @GetMapping
-    public List<CityDto> getAllCities() {
-        return cityService.getAllCities().stream().map(cityMapper::toDto).toList();
+    public List<CityDto> getAllCitiesByStatus(
+        @RequestParam(required = false) CityStatus status,
+        Authentication authentication) {
+
+        CityStatus effectiveStatus = resolveStatusFilterForCurrentUser(status, authentication);
+        return cityService.getCitiesByStatus(effectiveStatus).stream().map(cityMapper::toDto).toList();
     }
 
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<CityDto> getPendingCities() {
+        return cityService.getCitiesByStatus(CityStatus.PENDING).stream().map(cityMapper::toDto).toList();
+    }
     @PostMapping
     public CityDto createCity(@Valid @RequestBody CreateCityDto cityDto) {
         City createdCity =  cityService.createCity(cityMapper.toEntity(cityDto));
@@ -81,5 +97,17 @@ public class CityController {
             .filter(filter)
             .map(pointOfInterestMapper::toDto)
             .toList();
+    }
+
+    private CityStatus resolveStatusFilterForCurrentUser(CityStatus requestedStatus, Authentication authentication) {
+        if (AdminChecker.isAdmin(authentication)) {
+            return requestedStatus;
+        }
+
+        if (requestedStatus != null && requestedStatus != CityStatus.APPROVED) {
+            throw new AccessDeniedException("Only admins can query non-approved cities.");
+        }
+
+        return CityStatus.APPROVED;
     }
 }

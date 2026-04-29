@@ -1,15 +1,20 @@
 import {inject, Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { poi } from '../utils/Poi-interface';
 
 @Injectable({ providedIn: 'root' })
 export class PoiService {
-  private apiUrl = 'http://localhost:8080/api/pois';
-  http = inject(HttpClient)
+  private apiUrl = '/api/pois';
+  http = inject(HttpClient);
 
-  getPois(): Observable<poi[]> {
-    return this.http.get<poi[]>(this.apiUrl);
+  getPoisByStatus(status: string): Observable<poi[]> {
+    const params = new HttpParams().set('status', status);
+    return this.http.get<poi[]>(this.apiUrl, { params });
+  }
+
+  getPendingPois(): Observable<poi[]> {
+    return this.http.get<poi[]>(`${this.apiUrl}/pending`);
   }
 
   addPoi(poiData: poi): Observable<poi> {
