@@ -15,4 +15,5 @@ public class UserViewDto {
     private UserRole role;
     private UserBio bio;
     private String avatarUrl;
+    private Integer xpPoints;
 }

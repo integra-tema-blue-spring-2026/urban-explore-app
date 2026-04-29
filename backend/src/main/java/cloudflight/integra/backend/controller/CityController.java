@@ -34,8 +34,10 @@ public class CityController {
     }
 
     @PostMapping
-    public CityDto createCity(@Valid @RequestBody CreateCityDto cityDto) {
-        City createdCity =  cityService.createCity(cityMapper.toEntity(cityDto));
+    public CityDto createCity(
+        @RequestParam UUID userId,
+        @Valid @RequestBody CreateCityDto cityDto) {
+        City createdCity =  cityService.createCity(userId, cityMapper.toEntity(cityDto));
         return cityMapper.toDto(createdCity);
     }
 

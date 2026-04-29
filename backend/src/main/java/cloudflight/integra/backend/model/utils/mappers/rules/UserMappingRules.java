@@ -47,7 +47,7 @@ public final class UserMappingRules {
         dto.setRole(user.getRole());
         dto.setBio(user.getBio());
         dto.setAvatarUrl(user.getAvatarUrl());
-
+        dto.setBio(user.getBio());
         return dto;
     };
 }

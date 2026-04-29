@@ -8,4 +8,5 @@ export interface User {
   role: UserRole;
   bio: UserBio;
   avatarUrl: string;
+  xpPoints?: number;
 }

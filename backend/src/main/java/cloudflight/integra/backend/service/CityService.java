@@ -1,5 +1,6 @@
 package cloudflight.integra.backend.service;
 
+import cloudflight.integra.backend.events.CityAddedEvent;
 import cloudflight.integra.backend.exceptions.custom.CityNotFoundException;
 import cloudflight.integra.backend.exceptions.custom.UpdateCityException;
 import cloudflight.integra.backend.model.City;
@@ -7,6 +8,7 @@ import cloudflight.integra.backend.model.City;
 
 import cloudflight.integra.backend.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CityService {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     private final CityRepository cityRepository;
 
     private boolean isStringEmpty(String str) {
@@ -28,8 +32,12 @@ public class CityService {
         return cityRepository.findAll();
     }
 
-    public City createCity(City city) {
-        return cityRepository.save(city);
+    @Transactional
+    public City createCity(UUID userId, City city) {
+        City savedCity = cityRepository.save(city);
+
+        applicationEventPublisher.publishEvent(new CityAddedEvent(userId, savedCity));
+        return savedCity;
     }
 
     @Transactional
