@@ -10,6 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface QuestRepository extends JpaRepository<Quest, UUID>{
-	List<Quest> findByCityId(UUID cityId);
-
+    List<Quest> findByCityId(UUID cityId);
 }

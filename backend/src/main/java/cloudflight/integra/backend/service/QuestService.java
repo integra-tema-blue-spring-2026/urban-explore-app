@@ -23,7 +23,9 @@ public class QuestService {
     private final UserQuestProgressRepository userQuestProgressRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public QuestService(QuestRepository questRepo, UserQuestProgressRepository userQuestProgressRepository, ApplicationEventPublisher applicationEventPublisher){ 
+    public QuestService(QuestRepository questRepo,
+                        UserQuestProgressRepository userQuestProgressRepository,
+                        ApplicationEventPublisher applicationEventPublisher){
         this.questRepo = questRepo;
         this.userQuestProgressRepository = userQuestProgressRepository;
         this.applicationEventPublisher = applicationEventPublisher;

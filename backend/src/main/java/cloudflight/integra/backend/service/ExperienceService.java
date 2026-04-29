@@ -47,7 +47,7 @@ public class ExperienceService {
 
     @TransactionalEventListener
     public void handleCityAddedEvent(CityAddedEvent event) {
-       addXp(event.userId(), CITY_XP);
+        addXp(event.userId(), CITY_XP);
     }
 
     @TransactionalEventListener
@@ -68,6 +68,4 @@ public class ExperienceService {
         user.setXpPoints(currentXp + xpToAdd);
         userRepository.save(user);
     }
-
-    
 }
